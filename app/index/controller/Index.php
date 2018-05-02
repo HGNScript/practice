@@ -127,7 +127,7 @@ class Index extends Common{
 
 			$time = date('d', time());
 
-			if ($time >= 1) {
+			if ($time > 15) {
 				$res = $this->logs->addLogs($data);
 				if ($res) {
 					$up= db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);

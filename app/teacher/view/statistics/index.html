@@ -100,11 +100,11 @@
                             {else/}
                             <tr>
                                 <td>{$vo['class_name']}</td>
-                                <td>{$vo['signin']}</td>
-                                <td>{$vo['unSignin']}</td>
-                                <td>{$vo['logs']}</td>
-                                <td>{$vo['unLogs']}</td>
-                                <td>{$vo['sum']}</td>
+                                <td><span class="layui-badge layui-bg-green">{$vo['signin']}</span></td>
+                                <td><span class="layui-badge">{$vo['unSignin']}</span></td>
+                                <td><span class="layui-badge layui-bg-green">{$vo['logs']}</span></td>
+                                <td><span class="layui-badge">{$vo['unLogs']}</span></td>
+                                <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
                             </tr>
                             {/if}
                         {/foreach}

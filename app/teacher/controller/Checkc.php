@@ -190,6 +190,13 @@ class Checkc extends Common {
 	public function del() {
 		$stu_id = input('post.');
 		$res = db('student')->delete($stu_id);
+
+		foreach ($stu_id as $key => $value) {
+			$logs = db('logs')->where('stu_id', $value)->delete();
+			$sign = db('sginin')->where('stu_id', $value)->delete();
+			$company = db('company')->where('stu_id', $value)->delete();
+		}
+
 		if ($res) {
 			return json($res = ['valid' => 1, 'msg' => '删除成功']);
 		}
@@ -278,12 +285,17 @@ class Checkc extends Common {
 			if(!$validate->check($data)){
 				$res = ['valid' => 0, 'msg' => $validate->getError()];
 			} else {
-				$data['stu_password'] = md5('gzcj');
-				$info = $this->stu->addStu($data);
-			    if ($info) {
-			    	$res = ['valid' => 1, 'msg' => '添加成功!'];
-			    } else {
-			    	$res = ['valid' => 0, 'msg' => '添加失败!'];
+				$number = db('student')->where('stu_numBer', $data['stu_numBer'])->find();
+				if (!$number) {
+					$data['stu_password'] = md5('gzcj');
+					$info = $this->stu->addStu($data);
+				    if ($info) {
+				    	$res = ['valid' => 1, 'msg' => '添加成功!'];
+				    } else {
+				    	$res = ['valid' => 0, 'msg' => '添加失败!'];
+					}
+				} else {
+					$res = ['valid' => 0, 'msg' => '学号不能重复!'];
 				}
 			}
 			if($res['valid'])
