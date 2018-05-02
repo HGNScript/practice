@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="x-body">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label for="tch_numBer" class="layui-form-label">
+                工号
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="tch_numBer" name="tch_numBer" autocomplete="off" class="layui-input" placeholder="工号">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="tch_phone" class="layui-form-label">
+                联系电话
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="tch_phone" name="tch_phone" autocomplete="off" class="layui-input" placeholder="联系电话">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="newtch_psw" class="layui-form-label">
+                新密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="newtch_psw" name="newtch_psw" autocomplete="off" class="layui-input" placeholder="新密码">
+                </div>
+            </div>
+             <div class="layui-form-item">
+                <label for="newtch_psws" class="layui-form-label">
+                新密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="newtch_psws" name="newtch_psws" autocomplete="off" class="layui-input" placeholder="再次输入新密码">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">
+                </label>
+                <button class="layui-btn" lay-filter="add" lay-submit="">
+                    更改
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+    layui.use(['form', 'layer', 'element'], function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+        //监听提交
+        form.on('submit(add)', function(data) {
+            $.ajax({
+                type: "post",
+                url: '/teacher/Login/editpsw',
+                traditional: true,
+                dataType: "json",
+                data: data.field,
+                success: function(data) {
+                    console.log(data)
+                    if (data['valid']) {
+                        layer.msg(data['msg'], {
+                            icon: 1, //提示的样式
+                            time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                            end: function() {
+                                  parent.location.reload();
+                            }
+                        });
+                    } else {
+                        layer.msg(data['msg'], {
+                            icon: 2, //提示的样式
+                            time: 1200,
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+
+    });
+    </script>
+</body>
+
+</html>

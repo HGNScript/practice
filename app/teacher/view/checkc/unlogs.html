@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>广州城建实习系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/echarts.common.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<style type="text/css">
+    .layui-table th,.layui-table td{
+        text-align: center;
+    }
+</style>
+<body>
+     <div class="x-nav">
+            <span class="layui-breadcrumb" lay-separator="|">
+            <a href="javascript:history.back(-1)">返回上级</a>
+            <a><cite>本月未填写日志学生</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+        <div class="layui-form layui-col-md12 x-so">
+            <input id="input" type="text" name="search" placeholder="请输入名称或学号" class="layui-input">
+            <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <table class="layui-table">
+                    <thead>
+                        <tr>
+                            <th>学号</th>
+                            <th>名称</th>
+                            <th>最近日志时间</th>
+                            <th id="changge">最近日志摘要</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                </table>
+            </div>
+        </div>
+        <input type="hidden" name="" value="{$class_id}" id="hide">
+         <div class="page">
+            <div id="test1"></div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$(function(){
+    page(0)
+    search()
+})
+function page(changge, search) {
+    layui.use('laypage', function() {
+        var class_id = $('#hide').val();
+        var laypage = layui.laypage;
+        $.ajax({
+            type: "post",
+            url: '/teacher/checkc/unlogs?class_id='+class_id,
+            traditional: true,
+            dataType: "json",
+            data: search,
+            success: function(data) {
+                var len = data
+                laypage.render({
+                    elem: 'test1', //注意，这里的 test1 是 ID，不用加 # 号
+                    count: len, //数据总数，从服务端得到
+                    limit: 4,
+                    data: search,
+                    jump: function(obj, first) {
+                        var class_id = $('#hide').val();
+                        var info = { 'curr': obj.curr, 'limit': obj.limit };
+                        $.ajax({
+                            type: "post",
+                            url: '/teacher/Checkc/unlogs?curr=' + info['curr'] + '&limit=' + info['limit']+ '&class_id=' + class_id+ '&changge=' + changge,
+                            traditional: true,
+                            dataType: "json",
+                            data: search,
+                            success: function(data) {
+                                $("#tbody").empty();
+                                var data_html = "";
+                                $.each(data, function(index, array) {
+                                    data_html += `<tr>
+                            <td>`+array[0]['stu_numBer']+`</td>
+                            <td>`+array[0]['stu_name']+`</td>
+                            <td>`+array[0]['sendtime']+`</td>
+                            <td>`+array[0]['logs_content']+`</td>
+                            <td>
+                                <a title="学生信息" href="/teacher/Checkc/stuInfo?id=`+array[0]['stu_id']+`&flag=2">
+                                    <i class="layui-icon">&#xe63c;</i>
+                                </a>
+                                  <a title="评阅日志" href="/teacher/Checkc/lookLogs?id=` + array[0]['logs_id'] + `">
+                                                    <i class="layui-icon">&#xe63a;</i>
+                                                </a>
+                            </td>
+                        </tr>`;
+                                });
+                                $("#tbody").append(data_html);
+
+                            }
+                        });
+                    }
+                });
+            }
+        })
+    });
+}
+function search(){
+     $('#input').keypress(function(event) {
+        var keynum = (event.keyCode ? event.keyCode : event.which);
+        if (keynum == '13') {
+            var val = $('#input').val();
+            if (!val) {
+                layer.msg('请填写您要查询的数据', {
+                    icon: 2, //提示的样式
+                    time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                    end: function() {
+                        layer.closeAll('dialog')
+                    }
+                });
+            } else {
+                var search = {}
+                search['sea'] = val
+                page(0, search)
+                $('#input').val('');
+            }
+        }
+    });
+    $('#search').click(function() {
+        var val = $('#input').val();
+        if (!val) {
+                layer.msg('请填写您要查询的数据', {
+                    icon: 2, //提示的样式
+                    time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                    end: function() {
+                        layer.closeAll('dialog')
+                    }
+                });
+            } else {
+                var search = {}
+                search['sea'] = val
+                page(0, search)
+                $('#input').val('');
+            }
+    })
+}
+</script>
+
+</html>

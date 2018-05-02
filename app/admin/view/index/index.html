@@ -1,0 +1,25 @@
+{extend name="base" /}
+{block name="content"}
+<section class="main col-md-9 col-sm-8">
+    <h3>欢迎来到管理系统</h3>
+    <hr>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>信息名称</th>
+                <th>信息详情</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="info" item="vo" key="k"}
+            <tr>
+                <td>{$k}</td>
+                <td>{$vo}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    <div class="paging">
+    </div>
+</section>
+{/block}

@@ -1,0 +1,21 @@
+@import "compass/css3";
+@import "variable","mixin";
+
+#main .main-left .title{
+	margin:0 auto;
+}
+// #header{
+// 	.nav-list .active span{
+// 		    border-top: 10px solid nth($liColor, 2);
+// 		    border-left: 50px solid nth($liColor, 2);
+// 			border-right: 50px solid nth($liColor, 2);
+// 			border-bottom: 40px solid transparent;
+// 		}
+// }
+.article{
+	 margin:60px auto;
+	 @media (min-width: 768px){
+	 	margin:60px auto;
+		width: 80%;
+	}
+}

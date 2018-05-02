@@ -1,0 +1,42 @@
+{extend name="base" /} {block name="content"}
+<section class="main col-md-9 col-sm-8">
+    <ul class="nav nav-pills">
+        <li role="presentation" class="active">
+            <a href="{:url('index')}">标签列表</a>
+        </li>
+        <li role="presentation">
+            <a href="{:url('addWeb')}">添加配置项</a>
+        </li>
+    </ul>
+    <hr>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>配置名称</th>
+                <th>配置值</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(item, index) in res" :key="index">
+                <td>{{item.web_id}}</td>
+                <td>{{item.web_name}}</td>
+                <td>{{item.web_value}}</td>
+                <td>
+                    <span class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-primary btn-xs" data-toggle="dropdown">操作 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a :href="'eidtWeb?web_id='+item.web_id">编辑</a></li>
+                        </ul>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</section>
+{/block} {block name="page"}
+<page :page-Res="pageRes" @get="getData" @load="load"></page>
+{/block}

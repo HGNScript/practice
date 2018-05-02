@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>广州城建技术学校实习生登录</title>
+	<link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="https://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/sass/stylesheets/login.css">
+</head>
+<body>
+	<div class="container row">
+		<h3>实习生管理系统</h3>
+		<section class="login col-sm-12 col-md-5">
+			<form action="" method="POST" role="form" id="editPswForm">
+				<h5>请填写正确的信息,才可修改密码</h5>
+				<div>
+					<i class="icon-circle-blank"></i>
+					<input type="text" name="stu_name" placeholder="请输入你的名称">
+				</div>
+				<div>
+					<i class="icon-user"></i>
+					<input type="text" name="stu_numBer" placeholder="请输入你的学号">
+				</div>
+				<div>
+					<i class="icon-key"></i>
+					<input type="text" name="identity" placeholder="请输入你的身份证号码">
+				</div>
+				<div>
+					<i class="icon-key"></i>
+					<input type="password" name="oldPsw" placeholder="请输入你的新密码">
+				</div>
+				<div>
+					<i class="icon-key"></i>
+					<input type="password" name="newPsw" placeholder="请重新输入你的新密码">
+				</div>
+				<button class="btn" type="button" id="editPsw">修改密码</button>
+				<span class="pull-right" style="position:absolute;bottom: 10px;right: 10px;"><a href="{:url('index')}"><strong>返回首页</strong></a></span>
+			</form>
+		</section>
+	</div>
+	<script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/layer_mobile/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/script/login.js"></script>
+</body>
+</html>

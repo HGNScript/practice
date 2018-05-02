@@ -1,0 +1,30 @@
+{extend name="base" /} {block name="content"}
+    <style type="text/css">
+    section{
+        width: 100%;
+        flex-grow: 1;
+    }
+        .arc img{
+            width:60%;
+        }
+        .arc{
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            text-indent: 20px;
+        }
+    </style>
+<section class="row container" style="margin: 0 auto">
+    <ul class="nav nav-tabs" style="margin-top:10px;">
+        <li role="presentation"><a href="{:url('index')}">首页</a></li>
+        <li role="presentation" class="active">
+            <a href="">查看通知</a>
+        </li>
+    </ul>
+        <h4 class="title" style="width: 96%;display: block;">通知</h4>
+        <div class="col-sm-8 arc">
+                {$publicsh['publicsh_content']}
+        </div>
+</section>
+{/block}

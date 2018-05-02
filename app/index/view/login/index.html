@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>广州城建技术学校实习生登录</title>
+	<link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="https://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/sass/stylesheets/login.css">
+</head>
+<body>
+	<div class="container row">
+		<h3>实习生管理系统</h3>
+		<section class="login col-sm-8 col-md-5">
+			<form action="" method="POST" role="form" id="loginForm">
+				<h5>欢迎登录实习系统</h5>
+				<div>
+					<i class="icon-user"></i>
+					<input type="text" name="stu_numBer" placeholder="请输入你的学号">
+				</div>
+				<div>
+					<i class="icon-key"></i>
+					<input type="password" name="stu_password" placeholder="请输入你的密码">
+				</div>
+				<div class="verification">
+					<label>验证码:</label>
+					<input type="text" name="verification">
+				<img src="{:captcha_src()}" alt="captcha" onclick="this.src=this.src+'?'+Math.random()" />
+				</div>
+				<button class="btn" type="button" id="login">登录</button>
+			</form>
+			<a href="{:url('editPsw')}" class="editPsw">忘记密码</a>
+		</section>
+	</div>
+	<script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/layer_mobile/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/script/login.js"></script>
+</body>
+</html>

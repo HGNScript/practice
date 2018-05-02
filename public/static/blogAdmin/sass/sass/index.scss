@@ -1,0 +1,93 @@
+@import "normalize";
+
+html,
+body {
+    background-color: #dcdcdc;
+    height: 100%;
+}
+
+.navbar {
+    border-radius: unset;
+    margin-bottom: 0;
+}
+
+.row {
+    margin-right: 0px;
+}
+
+.list {
+    padding: 0;
+    .btn-group {
+        width: 100%;
+    }
+    .dropdown-menu {
+        position: unset;
+        display: block;
+    }
+    .btn-default {
+        background: #222;
+        color: #fff;
+        min-width: 160px;
+        border: #222;
+        &:active {
+            background: #222;
+            color: #ccc;
+        }
+        i {
+            position: relative;
+            left: -10px;
+        }
+    }
+}
+
+.main {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 10px;
+    margin-top: 30px;
+    background: #fff;
+    padding: 0 10px;
+    .breadcrumb {
+        background: #fff;
+        margin-top: 20px;
+        font-size: 18px;
+        margin-bottom: 0px;
+    }
+    hr {
+        margin-top: 0;
+    }
+    @media (min-width: 768px) {
+        margin-left: 80px;
+    }
+    @media (min-width: 1024px) {
+        margin-left: 30px;
+    }
+    table input {
+    	width:60%;
+    }
+    // table tr td:nth-child(1){
+    // 	width:20%;
+    // }
+}
+
+.nav{
+    margin-top: 10px;
+}
+.main table tr label{
+    height:100%;
+    margin-top:8px;
+}
+
+.pagination{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    text-align: center;
+    width:100%;
+}

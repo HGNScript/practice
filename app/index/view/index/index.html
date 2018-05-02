@@ -1,0 +1,92 @@
+{extend name="base" /} {block name="content"}
+<style type="text/css">
+.arc img {
+    display: none;
+}
+
+.arc p {
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+</style>
+<section class="row introduction">
+    <div class="col-sm-12">
+        <h4 class="title">实习信息<a href="{:url('editAdd')}"><i class="icon-edit pull-right"></i></a></h4> {if condition="$info"}
+        <div class="info">
+            <span>公司名称:</span>
+            <p>{$info['company_name']}</p>
+        </div>
+        <div class="info">
+            <span>公司地址:</span>
+            <p>{$info['company_address']}</p>
+        </div>
+        <div class="info">
+            <span>职务:</span>
+            <p>{$info['company_position']}</p>
+        </div>
+        <div class="info">
+            <span>负责人:</span>
+            <p>{$info['principal']}</p>
+        </div>
+        <div class="info">
+            <span>公司联系电话:</span>
+            <p>{$info['principal_phone']}</p>
+        </div>
+        <div class="info">
+            <span>学生 联系电话:</span>
+            <p>{$info['stu_phone']}</p>
+        </div>
+        {else/}
+        <div>
+            <h3 style="text-align: center;margin: 30px 0px;line-height: 50px;">
+                        请填写你的实习信息!
+                    </h3>
+        </div>
+        {/if}
+        <div class="details">
+            <i class="icon-double-angle-down" id="down"></i>
+        </div>
+    </div>
+</section>
+<section class="swiper-container">
+    <h4 class="title">实习日志<a href="{:url('logs')}"><i class="icon-pencil pull-right"></i></a></h4> {if condition="$logsInfo"}
+    <div class="swiper-wrapper">
+        {if condition="!$log"}
+        <div class="swiper-slide">
+            <div class="arc">
+                <h5>{:date('Y-m-d H:i', time())}</h5>
+                <h4>本月还没填写实习日志</h4>
+            </div>
+        </div>
+        {/if} {foreach name="$logsInfo" item="vo" key="k"}
+        <div class="swiper-slide">
+            <div class="arc">
+                <h5>{:date('Y-m-d H:i',$vo['sendtime'])}
+                        <a href="{:url('cLogs', ['logs_id' => $vo['logs_id']])}">
+                            <i class="icon-eye-open pull-right"></i>
+                        </a>
+                    </h5> {if condition="$vo['logs_content']"}
+                <p>{$vo['logs_content']}</p>
+                {else/}
+                <p>当前日志只有图片,请点击查看</p>
+                {/if}
+            </div>
+        </div>
+        {/foreach}
+    </div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    {else /}
+    <div>
+        <h3 style="text-align: center;margin: 30px 0px;line-height: 50px;">
+                请填写你的实习日志!
+            </h3>
+    </div>
+    {/if}
+</section>
+{/block}

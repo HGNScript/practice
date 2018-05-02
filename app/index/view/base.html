@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>广州城建技术学校实习生管理</title>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link href="https://cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/Swiper/4.2.2/css/swiper.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/sass/stylesheets/index.css">
+</head>
+
+<body>
+    <header class="row header">
+        <div class="col-sm-12">
+            <img src="__STATIC__/practiceIndex/sass/image/log.png">
+            <h4>{:session('stu.stu_name');}</h4>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    菜单 {if condition="$signin OR $notice"}
+                    <span class="badge"> </span> {/if}
+                </button>
+                <ul class="dropdown-menu pull-left">
+                    <li>
+                        <a href="javascript:;" id="signIn">签到
+                            {if condition="$signin"} <span class="badge"> </span>
+                            {/if}
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="{:url('notice')}">日志反馈
+                            {if condition="$notice"}
+                            <span class="badge">{$notice}</span></a> {/if}
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="{:url('editPas')}">更改密码</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="javascript:;" id="out">退出当前用户</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    {block name="content"}{/block}
+    <footer>
+        <p class="webInfo">
+            <a href="">广州城建技术学校</a>
+            <a href="">Copyright @ 2017 广州城建技术学校</a>
+            <a href="">291908320@qq.com</a>
+        </p>
+    </footer>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/Swiper/4.2.2/js/swiper.min.js"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=29f7a4936e5a84ff1e48a5f41cf9b080"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/layer_mobile/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/Eleditor.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/webuploader.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceIndex/script/index.js"></script>
+    <script type="text/javascript">
+    /*实例化一个编辑器*/
+    var artEditor = new Eleditor({
+        el: '#kindEditor',
+        upload: {
+            server: '/index/Index/upload', //后台接收地址
+            fileSizeLimit: 2, //限制文件上传大小为2M
+            formName: 'image', //设置文件name,
+        }
+    });
+    $('.Eleditor-controller').css({"top": "0px"})
+    </script>
+</body>
+
+</html>

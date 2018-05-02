@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="x-nav">
+        <span class="layui-breadcrumb" lay-separator="|">
+        <a href="javascript:history.back(-1)">返回上级</a>
+        <a><cite>编辑班级信息</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label for="class_grade" class="layui-form-label">
+                    年级
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="class_grade" name="class_grade" autocomplete="off" class="layui-input" placeholder="年级" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" value="{$oldData['class_grade']}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="class_name" class="layui-form-label">
+                    班级名称
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="class_name" name="class_name" autocomplete="off" class="layui-input" placeholder="班级名称" value="{$oldData['class_name']}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                 <label for="class_staffRoom" class="layui-form-label">
+                    所属教研室
+                </label>
+                <div class="layui-input-block layui-input-inline" style="margin:0">
+                    <select name="class_staffRoom" class="layui-input">
+                        <option value="">{$oldData['class_staffRoom']}</option>
+                        <option value="基础部" class="">基础部</option>
+                        <option value="机电信息教研室" class="">机电信息教研室</option>
+                        <option value="经济管理教研室" class="">经济管理教研室</option>
+                        <option value="艺术设计教研室" class="">艺术设计教研室</option>
+                        <option value="建筑工程教研室" class="">建筑工程教研室</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="class_specialty" class="layui-form-label">
+                    专业名称
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="class_specialty" name="class_specialty" autocomplete="off" class="layui-input" placeholder="专业名称" value="{$oldData['class_specialty']}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">
+                </label>
+                <button class="layui-btn" lay-filter="add" lay-submit="">
+                    编辑
+                </button>
+            </div>
+            <input type="hidden" name="class_id" value="{$oldData['class_id']}">
+        </form>
+    </div>
+    <script>
+    layui.use(['form', 'layer', 'element'], function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+        //监听提交
+        form.on('submit(add)', function(data) {
+            $.ajax({
+                type: "post",
+                url: '/teacher/Classlist/edit',
+                traditional: true,
+                dataType: "json",
+                data: data.field,
+                success: function(data) {
+                    if (data['valid']) {
+                        layer.msg(data['msg'], {
+                            icon: 1, //提示的样式
+                            time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                            end: function() {
+                                 location.href = '/teacher/Classlist/index'
+                            }
+                        });
+                    } else {
+                        layer.msg(data['msg'], {
+                            icon: 2, //提示的样式
+                            time: 1000,
+                        });
+                    }
+                }
+            });
+
+            return false;
+        });
+
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>广州城建实习系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/echarts.common.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+    .content {
+        margin: 0 auto;
+        float: none;
+        padding: 20px;
+        border-radius: 4px;
+    }
+
+    .content img {
+        width: 30%;
+        height: 30%;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="x-nav">
+        <div class="x-nav">
+            <span class="layui-breadcrumb" lay-separator="">
+            <a href="javascript:history.back(-1)">返回上级</a>
+            </span>
+            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+        </div>
+    </div>
+    <div class="x-body">
+        {if condition="$logs"}
+         <fieldset class="layui-elem-field">
+            <legend>{$stu_name}&nbsp;&nbsp;{:date('Y-m-d',$logs['sendtime'])}</legend>
+            <form enctype="multipart/form-data" method="Post" role="form" id="publishForm">
+                <div class="layui-field-box">
+                    <div class="layui-col-md10 content">
+                        {$logs['logs_content']}
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+        {/if}
+        <div class="x-nav" style="margin-top: 20px;">
+            <h2 style="display: inline-block;">评阅内容</h2>
+            <span>
+                  <button class="layui-btn x-right" type="button" id="reply">
+                评阅
+            </button>
+            </span>
+        </div>
+        <div class="layui-row" style="margin-top: 20px;">
+            <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm">
+                <div class="col-sm-12" style="padding: 0;">
+                    <input type="hidden" name="logs_reply" id="text">
+                    {if condition="$logs['logs_reply']"}
+                    <div id="kindEditor" style="width: 80%;margin:0 auto;">{$logs['logs_reply']}</div>
+                    {else/}
+                    <div id="kindEditor" style="width: 80%;margin:0 auto;"></div>
+                    {/if}
+
+                </div>
+            </form>
+            <input type="hidden" name="" id="hide" value="{$logs['logs_id']}">
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/Eleditor.js"></script>
+<script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/webuploader.min.js"></script>
+<script type="text/javascript">
+var artEditor = new Eleditor({
+    el: '#kindEditor',
+    upload: {
+        server: '/teacher/Checkc/upload', //后台接收地址
+        fileSizeLimit: 2, //限制文件上传大小为2M
+        formName: 'image', //设置文件name,
+    }
+});
+$('.Eleditor-controller').css({ "top": "0px" })
+
+$(function(){
+    $('#reply').click(function(){
+        reply();
+    })
+})
+var reply = function() {
+    var html = $('#kindEditor').html();
+    $('#text').val(html);
+    var info = $("#LogsForm").serialize();
+    var logs_id = $("#hide").val();
+
+    var str = $('#text').val()
+    var str = str.indexOf("点击此处编辑内容")
+    if (str > 0) {
+        layer.msg('请填写内容', {
+                    icon: 2, //提示的样式
+                    time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                });
+        return false;
+    }
+
+    $.ajax({
+        type: "post",
+        url: '/teacher/Checkc/reply?logs_id='+logs_id,
+        traditional: true,
+        dataType: "json",
+        data: info,
+        success: function(data) {
+            if (data['valid']) {
+                layer.msg(data['msg'], {
+                    icon: 1, //提示的样式
+                    time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                    end: function() {
+                        javascript:history.back(-1)
+                    }
+                });
+            } else {
+                layer.msg(data['msg'], {
+                    icon: 2, //提示的样式
+                    time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                });
+            }
+        }
+    });
+}
+</script>
+
+</html>

@@ -1,0 +1,34 @@
+{extend name="base" /} {block name="content"}
+
+<style type="text/css">
+    .Eleditor-controller{
+        position: unset;
+        margin: 50px 50%;
+    }
+    .Eleditor-controller ul{
+        padding: 10px;
+        margin: 0;
+    }
+    img{
+        width:100%;
+    }
+</style>
+<section class="row container" style="margin: 0 auto; flex-grow:1; width: 100%;">
+    <ul class="nav nav-tabs" style="margin-top:10px;">
+        <li role="presentation"><a href="{:url('index')}">首页</a></li>
+        <li role="presentation" class="active">
+            <a href="">添加日志</a>
+        </li>
+    </ul>
+    <form  enctype="multipart/form-data" method="Post" role="form" id="LogsForm">
+        <div class="col-sm-12" style="padding: 0;" >
+            <h4 class="title" style="width:90%;">实习日志</h4>
+            <input type="hidden" name="logs_content" id="text">
+            <div id="kindEditor" style="width: 80%;margin:0 auto;"></div>
+            <button class="btn btn-primary pull-right" type="button" style="margin: 10px" id="addLogs">
+                添加
+            </button>
+        </div>
+    </form>
+</section>
+{/block}

@@ -1,0 +1,20 @@
+@charset "UTF-8";
+/* 头部变量 */
+/* main-author */
+/* PopularPosts */
+/* line 4, ../sass/list.scss */
+#main .main-left .title {
+  margin: 0 auto;
+}
+
+/* line 15, ../sass/list.scss */
+.article {
+  margin: 60px auto;
+}
+@media (min-width: 768px) {
+  /* line 15, ../sass/list.scss */
+  .article {
+    margin: 60px auto;
+    width: 80%;
+  }
+}

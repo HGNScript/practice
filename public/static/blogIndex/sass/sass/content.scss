@@ -1,0 +1,44 @@
+@import "compass/css3";
+@import "variable","mixin";
+
+#main .main-left .title{
+	margin:0 auto;
+}
+#header{
+	.nav-list .active span{
+		    border-top: 10px solid nth($liColor, 3);
+		    border-left: 50px solid nth($liColor, 3);
+			border-right: 50px solid nth($liColor, 3);
+			border-bottom: 40px solid transparent;
+		}
+}
+.article{
+	 margin:60px auto;
+	 text-align:center;
+	 border-radius:10px;
+	 padding:30px;
+	p{
+		color: #000;
+		text-align:left;
+	}
+	 &:hover {
+		box-shadow: none;
+	}
+	@media (min-width: 768px){
+			width: 90%;
+	}
+	.arctitle{
+		margin:0 auto;
+		margin-bottom:10px;
+	}
+	.tag span{
+		&:nth-child(1){
+			margin-left:0;
+		}
+		margin-left:20px;
+		color:#000;
+		&:hover{
+			color:#337ab7;
+		}
+	}
+}

@@ -1,0 +1,42 @@
+{extend name="base" /} {block name="content"}
+    <style type="text/css">
+    section{
+        width: 100%;
+        flex-grow: 1;
+    }
+        .arc img{
+            width:60%;
+        }
+        .arc{
+            margin: 10px auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            text-indent: 20px;
+        }
+        .reply {
+            margin: 5px auto;
+            margin-bottom: 30px;
+        }
+    </style>
+<section class="row container" style="margin: 0 auto">
+    <ul class="nav nav-tabs" style="margin-top:10px;">
+        <li role="presentation"><a href="{:url('index')}">首页</a></li>
+        <li role="presentation" class="active">
+            <a href="">查看日志</a>
+        </li>
+    </ul>
+        <h4 class="col-sm-12" style="color: #2478C0">日志</h4>
+        <div class="col-sm-12 arc">
+                {$oldLogs['logs_content']}
+        </div>
+        <h4 class="col-sm-12" style="color: #2478C0">教师评语</h4>
+        <div class="reply col-sm-12">
+            {if condition="!$oldLogs['logs_reply']"}
+            还没有教师评语!
+            {else/}
+            {$oldLogs['logs_reply']}
+            {/if}
+        </div>
+</section>
+{/block}

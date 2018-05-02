@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> -->
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="x-body">
+        <div class="x-nav">
+            <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
+            <a href="/teacher/Admin/classAllot?id={$tch_id}">
+                <button class="layui-btn"><i class="layui-icon"></i>添加班级</button>
+            </a>
+        </div>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+                    </th>
+                    <th>年级</th>
+                    <th>班级名称</th>
+                    <th>教研室</th>
+                    <th>专业</th>
+                    <th>操作</th>
+                </tr>
+                <tbody>
+                    {foreach name="info" item="vo"}
+                    <tr>
+                        <td>
+                            <div class="checkbox layui-unselect layui-form-checkbox" lay-skin="primary" data-id="{$vo['class_id']}"><i class="layui-icon">&#xe605;</i></div>
+                        </td>
+                        <td>{$vo['class_grade']}</td>
+                        <td>{$vo['class_name']}</td>
+                        <td>{$vo['class_staffRoom']}</td>
+                        <td>{$vo['class_specialty']}</td>
+                        <td class="td-manage">
+                            <a title="查看班级" href="{:url('teacher/Checkc/index',['tch_id' => $tch_id,'class_id' => $vo['class_id']])}">
+                                        <i class="layui-icon">&#xe63c;</i>
+                                      </a>
+                            <a id="del" title="删除" onclick="class_del(this, {$vo['class_id']})" data_tchid={$tch_id} href="javascript:;">
+                                <i class="layui-icon">&#xe640;</i>
+                            </a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
+    <script>
+    $(function() {
+        checkbox()
+    })
+
+    function class_del(obj, id) {
+        var tch_id = $('#del').attr('data_tchid')
+        layer.confirm('确认要删除吗？', function(index) {
+            class_id = {};
+            class_id[0] = id
+            $.ajax({
+                type: "post",
+                url: '/teacher/Admin/classDel',
+                traditional: true,
+                dataType: "json",
+                data: class_id,
+                success: function(data) {
+                    layer.msg('删除成功', {
+                        icon: 1, //提示的样式
+                        time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                        end: function() {
+                            location.href = '/teacher/Admin/cla?id=' + tch_id
+                        }
+                    });
+                }
+            })
+        });
+    }
+
+    function delAll(argument) {
+        var tchid = $('#del').attr('data_tchid')
+        var id = tableCheck.getData()
+        if (!id.length) {
+            layer.msg('请选择要删除的数据', {
+                icon: 2, //提示的样式
+                time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                end: function() {
+                    layer.closeAll('dialog')
+                }
+            });
+            return 0
+        }
+        layer.confirm('确认要删除吗？', function(index) {
+            var id = tableCheck.getData()
+            var tch_id = {};
+            id.forEach(function(item, index) {
+                tch_id[index] = item
+            })
+            $.ajax({
+                type: "post",
+                url: '/teacher/Admin/classDel',
+                traditional: true,
+                dataType: "json",
+                data: tch_id,
+                success: function(data) {
+                    console.log(data)
+                    layer.msg('删除成功', {
+                        icon: 1, //提示的样式
+                        time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                        end: function() {
+                            location.href = '/teacher/Admin/cla?id=' + tchid
+                        }
+                    });
+                }
+            })
+        });
+    }
+
+    function checkbox() {
+        $('.checkbox').click(function() {
+            var checkbox = $('.checkbox')
+            var flag = false;
+            var arr = [];
+            checkbox.each(function(item) {
+                var c = $(this).attr('class')
+                arr[item] = c
+            })
+            var flag = arr.every(function(item) {
+                return item == "checkbox layui-unselect layui-form-checkbox layui-form-checked"
+            })
+            if (flag) {
+                $('.header').addClass('layui-form-checked')
+            } else {
+                $('.header').removeClass('layui-form-checked')
+            }
+
+        })
+    }
+    </script>
+</body>
+
+</html>

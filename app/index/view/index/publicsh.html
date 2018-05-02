@@ -1,0 +1,49 @@
+{extend name="base" /}
+{block name="content"}
+<style type="text/css">
+    .list-group div{
+        width:90%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 20px auto;
+        border-radius: 4px;
+    }
+    .list-group a {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .list-group p{
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .badge {
+        background-color:red;
+    }
+</style>
+    <section class="row container" style="margin: 0 auto; width:100%;flex-grow:1;">
+        <ul class="nav nav-tabs" style="margin-top:10px;">
+            <li role="presentation"><a href="{:url('index')}">首页</a></li>
+            <li role="presentation" class="active"><a href="">通知</a></li>
+        </ul>
+        <div class="col-sm-12">
+            <h4 class="title" style="width: 96%;position: relative">通知</h4>
+                <ul class="list-group">
+                    {if condition="!$publicsh"}
+                        <div>没有通知信息</div>
+                    {/if}
+                    {foreach name="$publicsh" item="vo" key="k"}
+                    <div><a href="{:url('cnotice', ['id' => $vo['publicsh_id']])}">
+                        <p>{$vo['sendtime']}</p>
+                        <p>{$vo['publicsh_content']}</p>
+                    </a>
+                    </div>
+                    {/foreach}
+                </ul>
+        </div>
+    </section>
+{/block}
