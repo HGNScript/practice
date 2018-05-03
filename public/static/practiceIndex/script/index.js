@@ -95,7 +95,6 @@ $(function() {
 
     var infoAdd = function() {
         var info = $("#addForm").serialize();
-        console.log(info)
         $.ajax({
             type: "post",
             url: '/index/Index/addInfo',
@@ -103,15 +102,22 @@ $(function() {
             dataType: "json",
             data: info,
             success: function(data) {
-                console.log(data)
-                layer.open({
-                    type: 0,
-                    content: data.msg,
-                    btn: '我知道了',
-                    yes: function(index) {
-                        window.location.href = "/index/Index/index"
-                    }
-                })
+                if (data['valid']) {
+                    layer.open({
+                        type: 0,
+                        content: data.msg,
+                        btn: '我知道了',
+                        yes: function(index) {
+                            window.location.href = "/index/Index/index"
+                        }
+                    })
+                 } else {
+                    layer.open({
+                        type: 0,
+                        content: data.msg,
+                        btn: '我知道了',
+                    })
+                 }
             }
         });
     }
@@ -150,8 +156,9 @@ $(function() {
         var info = $("#LogsForm").serialize();
 
         var str = $('#text').val()
-        var str = str.indexOf("点击此处编辑内容")
-        if (str > 0) {
+        var strNull = str.indexOf("点击此处编辑内容")
+
+        if (strNull > 0) {
             layer.open({
                 type: 0,
                 content: '请填写内容!',
@@ -166,6 +173,7 @@ $(function() {
             dataType: "json",
             data: info,
             success: function(data) {
+                console.log(data)
                 if (data['valid']) {
                     layer.open({
                         type: 0,
@@ -206,7 +214,7 @@ $(function() {
         });
     }
 
-      var editPas = function() {
+    var editPas = function() {
         var info = $("#editPasForm").serialize();
         $.ajax({
             type: "post",
@@ -216,7 +224,7 @@ $(function() {
             data: info,
             success: function(data) {
                 if (data['valid']) {
-                     layer.open({
+                    layer.open({
                         type: 0,
                         content: data.msg,
                         btn: '我知道了',
@@ -224,13 +232,13 @@ $(function() {
                             window.location.href = "/index/Index/index"
                         }
                     })
-                 } else {
-                     layer.open({
+                } else {
+                    layer.open({
                         type: 0,
                         content: data.msg,
                         btn: '我知道了',
                     })
-                 }
+                }
             }
         });
     }
@@ -239,7 +247,7 @@ $(function() {
         fontSize()
         downAnUp()
 
-        $('#editPas').click(function(){
+        $('#editPas').click(function() {
             editPas()
         })
         $('#signIn').click(function() {

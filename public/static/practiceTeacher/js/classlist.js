@@ -371,7 +371,7 @@ function html(array) {
             <td>` + array['class_staffRoom'] + `</td>
             <td>` + array['class_specialty'] + `</td>
             <td>` + array['sum'] + `</td>
-            <td><a href="/teacher/Admin/admin">` + array['tch_name'] + `<a></td>
+            <td>` + array['tch_name'] + `</td>
             <td>` + array['tch_phone'] + `</td>
             <td class="td-manage">
             <a title="班级信息" onclick="x_admin_show('负责班级','/teacher/Checkc/index?class_id=` + array['class_id'] + `')" href="javascript:;">

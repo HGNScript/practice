@@ -19,12 +19,19 @@ class Checkc extends Common {
 		$class_id = input('param.class_id');
 		$class_name = db('class')->where('class_id', $class_id)->value('class_name');
 		$sum = db('student')->where('stu_className', $class_name)->select();
+		$stu_id = db('student')->where('stu_className', $class_name)->column('stu_id');
 
 		if (request()->isAjax()) {
 			$class_name = input('post.class_name');
-			$stuData = $this->stu->getStu($class_name, null);
+			$stu_id = db('student')->where('stu_className', $class_name)->column('stu_id');
+			$stuData = array();
+			foreach ($stu_id as $key => $value) {
+				$stuData[$key] = $this->stu->getStuInfo($value);
+			}
+
 			return sizeof($stuData);
 		}
+
 		$this->assign('tch_id', $tch_id);
 		$this->assign('sum', sizeof($sum));
 		$this->assign('class_name', $class_name);
@@ -41,13 +48,20 @@ class Checkc extends Common {
 		$curr = input('get.curr');
 		$limit = input('get.limit');
 		$star = ($curr-1)*$limit;
-		$data = $this->stu->getStu($class_name, null);
-		foreach ($data as $key => $value) {
+		$stu_id = db('student')->where('stu_className', $class_name)->column('stu_id');
+		$stuData = array();
+		foreach ($stu_id as $key => $value) {
+			$stuData[$key] = $this->stu->getStuInfo($value);
+		}
+		foreach ($stuData as $key => $value) {
 			$value['signInFlag']?$value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['signInFlag'] = '<span class="layui-badge">否</span>';
 			$value['logsFlag']?$value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['logsFlag'] = '<span class="layui-badge">否</span>';
+			if (!$value['company_name']) {
+					$value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
+				}
 		}
-		$data = array_slice($data,$star,$limit);
-		return json($data);
+		$stuData = array_slice($stuData,$star,$limit);
+		return json($stuData);
 
 	}
 	/**
@@ -56,8 +70,22 @@ class Checkc extends Common {
 	public function indexLen() {
 		$data = input('post.info');
 		$class_name = input('post.class_name');
-		$data = $this->stu->sreach($data, $class_name);
-		return sizeof($data);
+		$stu_id = $this->stu->sreach($data, $class_name);
+
+		foreach ($stu_id as $key => $v) {
+			$arr = $stu_id;
+			unset($arr[$key]);
+			if (in_array($stu_id[$key], $arr)) {
+		        unset($stu_id[$key]);
+		    }
+		}
+
+		foreach ($stu_id as $key => $value) {
+			$stuData[$key] = $this->stu->getStuInfo($value);
+		}
+
+
+		return sizeof($stuData);
 
 	}
 
@@ -70,13 +98,25 @@ class Checkc extends Common {
 		$class_name = input('post.class_name');
 		$data = input('post.info');
 		$star = ($curr-1)*$limit;
-		$data = $this->stu->sreach($data, $class_name);
-		foreach ($data as $key => $value) {
+		$stu_id = $this->stu->sreach($data, $class_name);
+
+		foreach ($stu_id as $key => $v) {
+			$arr = $stu_id;
+			unset($arr[$key]);
+			if (in_array($stu_id[$key], $arr)) {
+		        unset($stu_id[$key]);
+		    }
+		}
+
+		foreach ($stu_id as $key => $value) {
+			$stuData[$key] = $this->stu->getStuInfo($value);
+		}
+		foreach ($stuData as $key => $value) {
 			$value['signInFlag']?$value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['signInFlag'] = '<span class="layui-badge">否</span>';
 			$value['logsFlag']?$value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['logsFlag'] = '<span class="layui-badge">否</span>';
 		}
-		$data = array_slice($data,$star,$limit);
-		return json($data);
+		$stuData = array_slice($stuData,$star,$limit);
+		return json($stuData);
 	}
 	/**
 	 * 学生信息详情
@@ -482,25 +522,34 @@ class Checkc extends Common {
 		$data = input('post.logs_reply');
 		$logs_id = input('get.logs_id');
 
-		if (!$logs_id) {
-			$id = db('logs')->where('replyFlag', 0)->column('logs_id');
-			if (!sizeof($id)) {
-				return $res = ['valid' => 0, 'msg' => '没要未评阅的日志!'];
+		$len = strlen($data);
+ 		if ($len > 15000) {
+ 			$res = ['valid' => 0, 'msg' => '评阅字数过多!'];
+ 		} else{
+ 			$res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 1]);
+			if ($res) {
+				$res = ['valid' => 1, 'msg' => '评阅成功!'];
+			} else {
+				$res = ['valid' => 0, 'msg' => '评阅失败,!'];
 			}
-			foreach ($id as $value) {
-				$res = db('logs')->where('logs_id', $value)->update(['logs_reply' => $data, 'replyFlag' => 1]);
-			}
-		} else{
-			$res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 1]);
-		}
 
-		if ($res) {
-			$res = ['valid' => 1, 'msg' => '添加成功!'];
-		} else {
-			$res = ['valid' => 0, 'msg' => '添加失败!'];
-		}
-
+ 		}
 		return $res;
+
+		// return json($len);
+
+		// return json($data);
+
+		// if (!$logs_id) {
+		// 	$id = db('logs')->where('replyFlag', 0)->column('logs_id');
+		// 	if (!sizeof($id)) {
+		// 		return $res = ['valid' => 0, 'msg' => '没要未评阅的日志!'];
+		// 	}
+		// 	foreach ($id as $value) {
+		// 		$res = db('logs')->where('logs_id', $value)->update(['logs_reply' => $data, 'replyFlag' => 1]);
+		// 	}
+		// } else{
+		// }
 	}
 
 		/**
@@ -615,7 +664,7 @@ class Checkc extends Common {
 				}
 
 				if (!$value['stu_score']) {
-					$stuInfo[$key]['stu_score'] = '<span class="layui-badge">双击评分</span>';
+					$stuInfo[$key]['stu_score'] = '<span class="layui-badge" style="height: 100%;">双击评分</span>';
 				}
 			}
 

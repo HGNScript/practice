@@ -12,7 +12,7 @@ class Index extends Model {
 		return $this->alias('s')
 		->join('practice_company c','s.stu_id = c.stu_id')
 		->where('s.stu_id', $stu_id)
-		->field('company_id, company_name, company_address, company_position, principal, principal_phone, stu_phone')
+		->field('company_id, company_name, company_address, company_position, principal, principal_phone, stu_phone, company_salary')
 		->order('sendtime desc')
 		->limit(1)
 		->select();

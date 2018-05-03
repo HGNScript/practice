@@ -78,6 +78,7 @@ $(function() {
                                     <td>` + array['stu_phone'] + `</td>
                                     <td>` + array['signInFlag'] + `</td>
                                     <td>` + array['logsFlag'] + `</td>
+                                    <td>` + array['company_name'] + `</td>
                                     <td class="td-manage">
                                    <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
                                         <i class="layui-icon">&#xe63c;</i>
@@ -99,6 +100,7 @@ $(function() {
                                     <td>` + array['stu_phone'] + `</td>
                                     <td>` + array['signInFlag'] + `</td>
                                     <td>` + array['logsFlag'] + `</td>
+                                    <td>` + array['company_name'] + `</td>
                                     <td class="td-manage">
                                     <a title="学生信息" href="/teacher/Checkc/stuInfo">
                                         <i class="layui-icon">&#xe63c;</i>
@@ -213,6 +215,7 @@ function page() {
                                     <td>` + array['stu_phone'] + `</td>
                                     <td>` + array['signInFlag'] + `</td>
                                     <td>` + array['logsFlag'] + `</td>
+                                    <td>` + array['company_name'] + `</td>
                                     <td class="td-manage">
                                     <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
                                         <i class="layui-icon">&#xe63c;</i>
@@ -234,6 +237,7 @@ function page() {
                                     <td>` + array['stu_phone'] + `</td>
                                     <td>` + array['signInFlag'] + `</td>
                                     <td>` + array['logsFlag'] + `</td>
+                                    <td>` + array['company_name'] + `</td>
                                     <td class="td-manage">
                                     <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
                                         <i class="layui-icon">&#xe63c;</i>

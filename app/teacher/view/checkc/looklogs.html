@@ -25,6 +25,10 @@
         float: none;
         padding: 20px;
         border-radius: 4px;
+        word-wrap:break-word;
+    }
+    .content p {
+        word-wrap:break-word;
     }
 
     .content img {
@@ -46,38 +50,34 @@
     </div>
     <div class="x-body">
         {if condition="$logs"}
-         <fieldset class="layui-elem-field">
-            <legend>{$stu_name}&nbsp;&nbsp;{:date('Y-m-d',$logs['sendtime'])}</legend>
-            <form enctype="multipart/form-data" method="Post" role="form" id="publishForm">
-                <div class="layui-field-box">
-                    <div class="layui-col-md10 content">
-                        {$logs['logs_content']}
-                    </div>
+        <div class="layui-row">
+                <legend style="font-weight: bold;font-size: 18px">{$stu_name}&nbsp;&nbsp;{:date('Y-m-d',$logs['sendtime'])}</legend>
+                <div class="content layui-col-md10" >
+                    {$logs['logs_content']}
                 </div>
-            </form>
-        </fieldset>
-        {/if}
-        <div class="x-nav" style="margin-top: 20px;">
-            <h2 style="display: inline-block;">评阅内容</h2>
-            <span>
-                  <button class="layui-btn x-right" type="button" id="reply">
-                评阅
-            </button>
-            </span>
-        </div>
-        <div class="layui-row" style="margin-top: 20px;">
-            <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm">
-                <div class="col-sm-12" style="padding: 0;">
-                    <input type="hidden" name="logs_reply" id="text">
-                    {if condition="$logs['logs_reply']"}
-                    <div id="kindEditor" style="width: 80%;margin:0 auto;">{$logs['logs_reply']}</div>
-                    {else/}
-                    <div id="kindEditor" style="width: 80%;margin:0 auto;"></div>
-                    {/if}
+            {/if}
+            <div class="x-nav" style="margin-top: 20px;">
+                <h2 style="display: inline-block;font-weight: bold;font-size: 18px">评阅内容</h2>
+                <span>
+                      <button class="layui-btn x-right" type="button" id="reply">
+                    评阅
+                </button>
+                </span>
+            </div>
+            <div class="layui-row" style="margin-top: 20px;">
+                <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm">
+                    <div class="col-sm-12" style="padding: 0;">
+                        <input type="hidden" name="logs_reply" id="text">
+                        {if condition="$logs['logs_reply']"}
+                        <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">{$logs['logs_reply']}</div>
+                        {else/}
+                        <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; "></div>
+                        {/if}
 
-                </div>
-            </form>
-            <input type="hidden" name="" id="hide" value="{$logs['logs_id']}">
+                    </div>
+                </form>
+                <input type="hidden" name="" id="hide" value="{$logs['logs_id']}">
+            </div>
         </div>
     </div>
 </body>
@@ -122,6 +122,7 @@ var reply = function() {
         dataType: "json",
         data: info,
         success: function(data) {
+            console.log(data)
             if (data['valid']) {
                 layer.msg(data['msg'], {
                     icon: 1, //提示的样式

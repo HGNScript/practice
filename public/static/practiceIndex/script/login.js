@@ -18,6 +18,7 @@ $(function() {
                         content: data.msg,
                         btn: '我知道了',
                     })
+                    captcha()
                 }
             }
         });
@@ -52,6 +53,11 @@ $(function() {
         });
     }
 
+    var captcha = function (){
+        var src = $('#captcha').attr('src')
+        $('#captcha').attr('src',src+'?'+Math.random());
+    }
+
     var _main = function() {
         $('#login').click(function() {
             login()
@@ -70,6 +76,9 @@ $(function() {
                 }
             }
         });
+        $('#captcha').click(function(){
+            captcha()
+        })
     }
     _main()
 })

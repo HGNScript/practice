@@ -71,9 +71,11 @@
             <div class="x-body">
             {/if}
                 {if condition="($authority == 2) OR ($staffRoom)"}
+                {if condition="($staffRoom)"}
                   <div class="layui-form layui-col-md12 x-so">
-                <input id="input" type="text" name="search" placeholder="请输入名称或学号" class="layui-input">
+                <input id="input" type="text" name="search" placeholder="请输入班级名称" class="layui-input">
                 <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
+                {/if}
             </div>
                 <table class="layui-table" lay-even>
                     <thead>
@@ -91,11 +93,11 @@
                             {if condition="$vo['sum']" }
                             <tr>
                                 <td>{$vo['class_name']}</td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )}%</span></td>
-                                <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )}%</span></td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )}%</span></td>
-                                <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )}%</span></td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['sum']}&nbsp;({:ceil( $vo['sum']/$vo['sum']*100 )}%</span></td>
+                                <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )})%</span></td>
+                                <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )})%</span></td>
+                                <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )})%</span></td>
+                                <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )})%</span></td>
+                                <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
                             </tr>
                             {else/}
                             <tr>

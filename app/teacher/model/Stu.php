@@ -12,11 +12,6 @@ class Stu extends Model {
 	 * 获取学生数据
 	 */
 	public function getStu($class_name, $stu_id) {
-		if ($class_name) {
-			return $this->where('stu_className', $class_name)
-				->order('signinFlag, logsFlag')
-				->select();
-		}
 		if ($stu_id) {
 			return $this->alias('s')
 				->join('practice_company c',' s.stu_id = c.stu_id', 'LEFT')
@@ -28,12 +23,22 @@ class Stu extends Model {
 				->select();
 		}
 	}
+	public function getStuInfo($stu_id){
+			return $this->alias('s')
+				->join('practice_company c',' s.stu_id = c.stu_id', 'LEFT')
+				->where('s.stu_id', $stu_id)
+				->order('signinFlag, logsFlag, sendtime desc')
+				->limit(1)
+				->find();
+	}
 
 	/**
 	 * 指定班级学生模糊搜索
 	 */
 	public function sreach($data, $class_name){
-		return $this->where("stu_className= '$class_name' AND stu_numBer like '%$data%' OR stu_className='$class_name' AND stu_name like '%$data%'")->select();
+		return $this->alias('s')
+					->join('practice_company c',' s.stu_id = c.stu_id', 'LEFT')
+					->where("s.stu_className= '$class_name' AND s.stu_numBer like '%$data%' OR s.stu_className='$class_name' AND s.stu_name like '%$data%' OR s.stu_className='$class_name' AND c.company_name like '%$data%'")->column('s.stu_id');
 	}
 
 	public function addStu($data){
@@ -109,14 +114,16 @@ class Stu extends Model {
 		}
 	}
 
-	public function expot($class_name) {
+	public function expot($stu_id) {
 		return $this->alias('s')
 					->join('practice_company c', 's.stu_id = c.stu_id', 'left')
 					->join('practice_class l', 's.stu_className = l.class_name', 'left')
 					->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
-					->where('s.stu_className', $class_name)
-					->order('s.stu_numBer')
-					->select();
+					->join('practice_sginin g', 's.stu_id = g.stu_id', 'left')
+					->where('s.stu_id', $stu_id)
+					->order('g.sendtime desc')
+					->limit(1)
+					->find();
 	}
 
 	public function company($stu_id){

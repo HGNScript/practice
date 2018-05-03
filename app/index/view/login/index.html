@@ -25,7 +25,7 @@
 				<div class="verification">
 					<label>验证码:</label>
 					<input type="text" name="verification">
-				<img src="{:captcha_src()}" alt="captcha" onclick="this.src=this.src+'?'+Math.random()" />
+				<img src="{:captcha_src()}" alt="captcha" id="captcha"/>
 				</div>
 				<button class="btn" type="button" id="login">登录</button>
 			</form>

@@ -73,13 +73,18 @@ class Index extends Common{
 		$stu_id = session('stu.stu_id');
 		$data = input('post.');
 
-		$cres = $this->company->editInfo($data, $company_id);
-		$sres = $this->index->editInfo($data, $stu_id);
-
-		if ($cres == 1 || $sres == 1) {
-			$res = ['valid' => 1, 'msg' => '修改成功!'];
+		$validate = validate('Editadd');
+		if(!$validate->check($data)){
+			$res = ['valid' => 0, 'msg' => $validate->getError()];
 		} else {
-			$res = ['valid' => 0, 'msg' => '修改失败!'];
+			$cres = $this->company->editInfo($data, $company_id);
+			$sres = $this->index->editInfo($data, $stu_id);
+
+			if ($cres == 1 || $sres == 1) {
+				$res = ['valid' => 1, 'msg' => '修改成功!'];
+			} else {
+				$res = ['valid' => 0, 'msg' => '修改失败!'];
+			}
 		}
 
 		return json($res);
@@ -93,16 +98,20 @@ class Index extends Common{
 		$data = input('post.');
 		$data['stu_id'] = $stu_id;
 
-		$cres = $this->company->addInfo($data);
-		$sres = $this->index->editInfo($data, $stu_id);
+		$validate = validate('Editadd');
+		if(!$validate->check($data)){
+			$res = ['valid' => 0, 'msg' => $validate->getError()];
+		} else{
+			$cres = $this->company->addInfo($data);
+			$sres = $this->index->editInfo($data, $stu_id);
 
 
-		if ($cres == 1 || $sres == 1) {
-			$res = ['valid' => 1, 'msg' => '添加成功!'];
-		}else {
-			$res = ['valid' => 0, 'msg' => '添加失败!'];
+			if ($cres == 1 || $sres == 1) {
+				$res = ['valid' => 1, 'msg' => '添加成功!'];
+			}else {
+				$res = ['valid' => 0, 'msg' => '添加失败!'];
+			}
 		}
-
 		return json($res);
 	}
 
@@ -123,20 +132,26 @@ class Index extends Common{
 			$data = input('post.');
 			$stu_id = session('stu.stu_id');
 			$data['stu_id'] = $stu_id;
-			$data['logs_content'] = $data['logs_content'];
+			// $data['logs_content'] = $data['logs_content'];
+			$str = mb_substr(strip_tags($data['logs_content']),0,null,'utf-8');
+			$len = strlen($str);
 
-			$time = date('d', time());
-
-			if ($time > 15) {
-				$res = $this->logs->addLogs($data);
-				if ($res) {
-					$up= db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
-					$res = ['valid' => 1, 'msg' => '添加成功!'];
-				} else {
-					$res = ['valid' => 0, 'msg' => '添加失败!'];
-				}
+			if ($len < 200) {
+				$res = ['valid' => 0, 'msg' => '日志字数不可少于200字!'];
 			} else {
-				$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
+				$time = date('d', time());
+
+				if ($time >= 1) {
+					$res = $this->logs->addLogs($data);
+					if ($res) {
+						$up= db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
+						$res = ['valid' => 1, 'msg' => '添加成功!'];
+					} else {
+						$res = ['valid' => 0, 'msg' => '添加失败!'];
+					}
+				} else {
+					$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
+				}
 			}
 
 			return $res;
@@ -206,7 +221,7 @@ class Index extends Common{
 		$logs = $this->logs->notice($stu_id);
 		foreach ($logs as $key => $value) {
 			$str = $value['logs_reply'];
-			$str = mb_substr(strip_tags($str),0,strlen($str),'utf-8');
+			$str = mb_substr(strip_tags($str),0,20,strlen($str),'utf-8');
 			$value['logs_reply'] = $str;
 		}
 		$this->assign('logs', $logs);
@@ -218,7 +233,7 @@ class Index extends Common{
 	 * 用户退出
 	 */
 	public function out() {
-		session(null);
+		session('stu.stu_id', null);
 		return json($res = ['valid' => 1, 'msg' => '已退出当前用户']);
 	}
 
