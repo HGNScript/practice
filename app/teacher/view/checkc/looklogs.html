@@ -77,6 +77,7 @@
                     </div>
                 </form>
                 <input type="hidden" name="" id="hide" value="{$logs['logs_id']}">
+                <input type="hidden" name="" id="class_id" value="{$class_id}">
             </div>
         </div>
     </div>
@@ -104,6 +105,7 @@ var reply = function() {
     $('#text').val(html);
     var info = $("#LogsForm").serialize();
     var logs_id = $("#hide").val();
+    var class_id = $("#class_id").val();
 
     var str = $('#text').val()
     var str = str.indexOf("点击此处编辑内容")
@@ -117,7 +119,7 @@ var reply = function() {
 
     $.ajax({
         type: "post",
-        url: '/teacher/Checkc/reply?logs_id='+logs_id,
+        url: '/teacher/Checkc/reply?logs_id='+logs_id+'&class_id='+class_id,
         traditional: true,
         dataType: "json",
         data: info,

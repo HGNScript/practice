@@ -4,10 +4,12 @@ namespace app\teacher\controller;
 class Checkc extends Common {
 	protected $tch;
 	protected $stu;
+	protected $cla;
 	protected function _initialize() {
 		parent::_initialize();
 		$this->tch = new \app\teacher\model\Index();
 		$this->stu = new \app\teacher\model\Stu();
+		$this->cla = new \app\teacher\model\Cla();
 	}
 	/**
 	 * 班级信息查看
@@ -510,6 +512,7 @@ class Checkc extends Common {
 
 	public function lookLogs(){
 		$id = session('tch.tch_id');
+		$class_id = input('get.class_id');
 		$authority = $this->tch->getAuthority($id);
 		$logs_id = input('get.id');
 		$logs = db('logs')->where('logs_id', $logs_id)->find();
@@ -519,41 +522,64 @@ class Checkc extends Common {
 		$this->assign('authority', $authority);
 		$this->assign('logs', $logs);
 		$this->assign('stu_name', $stu_name);
+		$this->assign('class_id', $class_id);
 		return $this->fetch();
+	}
+	public function replyAll(){
+		$class_id = input('get.class_id');
+		$class_name = db('class')->where('class_id', $class_id)->value('class_name');
+		$logs_id = $this->cla->getreply($class_name);
+		if (!sizeof($logs_id)) {
+				return $res = ['valid' => 0, 'msg' => '没要未评阅的日志!'];
+		} else {
+				return $res = ['valid' => 1];
+		}
 	}
 
 	public function reply(){
 		$data = input('post.logs_reply');
 		$logs_id = input('get.logs_id');
+		$class_id = input('get.class_id');
+		$class_name = db('class')->where('class_id', $class_id)->value('class_name');
+		if (!$logs_id) {
+			$len = strlen($data);
+	 		if ($len > 15000) {
+	 			$res = ['valid' => 0, 'msg' => '评阅字数过多!'];
+	 		} else{
+				$logs_id = $this->cla->getreply($class_name);
+				foreach ($logs_id as $key => $value) {
+					$res = db('logs')->where('logs_id', $value)->update(['logs_reply' => $data, 'replyFlag' => 1]);
+					if($res){
+						$res = true;
+					} else {
+						$res = false;
+					}
+				}
+				if ($res) {
+					$res = ['valid' => 1, 'msg' => '评阅成功!'];
+				} else {
+					$res = ['valid' => 0, 'msg' => '评阅失败,!'];
+				}
 
-		$len = strlen($data);
- 		if ($len > 15000) {
- 			$res = ['valid' => 0, 'msg' => '评阅字数过多!'];
- 		} else{
- 			$res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 1]);
-			if ($res) {
-				$res = ['valid' => 1, 'msg' => '评阅成功!'];
-			} else {
-				$res = ['valid' => 0, 'msg' => '评阅失败,!'];
-			}
+	 		}
 
- 		}
+		} else {
+			$len = strlen($data);
+	 		if ($len > 15000) {
+	 			$res = ['valid' => 0, 'msg' => '评阅字数过多!'];
+	 		} else{
+	 			$res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 1]);
+				if ($res) {
+					$res = ['valid' => 1, 'msg' => '评阅成功!'];
+				} else {
+					$res = ['valid' => 0, 'msg' => '评阅失败,!'];
+				}
+
+	 		}
+		}
+
 		return $res;
 
-		// return json($len);
-
-		// return json($data);
-
-		// if (!$logs_id) {
-		// 	$id = db('logs')->where('replyFlag', 0)->column('logs_id');
-		// 	if (!sizeof($id)) {
-		// 		return $res = ['valid' => 0, 'msg' => '没要未评阅的日志!'];
-		// 	}
-		// 	foreach ($id as $value) {
-		// 		$res = db('logs')->where('logs_id', $value)->update(['logs_reply' => $data, 'replyFlag' => 1]);
-		// 	}
-		// } else{
-		// }
 	}
 
 		/**
@@ -573,14 +599,7 @@ class Checkc extends Common {
 	    return json($res = ['status' => 0, 'msg' => '图片上传错误']);
 	}
 
-	public function replyAll(){
-		$id = db('logs')->where('replyFlag', 0)->column('logs_id');
-		if (!sizeof($id)) {
-				return $res = ['valid' => 0, 'msg' => '没要未评阅的日志!'];
-		} else {
-				return $res = ['valid' => 1];
-		}
-	}
+
 
 	public function unlogs() {
 		$class_id = input('get.class_id');

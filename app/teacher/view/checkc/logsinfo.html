@@ -87,9 +87,10 @@ $(function() {
 })
 function replyAll(){
     $('#replyAll').click(function(){
+        var class_id = $('#hide').val();
          $.ajax({
             type: "post",
-            url: '/teacher/Checkc/replyAll',
+            url: '/teacher/Checkc/replyAll?class_id='+class_id,
             traditional: true,
             dataType: "json",
             data: search,
@@ -100,7 +101,7 @@ function replyAll(){
                         time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
                     });
                 } else {
-                    location.href = "/teacher/Checkc/lookLogs"
+                    location.href = "/teacher/Checkc/lookLogs?class_id="+class_id
                 }
             }
         })

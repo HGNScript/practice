@@ -258,4 +258,13 @@ class Cla extends Model {
 			return $this->order('class_grade desc')->select();
 	}
 
+	public function getreply($class_name){
+		return $this->alias('c')
+					->join('practice_student s','c.class_name = s.stu_className', 'LEFT')
+					->join('practice_logs l','s.stu_id = l.stu_id', 'LEFT')
+					->where('s.stu_className', $class_name)
+					->where('l.replyFlag', 0)
+					->column('l.logs_id');
+	}
+
 }
