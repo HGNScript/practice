@@ -68,17 +68,16 @@
         </div>
         {/if} {foreach name="$logsInfo" item="vo" key="k"}
         <div class="swiper-slide">
+            <a href="{:url('/clogs', ['logs_id' => $vo['logs_id']])}">
             <div class="arc">
                 <h5>{:date('Y-m-d H:i',$vo['sendtime'])}
-                        <a href="{:url('/clogs', ['logs_id' => $vo['logs_id']])}">
-                            <i class="icon-eye-open pull-right"></i>
-                        </a>
                     </h5> {if condition="$vo['logs_content']"}
                 <p>{$vo['logs_content']}</p>
                 {else/}
                 <p>当前日志只有图片,请点击查看</p>
                 {/if}
             </div>
+            </a>
         </div>
         {/foreach}
     </div>

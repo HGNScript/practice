@@ -30,6 +30,9 @@
         font-size: 18px;
         bottom: 10px;
     }
+    .arc p{
+        word-wrap:break-word;
+    }
 </style>
     <section class="row container" style="margin: 0 auto; width:100%;flex-grow:1;">
         <ul class="nav nav-tabs" style="margin-top:10px;">
@@ -43,10 +46,10 @@
                         <div>没有未阅读的评语</div>
                     {/if}
                     {foreach name="$logs" item="vo" key="k"}
-                    <div><a href="{:url('cLogs', ['logs_id' => $vo['logs_id']])}">
+                    <div><a href="{:url('/clogs', ['logs_id' => $vo['logs_id']])}">
                         <p>{$vo['logs_reply']}</p>
                     </a>
-                    </div>
+                    </div class="arc">
                     {/foreach}
                 </ul>
         </div>

@@ -34,6 +34,7 @@ class Index extends Common {
 			}
 
 			$this->assign('staffRoom', $staffRoom);
+			$this->assign('classData', null);
 		}
 		$this->assign('authority', $authority);
 		return $this->fetch();

@@ -481,9 +481,9 @@ class Checkc extends Common {
 				$value['sendtime'] = date('Y-m-d', $value['sendtime']);
 
 				if (!$value['replyFlag']) {
-					$value['replyFlag'] = '<span class="layui-badge layui-bg-green">未评阅</span>';
+					$value['replyFlag'] = '<span class="layui-badge">未评阅</span>';
 				} else {
-					$value['replyFlag'] = '<span class="layui-badge">已评阅</span>';
+					$value['replyFlag'] = '<span class="layui-badge layui-bg-green">已评阅</span>';
 				}
 				// if (!$value['logs_id']) {
 				// 	$value['logs_content'] = '<span class="layui-badge">没有签到记录</span>';

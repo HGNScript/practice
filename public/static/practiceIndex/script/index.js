@@ -111,13 +111,13 @@ $(function() {
                             window.location.href = "/stu"
                         }
                     })
-                 } else {
+                } else {
                     layer.open({
                         type: 0,
                         content: data.msg,
                         btn: '我知道了',
                     })
-                 }
+                }
             }
         });
     }
@@ -156,16 +156,53 @@ $(function() {
         var info = $("#LogsForm").serialize();
 
         var str = $('#text').val()
-        var strNull = str.indexOf("点击此处编辑内容")
+        // var strNull = str.indexOf("点击此处编辑内容")
 
-        if (strNull > 0) {
-            layer.open({
+
+        var str = str.replace(/<[^>]+>/g, ""); //去掉所有的html标记
+
+        function getByteLen(str) {
+
+            var len = 0;
+
+            for (var i = 0; i < str.length; i++) {
+
+                var a = str.charAt(i);
+
+                if (a.match(/[^\x00-\xff]/ig) != null) {
+
+                    len += 2;
+
+                } else {
+
+                    len += 1;
+
+                }
+
+            }
+
+            return len;
+
+        }
+        var str = getByteLen(str)
+        if (str <= 200) {
+             layer.open({
                 type: 0,
-                content: '请填写内容!',
+                content: '字数不得少于200字!',
                 btn: '我知道了',
             })
             return false;
         }
+
+
+        // if (strNull > 0) {
+        //     layer.open({
+        //         type: 0,
+        //         content: '请填写内容!',
+        //         btn: '我知道了',
+        //     })
+        //     return false;
+        // }
         $.ajax({
             type: "post",
             url: '/index/Index/addlogs',

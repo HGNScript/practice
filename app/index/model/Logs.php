@@ -30,10 +30,6 @@ class Logs extends Model{
 		->select();
 	}
 
-	public function checkLogs($logs_id) {
-		$this->save(['readFlag' => 1],['logs_id' => $logs_id]);
-	}
-
 	public function getLogs() {
 		return $this->order('sendtime desc')->limit(1)->select();
 	}

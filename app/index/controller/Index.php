@@ -133,12 +133,7 @@ class Index extends Common{
 			$stu_id = session('stu.stu_id');
 			$data['stu_id'] = $stu_id;
 			// $data['logs_content'] = $data['logs_content'];
-			$str = mb_substr(strip_tags($data['logs_content']),0,null,'utf-8');
-			$len = strlen($str);
 
-			if ($len < 200) {
-				$res = ['valid' => 0, 'msg' => '日志字数不可少于200字!'];
-			} else {
 				$time = date('d', time());
 
 				if ($time >= 1) {
@@ -152,7 +147,6 @@ class Index extends Common{
 				} else {
 					$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
 				}
-			}
 
 			return $res;
 		}
@@ -164,7 +158,7 @@ class Index extends Common{
 	public function cLogs() {
 		$logs_id =input('param.logs_id');
 		$stu_id = session('stu.stu_id');
-		$this->logs->checkLogs($logs_id);
+		db('logs')->where('replyFlag', 1)->where('logs_id', $logs_id)->update(['readFlag' => 1]);
 
 		$oldLogs = $this->logs->oldlogs($logs_id);
 
@@ -221,7 +215,7 @@ class Index extends Common{
 		$logs = $this->logs->notice($stu_id);
 		foreach ($logs as $key => $value) {
 			$str = $value['logs_reply'];
-			$str = mb_substr(strip_tags($str),0,20,strlen($str),'utf-8');
+			$str = mb_substr(strip_tags($str),0,200,'utf-8');
 			$value['logs_reply'] = $str;
 		}
 		$this->assign('logs', $logs);
@@ -266,17 +260,6 @@ class Index extends Common{
 		return $this->fetch();
 	}
 
-	public function publicsh(){
-		$stu_id = session('stu.stu_id');
-
-		$this->notiAnsigns($stu_id);
-
-		$class_name = db('student')->where('stu_id', $stu_id)->value('stu_className');
-		$tch_id = db('class')->where('class_name', $class_name)->value('tch_id');
-		$publicsh = db('publicsh')->where('tch_id', $tch_id)->where('readFlag', 0)->order('sendtime desc')->select();
-		$this->assign('publicsh', $publicsh);
-		return $this->fetch();
-	}
 
 	public function editPas() {
 		$stu_id = session('stu.stu_id');
