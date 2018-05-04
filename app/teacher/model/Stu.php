@@ -11,8 +11,7 @@ class Stu extends Model {
 	/**
 	 * 获取学生数据
 	 */
-	public function getStu($class_name, $stu_id) {
-		if ($stu_id) {
+	public function getStu($stu_id) {
 			return $this->alias('s')
 				->join('practice_company c',' s.stu_id = c.stu_id', 'LEFT')
 				->join('practice_class l',' s.stu_className = l.class_name', 'LEFT')
@@ -21,7 +20,6 @@ class Stu extends Model {
 				->order('c.sendtime desc')
 				->limit(1)
 				->select();
-		}
 	}
 	public function getStuInfo($stu_id){
 			return $this->alias('s')
@@ -121,7 +119,7 @@ class Stu extends Model {
 					->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
 					->join('practice_sginin g', 's.stu_id = g.stu_id', 'left')
 					->where('s.stu_id', $stu_id)
-					->order('g.sendtime desc')
+					->order('g.sendtime desc, c.sendtime desc')
 					->limit(1)
 					->find();
 	}

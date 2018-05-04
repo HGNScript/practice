@@ -15,7 +15,7 @@
 </style>
 <section class="row introduction">
     <div class="col-sm-12">
-        <h4 class="title">实习信息<a href="{:url('editAdd')}"><i class="icon-edit pull-right"></i></a></h4> {if condition="$info"}
+        <h4 class="title">实习信息<a href="{:url('/info')}"><i class="icon-edit pull-right"></i></a></h4> {if condition="$info"}
         <div class="info">
             <span>公司名称:</span>
             <p>{$info['company_name']}</p>
@@ -57,7 +57,7 @@
     </div>
 </section>
 <section class="swiper-container">
-    <h4 class="title">实习日志<a href="{:url('logs')}"><i class="icon-pencil pull-right"></i></a></h4> {if condition="$logsInfo"}
+    <h4 class="title">实习日志<a href="{:url('/logs')}"><i class="icon-pencil pull-right"></i></a></h4> {if condition="$logsInfo"}
     <div class="swiper-wrapper">
         {if condition="!$log"}
         <div class="swiper-slide">
@@ -70,7 +70,7 @@
         <div class="swiper-slide">
             <div class="arc">
                 <h5>{:date('Y-m-d H:i',$vo['sendtime'])}
-                        <a href="{:url('cLogs', ['logs_id' => $vo['logs_id']])}">
+                        <a href="{:url('/clogs', ['logs_id' => $vo['logs_id']])}">
                             <i class="icon-eye-open pull-right"></i>
                         </a>
                     </h5> {if condition="$vo['logs_content']"}

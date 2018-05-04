@@ -140,7 +140,6 @@ class Statistics extends Common{
 			$className = db('class')->where('class_grade', $value)->column('class_name');
 				foreach ($className as $k => $va) {
 					$nub = db('student')->where('stu_className', $va)->select();
-					if (sizeof($nub) != 0) {
 						$signin = db('student')->where('stu_className', $va)->where('signInFlag', 1)->select();
 						$logs = db('student')->where('stu_className', $va)->where('logsFlag', 1)->select();
 
@@ -157,7 +156,6 @@ class Statistics extends Common{
 						$gradeData[$key]['logs'] =$logss;
 						$gradeData[$key]['unLogs'] = $unLogss;
 						$gradeData[$key]['sum'] = $nubs;
-					}
 				}
 					$nubs = null;
 					$signins = null;

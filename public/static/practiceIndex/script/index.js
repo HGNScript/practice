@@ -108,7 +108,7 @@ $(function() {
                         content: data.msg,
                         btn: '我知道了',
                         yes: function(index) {
-                            window.location.href = "/index/Index/index"
+                            window.location.href = "/stu"
                         }
                     })
                  } else {
@@ -136,7 +136,7 @@ $(function() {
                         content: data.msg,
                         btn: '我知道了',
                         yes: function(index) {
-                            window.location.href = "/index/Index/index"
+                            window.location.href = "/stu"
                         }
                     })
                 } else {
@@ -173,14 +173,13 @@ $(function() {
             dataType: "json",
             data: info,
             success: function(data) {
-                console.log(data)
                 if (data['valid']) {
                     layer.open({
                         type: 0,
                         content: data.msg,
                         btn: '我知道了',
                         yes: function(index) {
-                            window.location.href = "/index/Index/index"
+                            window.location.href = "/stu"
                         }
                     })
                 } else {
@@ -218,7 +217,7 @@ $(function() {
         var info = $("#editPasForm").serialize();
         $.ajax({
             type: "post",
-            url: '/index/Index/editPas',
+            url: '/editpas',
             traditional: true,
             dataType: "json",
             data: info,
@@ -229,7 +228,7 @@ $(function() {
                         content: data.msg,
                         btn: '我知道了',
                         yes: function(index) {
-                            window.location.href = "/index/Index/index"
+                            window.location.href = "/stu"
                         }
                     })
                 } else {

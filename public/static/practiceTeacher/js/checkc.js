@@ -36,7 +36,6 @@ $(function() {
                 dataType: "json",
                 data: data,
                 success: function(data) {
-                    console.log(data);
                     var len = data
                     laypage.render({
                         elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
@@ -195,6 +194,7 @@ function page() {
                                 dataType: "json",
                                 data: { 'class_name': class_name },
                                 success: function(data) {
+                                    console.log(data)
                                     $("#tbody").empty();
                                     var data_html = "";
                                     if (!data.length > 0) {

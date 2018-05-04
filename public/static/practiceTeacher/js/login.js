@@ -10,13 +10,14 @@ $(function() {
             data: info,
             success: function(data) {
             	if (data['valid']) {
-            		location.href='/teacher/Index/index';
+            		location.href='tch';
             	} else{
 	               layer.msg(data['msg'],{
                         icon: 2, //提示的样式
                         time: 700, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
                     });
                     captcha()
+                    $('#verification').val('')
 
             	}
             }

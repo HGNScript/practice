@@ -43,8 +43,8 @@ class Index extends Common {
 	 * 退出登录
 	 */
 	public function out() {
-		session(null);
-		return $this->fetch('login/index');
+		session('tch.tch_id', null);
+		$this->redirect('Login');
 	}
 
 	public function editInfo(){

@@ -59,6 +59,8 @@ class Checkc extends Common {
 			if (!$value['company_name']) {
 					$value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
 				}
+			$stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
+			$stuData[$key]['stu_id'] = $stu_id;
 		}
 		$stuData = array_slice($stuData,$star,$limit);
 		return json($stuData);
@@ -114,6 +116,8 @@ class Checkc extends Common {
 		foreach ($stuData as $key => $value) {
 			$value['signInFlag']?$value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['signInFlag'] = '<span class="layui-badge">否</span>';
 			$value['logsFlag']?$value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['logsFlag'] = '<span class="layui-badge">否</span>';
+			$stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
+			$stuData[$key]['stu_id'] = $stu_id;
 		}
 		$stuData = array_slice($stuData,$star,$limit);
 		return json($stuData);
@@ -124,7 +128,7 @@ class Checkc extends Common {
 	public function stuinfo() {
 		$stu_id = input('get.id');
 		$flag = input('get.flag');
-		$data = $this->stu->getStu(null, $stu_id);
+		$data = $this->stu->getStu($stu_id);
 		$sginin =  db('sginin')->where('stu_id', $stu_id)->limit(4)->order('sendtime desc')->select();
 		$logs =  db('logs')->where('stu_id', $stu_id)->limit(4)->order('sendtime desc')->select();
 		foreach ($logs as $key => $value) {

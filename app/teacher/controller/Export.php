@@ -106,7 +106,7 @@ class Export extends Common {
 		    $stuData[$key] = $this->stu->expot($value);
 	    }
 
-	    $header=['学号', '名称','最近一次签到记录','签到时间','实习评分','年级','班级名称','教研室','专业','联系电话','身份证号码','班主任名称','班主任联系电话','跟班教师','跟班教师联系电话','实习单位名称','实习单位地址','实习单位负责人','负责人联系电话','实习岗位'];
+	    $header=['学号', '名称','最近一次签到记录','实习评分','年级','班级名称','教研室','专业','联系电话','身份证号码','班主任名称','班主任联系电话','跟班教师','跟班教师联系电话','实习单位名称','实习单位地址','月薪','实习单位负责人','负责人联系电话','实习岗位'];
 
 	    $key = ord("A"); // 设置表头
 
@@ -121,7 +121,6 @@ class Export extends Common {
 
 	    }
 
-	    // dump($stuData);
 	    $column = 2;
 	    $objActSheet = $objPHPExcel->getActiveSheet();
 
@@ -130,7 +129,6 @@ class Export extends Common {
 	    	array_push($arr, '\''.$rows['stu_numBer']);
 	    	array_push($arr, $rows['stu_name']);
 	    	array_push($arr, $rows['address']);
-	    	array_push($arr, $rows['sendtime']?date('Y-m-d', $rows['sendtime']):'');
 	    	array_push($arr, $rows['stu_score']);
 	    	array_push($arr, $rows['class_grade']);
 	    	array_push($arr, $rows['stu_className']);
@@ -144,6 +142,7 @@ class Export extends Common {
 	    	array_push($arr, '\''.$rows['tch_phone']);
 	    	array_push($arr, $rows['company_name']);
 	    	array_push($arr, $rows['company_address']);
+	    	array_push($arr, $rows['company_salary']);
 	    	array_push($arr, $rows['principal']);
 	    	array_push($arr, '\''.$rows['principal_phone']);
 	    	array_push($arr, $rows['company_position']);

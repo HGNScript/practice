@@ -11,7 +11,7 @@ $(function() {
             data: info,
             success: function(data) {
                 if (data['valid']) {
-                    window.location.href = "/index/Index/index"
+                    window.location.href = "/stu"
                 } else {
                     layer.open({
                         type: 0,
@@ -19,6 +19,7 @@ $(function() {
                         btn: '我知道了',
                     })
                     captcha()
+                    $('#verification').val('')
                 }
             }
         });
@@ -39,7 +40,7 @@ $(function() {
                         content: data.msg,
                         btn: '我知道了',
                         yes: function(index) {
-                            window.location.href = "/index/Login/index"
+                            window.location.href = "/stuLogin"
                         }
                     })
                 } else {

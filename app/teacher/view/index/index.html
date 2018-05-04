@@ -29,7 +29,7 @@
                 <a href="javascript:;">{:session('tch.tch_name')}</a>
                 <dl class="layui-nav-child" style="left: -50px;">
                     <!-- <dd><a data-href="/teacher/Index/editInfo" href="javascript:;" id="editInfo">修改信息</a></dd> -->
-                    <dd><a onclick="x_admin_show('修改信息','/teacher/Index/editInfo')" href="javascript:;">修改信息</a></dd>
+                    <dd><a onclick="x_admin_show('修改信息','teacher/Index/editInfo')" href="javascript:;">修改信息</a></dd>
                     <dd><a onclick="x_admin_show('更改密码','/teacher/Index/editPas')" href="javascript:;">更改密码</a></dd>
                     <dd><a href="{:url('teacher/Index/out')}">退出</a></dd>
                 </dl>
@@ -197,7 +197,7 @@
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe id="iframe" src='/teacher/statistics/index' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                    <iframe id="iframe" src='teacher/Statistics/index' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
                 </div>
             </div>
         </div>

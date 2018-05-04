@@ -51,7 +51,8 @@
                 </thead>
                 <tbody>
                     {foreach $gradeData as $vo}
-                    <tr>
+                    {if condition="$vo['sum']"}
+                     <tr>
                         <td>{$vo['class_grade']}</td>
                         <td><span class="layui-badge layui-bg-green" >{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )}%)</span></td>
                         <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )}%)</span></td>
@@ -59,6 +60,16 @@
                         <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )}%)</span></td>
                         <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
                     </tr>
+                    {else/}
+                    <tr>
+                        <td>{$vo['class_grade']}</td>
+                        <td><span class="layui-badge layui-bg-green" >0</span></td>
+                        <td><span class="layui-badge">0</span></td>
+                        <td><span class="layui-badge layui-bg-green">0</span></td>
+                        <td><span class="layui-badge">0</span></td>
+                        <td><span class="layui-badge layui-bg-green">0</span></td>
+                    </tr>
+                    {/if}
                     {/foreach}
                 </tbody>
             </table>
@@ -71,7 +82,7 @@
             <div class="x-body">
             {/if}
                 {if condition="($authority == 2) OR ($staffRoom)"}
-                {if condition="($staffRoom)"}
+                {if condition="$authority == 1"}
                   <div class="layui-form layui-col-md12 x-so">
                 <input id="input" type="text" name="search" placeholder="请输入班级名称" class="layui-input">
                 <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
