@@ -135,7 +135,6 @@ function page() {
 
 function checkbox() {
     $('.checkbox').click(function() {
-    console.log(1)
         var checkbox = $('.checkbox')
         var flag = false;
         var arr = [];
@@ -229,7 +228,6 @@ function search() {
             dataType: "json",
             data: info,
             success: function(data) {
-                console.log(data)
                 var len = data
                 laypage.render({
                     elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号

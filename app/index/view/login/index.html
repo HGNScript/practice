@@ -11,7 +11,7 @@
 <body>
 	<div class="container row">
 		<h3>实习生管理系统</h3>
-		<section class="login col-sm-8 col-md-3 col-xs-12" style="padding: 0;">
+		<section class="login col-sm-8 col-md-3 col-xs-12" style="padding: 0;height: 300px;">
 			<form action="" method="POST" role="form" id="loginForm" style="width: 100%;">
 				<h5>欢迎登录实习系统</h5>
 				<div>
@@ -22,12 +22,7 @@
 					<i class="icon-key"></i>
 					<input type="password" name="stu_password" placeholder="请输入你的密码">
 				</div>
-				<div class="verification">
-					<label>验证码:</label>
-					<input type="text" name="verification" id="verification">
-				<img src="{:captcha_src()}" alt="captcha" id="captcha" style="margin-left:0;" />
-				</div>
-				<button class="btn" type="button" id="login">登录</button>
+				<button class="btn" type="button" id="login" style="margin-top: 20px;">登录</button>
 			</form>
 			<a href="{:url('editPsw')}" class="editPsw">忘记密码</a>
 		</section>

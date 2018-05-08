@@ -118,6 +118,9 @@ class Checkc extends Common {
 		foreach ($stuData as $key => $value) {
 			$value['signInFlag']?$value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['signInFlag'] = '<span class="layui-badge">否</span>';
 			$value['logsFlag']?$value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>':$value['logsFlag'] = '<span class="layui-badge">否</span>';
+			if (!$value['company_name']) {
+					$value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
+				}
 			$stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
 			$stuData[$key]['stu_id'] = $stu_id;
 		}

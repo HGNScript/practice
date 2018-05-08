@@ -54,7 +54,6 @@ $(function() {
                                 dataType: "json",
                                 data: data,
                                 success: function(data) {
-                                    console.log(data);
                                     if (!data.length > 0) {
                                         layer.msg('没有您需要的数据', {
                                             icon: 2, //提示的样式
@@ -70,7 +69,7 @@ $(function() {
                                         $.each(data, function(index, array) {
                                             data_html += `<tr>
                                              <td>
-                                        <div class="checkbox layui-unselect layui-form-checkbox" lay-skin="primary" data-id="` + array['tch_id'] + `"><i class="layui-icon">&#xe605;</i></div>
+                                        <div class="checkbox layui-unselect layui-form-checkbox" lay-skin="primary" data-id="` + array['stu_id'] + `"><i class="layui-icon">&#xe605;</i></div>
                                     </td>
                                     <td>` + array['stu_numBer'] + `</td>
                                     <td>` + array['stu_name'] + `</td>
@@ -85,7 +84,7 @@ $(function() {
                                         <a title="编辑学生信息" href="/teacher/Checkc/edit?stu_id=` + array['stu_id'] + `">
                                         <i class="layui-icon">&#xe639;</i>
                                       </a>
-                                         <a title="删除" onclick="member_del(this,'` + array['tch_id'] + `')" href="javascript:;">
+                                         <a title="删除" onclick="member_del(this,'` + array['stu_id'] + `')" href="javascript:;">
                                             <i class="layui-icon">&#xe640;</i>
                                           </a>
                                             </td>
@@ -298,7 +297,6 @@ function delAll(argument) {
     }
     layer.confirm('确认要删除吗？', function(index) {
         var id = tableCheck.getData()
-        console.log(id)
         var class_id = {};
         id.forEach(function(item, index) {
             class_id[index] = item
