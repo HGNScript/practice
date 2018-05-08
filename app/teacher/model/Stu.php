@@ -132,4 +132,11 @@ class Stu extends Model {
 				->select();
 	}
 
+	public function sreachScore($data, $class_name){
+		return $this->alias('s')
+					->join('practice_company c',' s.stu_id = c.stu_id', 'LEFT')
+					->where("s.stu_className= '$class_name' AND s.stu_numBer like '%$data%' OR s.stu_className='$class_name' AND s.stu_name like '%$data%' OR s.stu_className='$class_name' AND c.company_name like '%$data%'")->select();
+	}
+
+
 }

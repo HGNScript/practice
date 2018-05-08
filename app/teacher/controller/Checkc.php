@@ -666,9 +666,8 @@ class Checkc extends Common {
 			$class_name = db('class')->where('class_id', $class_id)->value('class_name');
 
 			$stuInfo = db('student')->where('stu_className', $class_name)->select();
-
 			if ($search) {
-				$stuInfo = $this->stu->sreach($search, $class_name);
+				$stuInfo = $this->stu->sreachScore($search, $class_name);
 			} else {
 				$stuInfo = db('student')->where('stu_className', $class_name)->select();
 			}
