@@ -193,7 +193,6 @@ function page() {
                                 dataType: "json",
                                 data: { 'class_name': class_name },
                                 success: function(data) {
-                                    console.log(data)
                                     $("#tbody").empty();
                                     var data_html = "";
                                     if (!data.length > 0) {

@@ -21,7 +21,7 @@ class Checkc extends Common {
 		$class_id = input('param.class_id');
 		$class_name = db('class')->where('class_id', $class_id)->value('class_name');
 		$sum = db('student')->where('stu_className', $class_name)->select();
-		$stu_id = db('student')->where('stu_className', $class_name)->column('stu_id');
+		$stu_id = db('student')->where('stu_className', $class_name)->order('signinFlag, logsFlag')->column('stu_id');
 
 		if (request()->isAjax()) {
 			$class_name = input('post.class_name');
@@ -50,7 +50,7 @@ class Checkc extends Common {
 		$curr = input('get.curr');
 		$limit = input('get.limit');
 		$star = ($curr-1)*$limit;
-		$stu_id = db('student')->where('stu_className', $class_name)->column('stu_id');
+		$stu_id = db('student')->where('stu_className', $class_name)->order('signinFlag, logsFlag')->column('stu_id');
 		$stuData = array();
 		foreach ($stu_id as $key => $value) {
 			$stuData[$key] = $this->stu->getStuInfo($value);
