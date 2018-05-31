@@ -59,6 +59,7 @@ function excel(){
                 load = layer.load()
             },
             done: function(data) {
+                console.log(data)
                 layer.close(load)
                 if (data['valid']) {
                     layer.msg(data['msg'],{

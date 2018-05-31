@@ -106,17 +106,16 @@ class Admin extends Common {
 	 */
 	public function excel() {
 		 //import('phpexcel.PHPExcel', EXTEND_PATH);//方法二
-	        vendor("PHPExcel.PHPExcel"); //方法一
+	       vendor("PHPExcel.PHPExcel");
 	        $objPHPExcel = new \PHPExcel();
-
-	        //获取表单上传文件
 	        $file = request()->file('excel');
 	        $info = $file->validate(['size'=>15678,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'excel');
-
 	        if($info){
 	            $exclePath = $info->getSaveName();  //获取文件名
-	            $file_name = ROOT_PATH . 'public' . DS . 'excel' . DS . $exclePath;   //上传文件的地址
-	            $objReader =\PHPExcel_IOFactory::createReader('Excel2007');
+	            $file_name = ROOT_PATH .'public' . DS . 'excel' . DS . $exclePath;   //上传文件的地址
+
+
+	            $objReader =new \PHPExcel_Reader_Excel2007();
 	            $obj_PHPExcel =$objReader->load($file_name, $encode = 'utf-8');  //加载文件内容,编码utf-8
 	            $excel_array=$obj_PHPExcel->getsheet(0)->toArray();   //转换为数组格式
 	            array_shift($excel_array);  //删除第一个数组(标题);
@@ -269,7 +268,14 @@ class Admin extends Common {
 		        unset($staffRoom[$key]);
 		    }
 		}
-		$specialty = db('class')->where('tch_id', 0)->column('class_specialty');
+
+		$class_staffRoom = session('class_staffRoom');
+		if ($class_staffRoom) {
+			$specialty = db('class')->where('tch_id', 0)->where('class_staffRoom', $class_staffRoom)->column('class_specialty');
+		} else {
+			$specialty = db('class')->where('tch_id', 0)->column('class_specialty');
+		}
+
 		foreach ($specialty as $key => $v) {
 			$specialtyArr = $specialty;
 			unset($specialtyArr[$key]);
@@ -316,6 +322,10 @@ class Admin extends Common {
 		$star = ($curr-1)*$limit;
 		$data = $this->Class->getCate($data, 0);
 		$data = array_slice($data,$star,$limit);
+
+		if ($data[1]) {
+			session('class_staffRoom', $data[1]);
+		}
 		return json($data);
 	}
 	/**
