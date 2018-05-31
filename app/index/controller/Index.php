@@ -136,7 +136,7 @@ class Index extends Common{
 
 				$time = date('d', time());
 
-				if ($time >= 1) {
+				// if ($time >= 1) {
 					$res = $this->logs->addLogs($data);
 					if ($res) {
 						$up= db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
@@ -144,9 +144,9 @@ class Index extends Common{
 					} else {
 						$res = ['valid' => 0, 'msg' => '添加失败!'];
 					}
-				} else {
-					$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
-				}
+				// } else {
+				// 	$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
+				// }
 
 			return $res;
 		}
