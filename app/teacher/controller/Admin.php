@@ -316,13 +316,18 @@ class Admin extends Common {
 		$star = ($curr-1)*$limit;
 
 		$data = input('post.');
+		$specialty = $data[2];
 
-		$specialty = db('class')->where('tch_id', 0)->where('class_staffRoom', $data[1])->column('class_specialty');
+		if ($data[1]) {
+			$specialtys = db('class')->where('tch_id', 0)->where('class_staffRoom', $data[1])->column('class_specialty');
+		} else {
+			$specialtys = db('class')->where('tch_id', 0)->column('class_specialty');
+		}
 
 		$data = $this->Class->getCate($data, 0);
 		$data = array_slice($data,$star,$limit);
 
-		$res = ["data" => $data, "specialty" => $specialty];
+		$res = ["data" => $data, "specialtys" => $specialtys, "specialty" => $specialty];
 
 		return json($res);
 	}

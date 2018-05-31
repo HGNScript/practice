@@ -36,7 +36,6 @@ $(function() {
                                 dataType: "json",
                                 data: data,
                                 success: function(data) {
-                                    console.log(data)
                                     if (!data['data'].length > 0) {
                                         layer.msg('没有您需要的数据', {
                                             icon: 2, //提示的样式
@@ -53,8 +52,12 @@ $(function() {
                                     });
 
                                     var specialty_html = `<option value=''>选择一个专业</option>`
-                                    $.each(data['specialty'], function(index, array) {
-                                        specialty_html += `<option value="`+array+`">`+array+`</option>`
+                                    $.each(data['specialtys'], function(index, array) {
+                                        if (data['specialty'] == array) {
+                                            specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
+                                        } else {
+                                            specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
+                                        }
                                     });
 
 
