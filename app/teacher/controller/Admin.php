@@ -313,15 +313,18 @@ class Admin extends Common {
 	public function selectData() {
 		$curr = input('get.curr');
 		$limit = input('get.limit');
-		$data = input('post.');
 		$star = ($curr-1)*$limit;
+
+		$data = input('post.');
+
+		$specialty = db('class')->where('tch_id', 0)->where('class_staffRoom', $data[1])->column('class_specialty');
+
 		$data = $this->Class->getCate($data, 0);
 		$data = array_slice($data,$star,$limit);
 
-		if ($data[1]) {
-			session('class_staffRoom', $data[1]);
-		}
-		return json($data);
+		$res = ["data" => $data, "specialty" => $specialty];
+
+		return json($res);
 	}
 	/**
 	 * 获取未分配的班级
@@ -352,8 +355,7 @@ class Admin extends Common {
 		$star = ($curr-1)*$limit;
 		$data = $this->Class->searchCla($info);
 		$data = array_slice($data,$star,$limit);
-		$specialty = db('class')->where('tch_id', 0)->column('class_specialty');
-		return json($data);
+		return json($res);
 	}
 	/**
 	 * 分配班级
