@@ -269,12 +269,7 @@ class Admin extends Common {
 		    }
 		}
 
-		$class_staffRoom = session('class_staffRoom');
-		if ($class_staffRoom) {
-			$specialty = db('class')->where('tch_id', 0)->where('class_staffRoom', $class_staffRoom)->column('class_specialty');
-		} else {
-			$specialty = db('class')->where('tch_id', 0)->column('class_specialty');
-		}
+		$specialty = db('class')->where('tch_id', 0)->column('class_specialty');
 
 		foreach ($specialty as $key => $v) {
 			$specialtyArr = $specialty;
@@ -357,6 +352,7 @@ class Admin extends Common {
 		$star = ($curr-1)*$limit;
 		$data = $this->Class->searchCla($info);
 		$data = array_slice($data,$star,$limit);
+		$specialty = db('class')->where('tch_id', 0)->column('class_specialty');
 		return json($data);
 	}
 	/**
