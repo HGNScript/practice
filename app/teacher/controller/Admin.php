@@ -112,6 +112,7 @@ class Admin extends Common {
 	        //获取表单上传文件
 	        $file = request()->file('excel');
 	        $info = $file->validate(['size'=>15678,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'excel');
+
 	        if($info){
 	            $exclePath = $info->getSaveName();  //获取文件名
 	            $file_name = ROOT_PATH . 'public' . DS . 'excel' . DS . $exclePath;   //上传文件的地址
@@ -133,11 +134,12 @@ class Admin extends Common {
 		            $i++;
 	            }
 		            $data = $this->arrOnly($data);
-
 	           $success=db('teacher')->insertAll($data); //批量插入数据
 	           $error=$i-$success;
 	           if ($success) {
 		            return  json($res = ['valid' => 1, 'msg' => "共导入{$i}条，成功{$success}条，失败{$error}条。"]);
+	           } else {
+	        		return  json($res = ['valid' => 0, 'msg' => "共导入{$i}条，成功{$success}条，失败{$error}条。"]);
 	           }
 	        }else{
 	            // 上传失败获取错误信息
