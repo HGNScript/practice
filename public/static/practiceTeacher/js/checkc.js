@@ -196,11 +196,7 @@ function page() {
                                     $("#tbody").empty();
                                     var data_html = "";
                                     if (!data.length > 0) {
-                                        layer.confirm('还没有学生数据,请添加!', function() {
-                                            // location.href="/teacher/Admin/addAdmin";\
-                                            layer.closeAll('dialog')
-                                            // x_admin_show('添加用户', 'addAdmin')
-                                        });
+                                      $("#tbody").append('<td colspan="7" style="text-align: center;"> 暂时没有数据 </td>');
                                     } else {
                                         if ($('#hidn').val() == 2) {
                                             $.each(data, function(index, array) {
