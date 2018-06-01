@@ -272,6 +272,8 @@ class Classlist extends Common {
 
 		$specialty = $data[2];
 
+		$data[2] = '';
+
 		if ($data[1]) {
 			$specialtys = db('class')->where('tch_id', 0)->where('class_staffRoom', $data[1])->column('class_specialty');
 		} else {
@@ -289,6 +291,14 @@ class Classlist extends Common {
 			}
 		}
 		$data = array_slice($data,$star,$limit);
+
+		foreach ($specialtys as $key => $v) {
+			$specialtysArr = $specialtys;
+			unset($specialtysArr[$key]);
+			if (in_array($specialtys[$key], $specialtysArr)) {
+		        unset($specialtys[$key]);
+		    }
+		}
 
 		$res = ["data" => $data, "specialtys" => $specialtys, "specialty" => $specialty];
 
