@@ -59,7 +59,7 @@
                             <th>签到总数</th>
                             <th>日志总数</a>
                             </th>
-                            <th>评分</a>
+                            <th>评分
                             </th>
                             <th>操作</th>
                         </tr>
@@ -115,6 +115,7 @@ function page(search) {
                             dataType: "json",
                             data: search,
                             success: function(data) {
+                console.log(data)
                                 $("#tbody").empty();
                                 var data_html = "";
                                 $.each(data, function(index, array) {

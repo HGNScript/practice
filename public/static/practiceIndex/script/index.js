@@ -31,13 +31,13 @@ $(function() {
         $('#down').click(function() {
             if (!clickFlag) {
                 $(".info").show("200")
-                $(this).addClass("icon-double-angle-up")
-                $(this).removeClass("icon-double-angle-down")
+                $(this).addClass("fa-angle-double-up")
+                $(this).removeClass("fa-angle-double-down")
                 clickFlag = true
             } else {
                 $(".info").not($(".info")[0]).not($(".info")[1]).hide("200")
-                $(this).addClass("icon-double-angle-down")
-                $(this).removeClass("icon-double-angle-up")
+                $(this).addClass("fa-angle-double-down")
+                $(this).removeClass("fa-angle-double-up")
                 clickFlag = !clickFlag
             }
 
