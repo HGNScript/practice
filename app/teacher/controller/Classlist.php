@@ -272,12 +272,15 @@ class Classlist extends Common {
 
 		$specialty = $data[2];
 
-		$data[2] = '';
 
 		if ($data[1]) {
 			$specialtys = db('class')->where('tch_id', 0)->where('class_staffRoom', $data[1])->column('class_specialty');
 		} else {
 			$specialtys = db('class')->where('tch_id', 0)->column('class_specialty');
+		}
+
+		if (!in_array($specialty, $specialtys)) {
+		  	$data[2] = '';
 		}
 
 		$star = ($curr-1)*$limit;
