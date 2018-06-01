@@ -48,7 +48,7 @@
                     </select>
                 </span>
             <span class="layui-col-md2">
-                    <select name="city" lay-verify="" class="grade layui-input">
+                    <select name="city" lay-verify="" class="grade layui-input" id="specialty">
                         <option value="">专业</option>
                         {foreach name="specialty" item="v"}
                         <option value="{$v}">{$v}</option>
@@ -135,23 +135,55 @@ function page(search) {
                             dataType: "json",
                             data: search,
                             success: function(data) {
-                                $("#tbody").empty();
-                                var data_html = "";
-                                $.each(data, function(index, array) {
-                                    data_html += `<tr>
-                            <td>`+array['class_grade']+`</td>
-                            <td>`+array['class_name']+`</td>
-                            <td>`+array['class_staffRoom']+`</td>
-                            <td>`+array['class_specialty']+`</td>
-                            <td>`+array['class_sum']+`</td>
-                            <td>
-                                <a href="/teacher/Export/excel?class_id=`+array['class_id']+`" class="layui-btn">
-                                    导出
-                                </a>
-                            </td>
-                        </tr>`;
-                                });
-                                $("#tbody").append(data_html);
+                            $("#tbody").empty();
+                                if (data['specialtys']) {
+                                    $("#tbody").empty();
+                                    var data_html = "";
+                                    $.each(data['data'], function(index, array) {
+                                        data_html += `<tr>
+                                            <td>`+array['class_grade']+`</td>
+                                            <td>`+array['class_name']+`</td>
+                                            <td>`+array['class_staffRoom']+`</td>
+                                            <td>`+array['class_specialty']+`</td>
+                                            <td>`+array['class_sum']+`</td>
+                                            <td>
+                                                <a href="/teacher/Export/excel?class_id=`+array['class_id']+`" class="layui-btn">
+                                                    导出
+                                                </a>
+                                            </td>
+                                        </tr>`;
+                                    });
+                                    $("#specialty").empty();
+                                    var specialty_html = `<option value=''>专业</option>`
+
+                                    $.each(data['specialtys'], function(index, array) {
+                                        if (data['specialty'] == array) {
+                                            specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
+                                        } else {
+                                            specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
+                                        }
+                                    });
+
+                                    $("#specialty").append(specialty_html);
+                                    $("#tbody").append(data_html);
+                                } else {
+                                     var data_html = "";
+                                    $.each(data, function(index, array) {
+                                        data_html += `<tr>
+                                            <td>`+array['class_grade']+`</td>
+                                            <td>`+array['class_name']+`</td>
+                                            <td>`+array['class_staffRoom']+`</td>
+                                            <td>`+array['class_specialty']+`</td>
+                                            <td>`+array['class_sum']+`</td>
+                                            <td>
+                                                <a href="/teacher/Export/excel?class_id=`+array['class_id']+`" class="layui-btn">
+                                                    导出
+                                                </a>
+                                            </td>
+                                        </tr>`;
+                                    });
+                                    $("#tbody").append(data_html);
+                                }
 
                             }
                         });
@@ -165,6 +197,7 @@ function search(){
      $('#input').keypress(function(event) {
         var keynum = (event.keyCode ? event.keyCode : event.which);
         if (keynum == '13') {
+            $('.grade').val('')
             var val = $('#input').val();
             if (!val) {
                 layer.msg('请填写您要查询的数据', {
@@ -183,6 +216,7 @@ function search(){
         }
     });
     $('#search').click(function() {
+        $('.grade').val('')
         var val = $('#input').val();
         if (!val) {
                 layer.msg('请填写您要查询的数据', {

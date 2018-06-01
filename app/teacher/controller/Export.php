@@ -62,6 +62,18 @@ class Export extends Common {
 				if($search) {
 					$classinfo = db('class')->where("class_grade like '%$search%' OR class_name like '%$search%' OR class_staffRoom like '%$search%' OR class_specialty like '%$search%'")->order('class_grade desc')->select();
 				} else {
+					$specialty = $select[2];
+
+					if ($select[1]) {
+						$specialtys = db('class')->where('class_staffRoom', $select[1])->column('class_specialty');
+					} else {
+						$specialtys = db('class')->column('class_specialty');
+					}
+
+					if (!in_array($specialty, $specialtys)) {
+					  	$select[2] = '';
+					}
+
 					$classinfo = $this->cla->exportClass($select);
 				}
 
@@ -78,6 +90,23 @@ class Export extends Common {
 					$sum = db('student')->where('stu_className', $value['class_name'])->select();
 					$classinfo[$key]['class_sum']= sizeof($sum);
 				}
+
+
+				if ($select) {
+					if (!$search) {
+						foreach ($specialtys as $key => $v) {
+						$specialtysArr = $specialtys;
+						unset($specialtysArr[$key]);
+						if (in_array($specialtys[$key], $specialtysArr)) {
+					        unset($specialtys[$key]);
+						    }
+						}
+
+						$res = ["data" => $classinfo, "specialtys" => $specialtys, "specialty" => $specialty];
+						return json($res);
+					}
+				}
+
 				return json($classinfo);
 			} else {
 				return sizeof($classinfo);

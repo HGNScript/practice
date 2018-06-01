@@ -83,7 +83,7 @@ class Checkc extends Common {
 		        unset($stu_id[$key]);
 		    }
 		}
-
+		$stuData = array();
 		foreach ($stu_id as $key => $value) {
 			$stuData[$key] = $this->stu->getStuInfo($value);
 		}
@@ -103,7 +103,7 @@ class Checkc extends Common {
 		$data = input('post.info');
 		$star = ($curr-1)*$limit;
 		$stu_id = $this->stu->sreach($data, $class_name);
-
+		$stuData = array();
 		foreach ($stu_id as $key => $v) {
 			$arr = $stu_id;
 			unset($arr[$key]);
