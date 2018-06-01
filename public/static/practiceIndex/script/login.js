@@ -18,7 +18,6 @@ $(function() {
                         content: data.msg,
                         btn: '我知道了',
                     })
-                    captcha()
                     $('#verification').val('')
                 }
             }

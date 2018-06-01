@@ -269,6 +269,15 @@ class Classlist extends Common {
 		$curr = input('get.curr');
 		$limit = input('get.limit');
 		$data = input('post.');
+
+		$specialty = $data[2];
+
+		if ($data[1]) {
+			$specialtys = db('class')->where('tch_id', 0)->where('class_staffRoom', $data[1])->column('class_specialty');
+		} else {
+			$specialtys = db('class')->where('tch_id', 0)->column('class_specialty');
+		}
+
 		$star = ($curr-1)*$limit;
 		$data = $this->cla->getCate($data, 1);
 		foreach ($data as $key => $value) {
@@ -280,6 +289,9 @@ class Classlist extends Common {
 			}
 		}
 		$data = array_slice($data,$star,$limit);
-		return json($data);
+
+		$res = ["data" => $data, "specialtys" => $specialtys, "specialty" => $specialty];
+
+		return json($res);
 	}
 }

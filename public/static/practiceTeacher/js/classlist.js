@@ -37,7 +37,7 @@ $(function() {
                                 dataType: "json",
                                 data: data,
                                 success: function(data) {
-                                    if (!data.length > 0) {
+                                    if (!data['data'].length > 0) {
                                         layer.msg('没有您需要的数据', {
                                             icon: 2, //提示的样式
                                             time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
@@ -47,13 +47,26 @@ $(function() {
                                         });
                                     }
                                     $("#tbody").empty();
+                                    $("#specialty").empty();
+
                                     var data_html = "";
-                                    $.each(data, function(index, array) {
+                                    $.each(data['data'], function(index, array) {
                                         data_html += html(array)
+                                    });
+
+                                    var specialty_html = `<option value=''>选择一个专业</option>`
+                                    $.each(data['specialtys'], function(index, array) {
+                                        if (data['specialty'] == array) {
+                                            specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
+                                        } else {
+                                            specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
+                                        }
                                     });
 
 
                                     $("#tbody").append(data_html);
+                                    $("#specialty").append(specialty_html);
+
                                     $('.layui-unselect').not('.header').click(function() {
                                         $(this).toggleClass('layui-form-checked')
                                     })
