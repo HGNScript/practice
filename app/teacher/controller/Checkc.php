@@ -654,7 +654,17 @@ class Checkc extends Common {
 
 	public function score() {
 		$class_id = input('get.class_id');
-		$scoreFlag = db('class')->where('class_id', $class_id)->value('scoreFlag');
+
+		$class_name = db('class')->where('class_id', $class_id)->value('class_name');
+
+		$all = db('student')->where('stu_className', $class_name)->select();
+		if (sizeof($all)) {
+			$scoreFlag = db('class')->where('class_id', $class_id)->value('scoreFlag');
+		} else {
+			$scoreFlag = 0;
+		}
+
+
 
 		if (request()->isAjax()) {
 
