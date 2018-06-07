@@ -10,12 +10,21 @@ class Index extends Model {
 
 	public function getInfo($stu_id) {
 		return $this->alias('s')
+		->join('practice_company c','s.stu_id = c.stu_id', 'left')
+		->join('practice_class l','s.class_id = l.class_id')
+		->join('practice_teacher t','l.tch_id = t.tch_id')
+		->where('s.stu_id', $stu_id)
+		->order('sendtime desc')
+		->find();
+	}
+
+	public function getCompany($stu_id) {
+		return $this->alias('s')
 		->join('practice_company c','s.stu_id = c.stu_id')
 		->where('s.stu_id', $stu_id)
-		->field('company_id, company_name, company_address, company_position, principal, principal_phone, stu_phone, company_salary')
 		->order('sendtime desc')
 		->limit(1)
-		->select();
+		->find();
 	}
 
 	public function editInfo($data, $stu_id) {

@@ -7,11 +7,12 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
     <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> -->
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
     <script type="text/javascript" src="__STATIC__/practiceTeacher/node_modules/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/echarts.common.min.js"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/checkc.js"></script>
@@ -43,7 +44,7 @@
         </div>
             {if condition="$authority == 2"}
             <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-            <a class="layui-btn" href="/teacher/Checkc/addstu?class_name={$class_name}"><i class="layui-icon"></i>添加</a>
+            <a class="layui-btn" href="/teacher/Checkc/addstu?class_id={$class_id}"><i class="layui-icon"></i>添加</a>
             <button type="button" class="layui-btn" id="excel">
                 <i class="layui-icon">&#xe67c;</i>批量添加
             </button>
@@ -75,7 +76,9 @@
             <div id="test1"></div>
         </div>
         <input type="hidden" name="" value="{$class_name}" id="class_name">
+        <input type="hidden" name="" value="{$class_id}" id="class_id">
     </div>
+
     <script>
     $(function() {
         var class_name = $('#class_name').val()

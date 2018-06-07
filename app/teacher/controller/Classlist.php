@@ -115,7 +115,7 @@ class Classlist extends Common {
 	        vendor("PHPExcel.PHPExcel");
 	        $objPHPExcel = new \PHPExcel();
 	        $file = request()->file('excel');
-	        $info = $file->validate(['size'=>15678,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'excel');
+	        $info = $file->validate(['size'=>80000,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'excel');
 	        if($info){
 	            $exclePath = $info->getSaveName();  //获取文件名
 	            $file_name = ROOT_PATH . 'public' . DS . 'excel' . DS . $exclePath;   //上传文件的地址

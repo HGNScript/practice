@@ -33,10 +33,10 @@ class Stu extends Model {
 	/**
 	 * 指定班级学生模糊搜索
 	 */
-	public function sreach($data, $class_name){
+	public function sreach($data, $class_id){
 		return $this->alias('s')
 					->join('practice_company c',' s.stu_id = c.stu_id', 'LEFT')
-					->where("s.stu_className= '$class_name' AND s.stu_numBer like '%$data%' OR s.stu_className='$class_name' AND s.stu_name like '%$data%' OR s.stu_className='$class_name' AND c.company_name like '%$data%'")->column('s.stu_id');
+					->where("s.class_id= '$class_id' AND s.stu_numBer like '%$data%' OR s.class_id='$class_id' AND s.stu_name like '%$data%' OR s.class_id='$class_id' AND c.company_name like '%$data%'")->column('s.stu_id');
 	}
 
 	public function addStu($data){

@@ -20,12 +20,12 @@ class Checkc extends Common {
 		$tch_id = input('param.tch_id');
 		$class_id = input('param.class_id');
 		$class_name = db('class')->where('class_id', $class_id)->value('class_name');
-		$sum = db('student')->where('stu_className', $class_name)->select();
-		$stu_id = db('student')->where('stu_className', $class_name)->order('signinFlag, logsFlag')->column('stu_id');
+		$sum = db('student')->where('class_id', $class_id)->select();
+		$stu_id = db('student')->where('class_id', $class_id)->order('signinFlag, logsFlag')->column('stu_id');
 
 		if (request()->isAjax()) {
-			$class_name = input('post.class_name');
-			$stu_id = db('student')->where('stu_className', $class_name)->column('stu_id');
+			$class_id = input('post.class_id');
+			$stu_id = db('student')->where('class_id', $class_id)->column('stu_id');
 			$stuData = array();
 			foreach ($stu_id as $key => $value) {
 				$stuData[$key] = $this->stu->getStuInfo($value);
@@ -46,11 +46,11 @@ class Checkc extends Common {
 	 * 班级数据分页
 	 */
 	public function indexPage() {
-		$class_name= input('post.class_name');
+		$class_id= input('post.class_id');
 		$curr = input('get.curr');
 		$limit = input('get.limit');
 		$star = ($curr-1)*$limit;
-		$stu_id = db('student')->where('stu_className', $class_name)->order('signinFlag, logsFlag')->column('stu_id');
+		$stu_id = db('student')->where('class_id', $class_id)->order('signinFlag, logsFlag')->column('stu_id');
 		$stuData = array();
 		foreach ($stu_id as $key => $value) {
 			$stuData[$key] = $this->stu->getStuInfo($value);
@@ -73,8 +73,8 @@ class Checkc extends Common {
 	 */
 	public function indexLen() {
 		$data = input('post.info');
-		$class_name = input('post.class_name');
-		$stu_id = $this->stu->sreach($data, $class_name);
+		$class_id = input('post.class_id');
+		$stu_id = $this->stu->sreach($data, $class_id);
 
 		foreach ($stu_id as $key => $v) {
 			$arr = $stu_id;
@@ -99,10 +99,10 @@ class Checkc extends Common {
 	public function searchStu() {
 		$curr = input('post.curr');
 		$limit = input('post.limit');
-		$class_name = input('post.class_name');
+		$class_id = input('post.class_id');
 		$data = input('post.info');
 		$star = ($curr-1)*$limit;
-		$stu_id = $this->stu->sreach($data, $class_name);
+		$stu_id = $this->stu->sreach($data, $class_id);
 		$stuData = array();
 		foreach ($stu_id as $key => $v) {
 			$arr = $stu_id;
@@ -285,11 +285,12 @@ class Checkc extends Common {
 	 */
 	public function excel() {
 		 // import('phpexcel.PHPExcel', EXTEND_PATH);//方法二
-		 	$class_name = input('get.class_name');
+		 	$class_id = input('get.class_id');
+		 	$class_name = db('class')->where('class_id', $class_id)->value('class_name');
 	        vendor("PHPExcel.PHPExcel");
 	        $objPHPExcel = new \PHPExcel();
 	        $file = request()->file('excel');
-	        $info = $file->validate(['size'=>15678,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'excel');
+	        $info = $file->validate(['size'=>80000,'ext'=>'xlsx,xls,csv'])->move(ROOT_PATH . 'public' . DS . 'excel');
 	        if($info){
 	            $exclePath = $info->getSaveName();  //获取文件名
 	            $file_name = ROOT_PATH . 'public' . DS . 'excel' . DS . $exclePath;   //上传文件的地址
@@ -311,6 +312,7 @@ class Checkc extends Common {
 		                $data[$k]['stu_password'] = md5('gzcj');
 		                $data[$k]['classteacher'] = $v[4];
 		                $data[$k]['classteacher_phone'] = $v[5];
+		                $data[$k]['class_id'] = $class_id;
 	            	}
 	            }
 	           $data = $this->arrOnly($data);
@@ -327,8 +329,11 @@ class Checkc extends Common {
 	}
 
 	public function addstu() {
-		$class_name = input('get.class_name');
+		$class_id = input('get.class_id');
+
 			if (request()->isAjax()) {
+			$class_id = input('get.class_id');
+			$class_name = $class_name = db('class')->where('class_id', $class_id)->value('class_name');
 			$data = input('post.');
 			$validate = validate('AddStu');
 			if(!$validate->check($data)){
@@ -337,6 +342,8 @@ class Checkc extends Common {
 				$number = db('student')->where('stu_numBer', $data['stu_numBer'])->find();
 				if (!$number) {
 					$data['stu_password'] = md5('gzcj');
+					$data['stu_className'] = $class_name;
+					$data['class_id'] = $class_id;
 					$info = $this->stu->addStu($data);
 				    if ($info) {
 				    	$res = ['valid' => 1, 'msg' => '添加成功!'];
@@ -354,7 +361,7 @@ class Checkc extends Common {
 				return json($res);
 			}
 		}
-		$this->assign('class_name', $class_name);
+		$this->assign('class_id', $class_id);
 		return $this->fetch();
 	}
 

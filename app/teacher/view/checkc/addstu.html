@@ -83,12 +83,12 @@
             <div class="layui-form-item">
                 <label for="L_repass" class="layui-form-label">
                 </label>
-                <button class="layui-btn" lay-filter="add" lay-submit="">
+                <button class="layui-btn" lay-filter="add" lay-submit="" type="button">
                     增加
                 </button>
             </div>
-            <input type="hidden" name="stu_className" value="{$class_name}">
         </form>
+        <input type="hidden" name="class_id" value="{$class_id}" id="class_id">
     </div>
     <script>
     layui.use(['form', 'layer', 'element'], function() {
@@ -97,9 +97,10 @@
             layer = layui.layer;
         //监听提交
         form.on('submit(add)', function(data) {
+            var class_id =$('#class_id').val()
             $.ajax({
                 type: "post",
-                url: '/teacher/Checkc/addstu',
+                url: '/teacher/Checkc/addstu?class_id='+class_id,
                 traditional: true,
                 dataType: "json",
                 data: data.field,

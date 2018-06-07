@@ -1,4 +1,5 @@
 $(function() {
+    var searchdata = '';
     excel()
     page();
     $('#input').keypress(function(event) {
@@ -25,10 +26,11 @@ $(function() {
 
     function search() {
         var info = $("#input").val()
-        var class_name = $("#class_name").val()
+        searchdata = info;
+        var class_id = $("#class_id").val()
         layui.use('laypage', function() {
             var laypage = layui.laypage;
-            var data = { 'info': info, 'class_name': class_name }
+            var data = { 'info': info, 'class_id': class_id }
             $.ajax({
                 type: "post",
                 url: '/teacher/Checkc/indexLen',
@@ -46,14 +48,18 @@ $(function() {
                             //obj包含了当前分页的所有参数，比如：
                             var info = $("#input").val();
                             var class_name = $("#class_name").val()
-                            var data = { 'curr': obj.curr, 'limit': obj.limit, 'class_name': class_name, 'info': info };
+                            var data = { 'curr': obj.curr, 'limit': obj.limit, 'class_id': class_id, 'info': info||searchdata };
                             $.ajax({
                                 type: "post",
                                 url: '/teacher/Checkc/searchStu',
                                 traditional: true,
                                 dataType: "json",
                                 data: data,
+                                beforeSend: function() {
+                                    load = layer.load()
+                                },
                                 success: function(data) {
+                                    layer.close(load)
                                     if (!data.length > 0) {
                                         layer.msg('没有您需要的数据', {
                                             icon: 2, //提示的样式
@@ -122,8 +128,9 @@ $(function() {
             })
         });
     }
+
     function excel() {
-    var class_name = $("#class_name").val()
+    var class_id = $("#class_id").val()
     layui.use('upload', function() {
         var upload = layui.upload;
 
@@ -131,7 +138,7 @@ $(function() {
         var uploadInst = upload.render({
             elem: '#excel' //绑定元素
                 ,
-            url: '/teacher/Checkc/excel?class_name='+class_name //上传接口
+            url: '/teacher/Checkc/excel?class_id='+class_id //上传接口
                 ,
             accept: 'file',
             field: 'excel',
@@ -162,11 +169,8 @@ $(function() {
     });
 }
 
-
-})
-
-function page() {
-        var class_name = $('#class_name').val()
+    function page(searchdata) {
+        var class_id = $("#class_id").val()
         layui.use('laypage', function() {
             var laypage = layui.laypage;
             $.ajax({
@@ -174,7 +178,7 @@ function page() {
                 url: '/teacher/checkc/index',
                 traditional: true,
                 dataType: "json",
-                data: { 'class_name': class_name },
+                data: { 'class_id': class_id, 'searchdata' : searchdata},
                 success: function(data) {
                     var len = data
                     laypage.render({
@@ -191,8 +195,12 @@ function page() {
                                 url: '/teacher/Checkc/indexPage?curr=' + info['curr'] + '&limit=' + info['limit'],
                                 traditional: true,
                                 dataType: "json",
-                                data: { 'class_name': class_name },
+                                data: { 'class_id': class_id, 'search' : searchdata},
+                                beforeSend: function() {
+                                    load = layer.load()
+                                },
                                 success: function(data) {
+                                    layer.close(load)
                                     $("#tbody").empty();
                                     var data_html = "";
                                     if (!data.length > 0) {
@@ -255,6 +263,10 @@ function page() {
             })
         });
     }
+
+})
+
+
 function checkbox() {
         $('.checkbox').click(function() {
             var checkbox = $('.checkbox')

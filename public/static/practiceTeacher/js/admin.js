@@ -219,7 +219,7 @@ function delAll(argument) {
 }
 
 function search() {
-    var info = $("#searchForm").serialize();
+    var info = $("#input").val();
     layui.use('laypage', function() {
         var laypage = layui.laypage;
         $.ajax({
@@ -227,7 +227,7 @@ function search() {
             url: '/teacher/Admin/checkLen',
             traditional: true,
             dataType: "json",
-            data: info,
+            data: {'search': info},
             success: function(data) {
                 var len = data
                 laypage.render({

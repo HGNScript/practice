@@ -12,37 +12,56 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
+.tch_info {
+    width: 76%;
+    margin: 10px auto;
+}
 </style>
 <section class="row introduction">
     <div class="col-sm-12">
-        <h4 class="title">实习信息<a href="{:url('/info')}"><i class="fa fa-pencil pull-right"></i></a></h4> {if condition="$info"}
+        <h4 class="title">实习指导教师
+        </h4>
+        <div class="tch_info">
+            <span>教师名称:{$info['tch_name']}</span>
+        </div>
+        <div class="tch_info">
+            <span>教师联系电话:{$info['tch_phone']}</span>
+        </div>
+        <div class="tch_info">
+            <span>教师邮箱:{$info['tch_email']}</span>
+        </div>
+    </div>
+</section>
+<section class="row introduction">
+    <div class="col-sm-12">
+        <h4 class="title">实习信息<a href="{:url('/info')}"><i class="fa fa-pencil pull-right"></i></a></h4> {if condition="$company"}
         <div class="info">
             <span>公司名称:</span>
-            <p>{$info['company_name']}</p>
+            <p>{$company['company_name']}</p>
         </div>
         <div class="info">
             <span>公司地址:</span>
-            <p>{$info['company_address']}</p>
+            <p>{$company['company_address']}</p>
         </div>
          <div class="info">
             <span>月薪:</span>
-            <p>{$info['company_salary']}</p>
+            <p>{$company['company_salary']}</p>
         </div>
         <div class="info">
             <span>职务:</span>
-            <p>{$info['company_position']}</p>
+            <p>{$company['company_position']}</p>
         </div>
         <div class="info">
             <span>负责人:</span>
-            <p>{$info['principal']}</p>
+            <p>{$company['principal']}</p>
         </div>
         <div class="info">
             <span>公司联系电话:</span>
-            <p>{$info['principal_phone']}</p>
+            <p>{$company['principal_phone']}</p>
         </div>
         <div class="info">
             <span>学生 联系电话:</span>
-            <p>{$info['stu_phone']}</p>
+            <p>{$company['stu_phone']}</p>
         </div>
         {else/}
         <div>

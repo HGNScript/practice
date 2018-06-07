@@ -37,7 +37,6 @@ $(function() {
                                 dataType: "json",
                                 data: data,
                                 success: function(data) {
-                                    console.log(data['specialtys'])
                                     if (!data['data'].length > 0) {
                                         layer.msg('没有您需要的数据', {
                                             icon: 2, //提示的样式

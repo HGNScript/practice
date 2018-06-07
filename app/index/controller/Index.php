@@ -30,6 +30,7 @@ class Index extends Common{
 
 
 		$info = $this->index->getInfo($stu_id);
+		$company = $this->index->getCompany($stu_id);
 		$logsInfo = $this->logs->Logs($stu_id);
 
 		foreach ($logsInfo as $key => $value) {
@@ -41,11 +42,11 @@ class Index extends Common{
 			$info = null;
 		}
 		$this->notiAnsigns($stu_id);
-		$this->assign('info', $info[0]);
+		$this->assign('info', $info);
+		$this->assign('company', $company);
 		$this->assign('logsInfo', $logsInfo);
 		$log = $this->index->getLogsFlag($stu_id);
 		$this->assign('log', $log);
-
 		return $this->fetch();
 	}
 
