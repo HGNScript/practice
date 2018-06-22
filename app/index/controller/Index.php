@@ -57,7 +57,7 @@ class Index extends Common{
 		$stu_id = session('stu.stu_id');
 		$info = $this->index->getInfo($stu_id);
 		if ($info) {
-			$this->assign('info', $info[0]);
+			$this->assign('info', $info);
 		} else {
 			$this->assign('info', null);
 		}

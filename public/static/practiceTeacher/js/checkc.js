@@ -1,7 +1,7 @@
 $(function() {
+    page();
     var searchdata = '';
     excel()
-    page();
     $('#input').keypress(function(event) {
         var keynum = (event.keyCode ? event.keyCode : event.which);
         if (keynum == '13') {
@@ -130,46 +130,47 @@ $(function() {
     }
 
     function excel() {
-    var class_id = $("#class_id").val()
-    layui.use('upload', function() {
-        var upload = layui.upload;
+        var class_id = $("#class_id").val()
+        layui.use('upload', function() {
+            var upload = layui.upload;
 
-        //执行实例
-        var uploadInst = upload.render({
-            elem: '#excel' //绑定元素
-                ,
-            url: '/teacher/Checkc/excel?class_id='+class_id //上传接口
-                ,
-            accept: 'file',
-            field: 'excel',
-            before: function() {
-                load = layer.load()
-            },
-            done: function(data) {
-                layer.close(load)
-                if (data['valid']) {
-                    layer.msg(data['msg'], {
-                        icon: 1, //提示的样式
-                        time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                        end: function() {
-                            page()
-                        }
-                    });
-                } else {
-                    layer.msg(data['msg'], {
-                        icon: 2, //提示的样式
-                        time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                        end: function() {
-                            page()
-                        }
-                    });
-                }
-            },
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#excel' //绑定元素
+                    ,
+                url: '/teacher/Checkc/excel?class_id='+class_id //上传接口
+                    ,
+                accept: 'file',
+                field: 'excel',
+                before: function() {
+                    load = layer.load()
+                },
+                done: function(data) {
+                    layer.close(load)
+                    if (data['valid']) {
+                        layer.msg(data['msg'], {
+                            icon: 1, //提示的样式
+                            time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                            end: function() {
+                                location.reload()
+                            }
+                        });
+                    } else {
+                        layer.msg(data['msg'], {
+                            icon: 2, //提示的样式
+                            time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                            end: function() {
+                                location.reload()
+                            }
+                        });
+                    }
+                },
+            });
         });
-    });
-}
+    }
 
-    function page(searchdata) {
+   
+function page(searchdata) {
         var class_id = $("#class_id").val()
         layui.use('laypage', function() {
             var laypage = layui.laypage;
@@ -264,8 +265,6 @@ $(function() {
         });
     }
 
-})
-
 
 function checkbox() {
         $('.checkbox').click(function() {
@@ -289,7 +288,11 @@ function checkbox() {
             }
 
         })
-    }
+}
+
+
+})
+
 function delAll(argument) {
     var id = tableCheck.getData()
     if (!id.length) {
@@ -320,7 +323,7 @@ function delAll(argument) {
                     time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
                     end: function() {
                         $('.header').removeClass('layui-form-checked')
-                        page()
+                        location.reload()
                     }
                 });
             }
@@ -344,10 +347,11 @@ function member_del(obj, id) {
                     icon: 1, //提示的样式
                     time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
                     end: function() {
-                        page();
+                        location.reload()
                     }
                 });
             }
         })
     });
 }
+
