@@ -121,7 +121,8 @@ class Index extends Common{
 							->where('company_salary', $data['company_salary'])
 							->where('company_position', $data['company_position'])
 							->where('principal', $data['principal'])
-							->where('principal_phone', $data['principal_phone'])
+                            ->where('principal_phone', $data['principal_phone'])
+                            ->where('date', $data['date'])
 							->find();
 
 		$stuflag = db('student')->where('stu_id', $stu_id)

@@ -76,14 +76,17 @@ $(function() {
             type: "post",
             url: '/index/Index/signIn',
             data: { address: address },
+            beforeSend:function(XMLHttpRequest){
+                var index = layer.load();
+            },
             success: function(data) {
                 layer.open({
                     type: 0,
                     content: data.msg,
                     btn: '我知道了',
                     yes: function(index) {
+                        layer.close(index);
                         location.reload();
-                        // layer.close(index);
                     }
                 })
             }
@@ -156,7 +159,7 @@ $(function() {
         var info = $("#LogsForm").serialize();
 
         var str = $('#text').val()
-        // var strNull = str.indexOf("点击此处编辑内容")
+        var strNull = str.indexOf("点击此处编辑内容")
 
 
         var str = str.replace(/<[^>]+>/g, ""); //去掉所有的html标记
@@ -185,24 +188,24 @@ $(function() {
 
         }
         var str = getByteLen(str)
-        if (str <= 200) {
-             layer.open({
-                type: 0,
-                content: '字数不得少于200字!',
-                btn: '我知道了',
-            })
-            return false;
-        }
-
-
-        // if (strNull > 0) {
-        //     layer.open({
+        // if (strNull <= 200) {
+        //      layer.open({
         //         type: 0,
-        //         content: '请填写内容!',
+        //         content: '字数不得少于200字!',
         //         btn: '我知道了',
         //     })
         //     return false;
         // }
+
+
+        if (strNull > 0) {
+            layer.open({
+                type: 0,
+                content: '请填写内容!',
+                btn: '我知道了',
+            })
+            return false;
+        }
         $.ajax({
             type: "post",
             url: '/index/Index/addlogs',
@@ -237,15 +240,17 @@ $(function() {
             traditional: true,
             dataType: "json",
             success: function(data) {
-                layer.open({
-                    type: 0,
-                    content: data.msg,
-                    btn: '我知道了',
-                    yes: function(index) {
-                        location.reload();
-                        layer.close(index);
-                    }
-                })
+
+                location.reload();
+
+                // layer.open({
+                //     type: 0,
+                //     content: data.msg,
+                //     btn: '我知道了',
+                //     yes: function(index) {
+                //         layer.close(index);
+                //     }
+                // })
             }
         });
     }
@@ -301,10 +306,10 @@ $(function() {
                             // }
                         })
                     } else {
-                        layer.open({
-                            type: 2,
-                            content: data.msg,
-                        });
+                        // layer.open({
+                        //     type: 2,
+                        //     content: data.msg,
+                        // });
                         gd()
                     }
                 }

@@ -12,8 +12,12 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             padding: 10px;
-            text-indent: 20px;
+            /*text-indent: 20px;*/
             word-wrap:break-word;
+            text-align: center;
+        }
+        .arc img {
+            margin: 10px auto;
         }
         .reply {
             margin: 5px auto;
@@ -28,7 +32,7 @@
             <a href="">查看日志</a>
         </li>
     </ul>
-        <h4 class="col-sm-12" style="color: #2478C0">日志</h4>
+        <h4 class="col-sm-12" style="color: #2478C0; margin-top: 20px;">日志</h4>
         <div class="col-sm-12 arc">
                 {$oldLogs['logs_content']}
         </div>

@@ -8,19 +8,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
+    <!-- <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css"> -->
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
+
     <script type="text/javascript" src="__STATIC__/practiceTeacher/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/echarts.common.min.js"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/practiceInfo.js"></script>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js""></script>
+
+
+
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
       <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
       <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
    <div class="x-nav">
             <span class="layui-breadcrumb" lay-separator="|">
@@ -33,7 +39,7 @@
     <div class="x-body">
         <div class="layui-row">
             <div class=" layui-col-md4">
-                <table class="layui-table">
+                <table class="layui-table stuInfo">
                     <thead>
                         <tr>
                             <th>学生资料</th>
@@ -41,52 +47,56 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>学生名称:{$data['stu_name']}</td>
+                            <td>姓名:<span data-name="stu_name">{$data['stu_name']}</span></td>
                         </tr>
                         <tr>
-                            <td>学号:{$data['stu_numBer']}</td>
+                            <td>学号:<span data-name="stu_numBer">{$data['stu_numBer']}</span></td>
                         </tr>
                         <tr>
-                            <td>联系电话:{$data['stu_phone']}</td>
+                            <td>身份证:<span data-name="identity">{$data['identity']}</span></td>
                         </tr>
                         <tr>
-                            <td>班主任:{$data['classteacher']}</td>
+                            <td>联系电话:<span data-name="stu_phone">{$data['stu_phone']}</span></td>
                         </tr>
                         <tr>
-                            <td>班主任联系电话:{$data['classteacher_phone']}</td>
+                            <td>班主任:<span data-name="classteacher">{$data['classteacher']}</span></td>
+                        </tr>
+                        <tr>
+                            <td>班主任联系电话:<span data-name="classteacher_phone">{$data['classteacher_phone']}</span></td>
                         </tr>
                          <tr>
-                            <td>跟班教师:{$data['tch_name']}</td>
+                            <td>跟班教师:<span data-name="tch_name">{$data['tch_name']}</span></td>
                         </tr>
                         <tr>
-                            <td>跟班教师联系电话:{$data['tch_phone']}</td>
+                            <td>跟班教师联系电话:<span data-name="tch_phone">{$data['tch_phone']}</span></td>
                         </tr>
                     </tbody>
                 </table>
-                <table class="layui-table">
+                <table class="layui-table practiceInfo">
                     <thead>
                         <tr>
                             <th>实习资料</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <input type="hidden" id="company_id" value="{$data['company_id']}">
                         <tr>
-                            <td>单位名称:{$data['company_name']}</td>
+                            <td>单位名称:<span data-name="company_name">{$data['company_name']}</span></td>
                         </tr>
                         <tr>
-                            <td>单位地址:{$data['company_address']}</td>
+                            <td>单位地址:<span data-name="company_address">{$data['company_address']}</span></td>
                         </tr>
                         <tr>
-                            <td>月薪:{$data['company_salary']}</td>
+                            <td>月薪:<span data-name="company_salary">{$data['company_salary']}</span></td>
                         </tr>
                         <tr>
-                            <td>职位:{$data['company_position']}</td>
+                            <td>职位:<span data-name="company_position">{$data['company_position']}</span></td>
                         </tr>
                         <tr>
-                            <td>单位负责人:{$data['principal']}</td>
+                            <td>单位负责人:<span data-name="principal">{$data['principal']}</span></td>
                         </tr>
                         <tr>
-                            <td>单位负责人联系电话:{$data['principal_phone']}</td>
+                            <td>单位负责人联系电话:<span data-name="principal_phone">{$data['principal_phone']}</span></td>
                         </tr>
                          <tr>
                             <td colspan='2' style="text-align: center;">
@@ -113,7 +123,7 @@
                         {foreach $sginin as $vo}
                         <tr>
                             <td>
-                                {:date('Y-m-d',$vo['sendtime'])}
+                                {:date('Y-m-d h:i:s',$vo['sendtime'])}
                             </td>
                             <td>
                                 {$vo['address']}
@@ -153,7 +163,7 @@
                         {foreach $logs as $vo}
                         <tr  class="logs" data-id="{$vo['logs_id']}" style="cursor: pointer;">
                             <td>
-                                {:date('Y-m-d',$vo['sendtime'])}
+                                {:date('Y-m-d h:i:s',$vo['sendtime'])}
                             </td>
                             <td>
                                 {$vo['logs_content']}
@@ -179,6 +189,8 @@
         </div>
     </div>
 </body>
+
+<input type="hidden" id="stu_id" value="{$stu_id}">
 <script type="text/javascript">
     $(function(){
         cli()

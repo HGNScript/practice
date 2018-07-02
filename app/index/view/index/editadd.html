@@ -10,35 +10,44 @@
         <h4 class="title">实习信息</h4>
         <div class="form-group">
             <label for="company_name">实习单位名称:</label>
-            <input type="text" class="form-control" id="company_name" placeholder="实习单位名称" value="{$info['company_name']}" name="company_name">
+            <input type="text" class="layui-input" id="company_name" placeholder="实习单位名称" value="{$info['company_name']}" name="company_name">
         </div>
         <div class="form-group">
             <label for="company_address">实习单位地址:</label>
-            <input type="text" class="form-control" id="company_address" placeholder="实习单位地址" value="{$info['company_address']}" name="company_address">
+            <input type="text" class="layui-input" id="company_address" placeholder="实习单位地址" value="{$info['company_address']}" name="company_address">
         </div>
         <div class="form-group">
             <label for="company_salary">月薪:</label>
-            <input type="tel" class="form-control" id="company_salary" placeholder="实习单位地址" value="{$info['company_salary']}" name="company_salary" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v()";>
+            <input type="tel" class="layui-input" id="company_salary" placeholder="实习单位地址" value="{$info['company_salary']}" name="company_salary" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v()";>
         </div>
         <div class="form-group">
-            <label for="company_position">职务:</label>
-            <input type="text" class="form-control" id="company_position" placeholder="职务" value="{$info['company_position']}" name="company_position">
+            <label for="company_position">岗位:</label>
+            <input type="text" class="layui-input" id="company_position" placeholder="职务" value="{$info['company_position']}" name="company_position">
         </div>
         <div class="form-group">
             <label for="principal">实习单位负责人:</label>
-            <input type="text" class="form-control" id="principal" placeholder="实习单位负责人" value="{$info['principal']}" name="principal">
+            <input type="text" class="layui-input" id="principal" placeholder="实习单位负责人" value="{$info['principal']}" name="principal">
         </div>
         <div class="form-group">
             <label for="principal_phone">负责人联系电话:</label>
-            <input type="tel" class="form-control" id="principal_p hone" placeholder="负责人联系电话" value="{$info['principal_phone']}" name="principal_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
+            <input type="tel" class="layui-input" id="principal_p hone" placeholder="负责人联系电话" value="{$info['principal_phone']}" name="principal_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
         </div>
-        <div class="form-group">
+       <!--  <div class="form-group">
             <label for="stu_phone">学生联系电话:</label>
-            <input type="tel" class="form-control" id="stu_phone" placeholder="学生联系电话" value="{$info['stu_phone']}" name="stu_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
+            <input type="tel" class="layui-input" id="stu_phone" placeholder="学生联系电话" value="{$info['stu_phone']}" name="stu_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
+        </div> -->
+
+        <div class="form-group">
+            <label for="stu_phone">实习时间:</label>
+            <div>
+                <input type="text" id="date" name="date" placeholder="点击选择时间" value="{$info['date']}" class="layui-input">
+            </div>
         </div>
-        {if condition="$info"}
+
+
+        <!-- {if condition="$info"}
         <button type="button" style="margin: 10px" class="btn btn-primary pull-right" id="infoEdit" company_id="{$info['company_id']}">修改</button>
-        {/if}
+        {/if} -->
         <button type="button" class="btn btn-primary pull-right" style="margin: 10px" id="infoAdd">添加</button>
     </form>
 </section>

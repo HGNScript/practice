@@ -8,7 +8,7 @@ class Common extends Controller {
     public function __construct ( Request $request = null ) {
 		parent::__construct( $request );
 		if(!session('stu.stu_id')) {
-			$this->redirect('index/login/index');
+			$this->redirect('teacher/login/index');
 		}
 	}
 

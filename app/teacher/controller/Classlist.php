@@ -81,8 +81,19 @@ class Classlist extends Common {
 	 */
 	public function indexLen() {
 		$data = $this->cla->getCla();
+
+        foreach ($data as $key => $value) {
+            $sum = db('student')->where('stu_className', $value['class_name'])->select();
+            $value['sum'] = sizeof($sum);
+            if (!$value['tch_name']) {
+                $value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
+                $value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
+            }
+        }
+
 		$data= $this->arrOnly($data);
-		return sizeof($data);
+
+		return json($data);
 	}
 
 	/**

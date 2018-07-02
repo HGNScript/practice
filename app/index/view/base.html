@@ -4,11 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>广州城建技术学校实习生管理</title>
+    <title>广州城建实习系统</title>
     <link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link href="__STATIC__/practiceIndex/css/font-awesome.min.css" rel="stylesheet">
     <link href="__STATIC__/practiceIndex/css/swiper-4.2.6.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="__STATIC__/practiceIndex/sass/stylesheets/index.css">
+
+    <link rel="stylesheet" type="text/css" href="__STATIC__/layui/css/layui.css">
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/node_modules/jquery/dist/jquery.min.js""></script>
+    <script type="text/javascript" src="__STATIC__/layui/layui.js""></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js""></script>
 </head>
 
 <body>
@@ -47,8 +52,8 @@
     {block name="content"}{/block}
     <footer>
         <p class="webInfo">
-            <a href="">广州城建技术学校</a>
-            <a href="">Copyright @ 2017 广州城建技术学校</a>
+            <a href="">广州城建技工学校</a>
+            <a href="">Copyright @ 2017 广州城建技工学校</a>
             <a href="">291908320@qq.com</a>
         </p>
     </footer>
@@ -56,7 +61,7 @@
     <script type="text/javascript" src="__STATIC__/practiceIndex/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="__STATIC__/practiceIndex/script/swiper-4.2.6.min.js"></script>
     <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=29f7a4936e5a84ff1e48a5f41cf9b080"></script>
-    <script type="text/javascript" src="__STATIC__/practiceIndex/layer_mobile/layer_mobile/layer.js"></script>
+    <!-- <script type="text/javascript" src="__STATIC__/practiceIndex/layer_mobile/layer_mobile/layer.js"></script> -->
     <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/Eleditor.js"></script>
     <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/webuploader.min.js"></script>
     <script type="text/javascript" src="__STATIC__/practiceIndex/script/index.js"></script>
@@ -68,9 +73,29 @@
             server: '/index/Index/upload', //后台接收地址
             fileSizeLimit: 2, //限制文件上传大小为2M
             formName: 'image', //设置文件name,
-        }
+
+        },
+         toolbars: [
+                // 'insertText',
+                // 'editText',
+                // 'delete',
+                // 'undo',
+                'insertImage',
+                'cancel',
+                ],
     });
     $('.Eleditor-controller').css({"top": "0px"})
+
+
+    layui.use('laydate', function(){
+      var laydate = layui.laydate;
+      
+      //执行一个laydate实例
+      laydate.render({
+        elem: '#date' //指定元素
+      });
+    });
+    
     </script>
 </body>
 

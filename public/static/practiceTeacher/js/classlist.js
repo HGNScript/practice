@@ -7,72 +7,131 @@ $(function() {
         $.each(arr, function(index, array) {
             data[index] = $(this).val();
         })
+
         layui.use('laypage', function() {
             var laypage = layui.laypage;
             $.ajax({
                 type: "post",
-                url: '/teacher/Classlist/selectLen',
+                url: '/teacher/Classlist/selectData',
                 traditional: true,
                 dataType: "json",
                 data: data,
+                beforeSend: function(){
+                    var index = layer.load()
+                },
                 success: function(data) {
-                    var len = data
+                    layer.closeAll()
+
+                    classSelectData = data['data']
+
+                    var len = data['data'].length
+
                     laypage.render({
                         elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                             ,
                         count: len, //数据总数，从服务端得到
                         limit: 4,
                         jump: function(obj, first) {
-                            var arr = $('.grade');
-                            var data = {};
-                            $.each(arr, function(index, array) {
-                                data[index] = $(this).val();
-                            })
-                            var info = { 'curr': obj.curr, 'limit': obj.limit };
-                            var tchid = $('#allots').attr('data_tchid')
-                            $.ajax({
-                                type: "post",
-                                url: '/teacher/Classlist/selectData?curr=' + info['curr'] + '&limit=' + info['limit'],
-                                traditional: true,
-                                dataType: "json",
-                                data: data,
-                                success: function(data) {
-                                    if (!data['data'].length > 0) {
-                                        layer.msg('没有您需要的数据', {
-                                            icon: 2, //提示的样式
-                                            time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                                            end: function() {
-                                                // location.reload();
-                                            }
-                                        });
-                                    }
-                                    $("#tbody").empty();
-                                    var data_html = "";
-                                    $.each(data['data'], function(index, array) {
-                                        data_html += html(array)
-                                    });
 
-                                    $("#specialty").empty();
-                                    var specialty_html = `<option value=''>专业</option>`
+                                if (obj.curr > 1) {
 
-                                    $.each(data['specialtys'], function(index, array) {
-                                        if (data['specialty'] == array) {
-                                            specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
-                                        } else {
-                                            specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
-                                        }
-                                    });
-                                    $("#specialty").append(specialty_html);
+                                    var start = obj.curr * obj.limit-obj.limit
 
-
-                                    $("#tbody").append(data_html);
-
-                                    $('.layui-unselect').not('.header').click(function() {
-                                        $(this).toggleClass('layui-form-checked')
-                                    })
-                                    checkbox()
+                                    var data = classSelectData.slice(start, obj.curr * obj.limit)
                                 }
-                            });
+
+                                if (obj.curr == 1) {
+                                    var start = 0
+
+                                    var data = classSelectData.slice(start, start+obj.limit)
+                                }
+
+
+                                $("#tbody").empty();
+                                var data_html = "";
+                                $.each(data, function(index, array) {
+                                    data_html += html(array)
+                                });
+
+                                $("#specialty").empty();
+                                var specialty_html = `<option value=''>专业</option>`
+
+                                $.each(data['specialtys'], function(index, array) {
+                                    if (data['specialty'] == array) {
+                                        specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
+                                    } else {
+                                        specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
+                                    }
+                                });
+                                $("#specialty").append(specialty_html);
+
+                                console.log(data_html)
+
+                                $("#tbody").append(data_html);
+
+                                $('.layui-unselect').not('.header').click(function() {
+                                    $(this).toggleClass('layui-form-checked')
+                                })
+                                checkbox()
+
+
+
+
+
+
+
+                            // var arr = $('.grade');
+                            // var data = {};
+
+                            // $.each(arr, function(index, array) {
+                            //     data[index] = $(this).val();
+                            // })
+
+                            // var info = { 'curr': obj.curr, 'limit': obj.limit };
+                            // var tchid = $('#allots').attr('data_tchid')
+                            // $.ajax({
+                            //     type: "post",
+                            //     url: '/teacher/Classlist/selectData?curr=' + info['curr'] + '&limit=' + info['limit'],
+                            //     traditional: true,
+                            //     dataType: "json",
+                            //     data: data,
+                            //     success: function(data) {
+                            //         if (!data['data'].length > 0) {
+                            //             layer.msg('没有您需要的数据', {
+                            //                 icon: 2, //提示的样式
+                            //                 time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                            //                 end: function() {
+                            //                     // location.reload();
+                            //                 }
+                            //             });
+                            //         }
+                            //         $("#tbody").empty();
+                            //         var data_html = "";
+                            //         $.each(data['data'], function(index, array) {
+                            //             data_html += html(array)
+                            //         });
+
+                            //         $("#specialty").empty();
+                            //         var specialty_html = `<option value=''>专业</option>`
+
+                            //         $.each(data['specialtys'], function(index, array) {
+                            //             if (data['specialty'] == array) {
+                            //                 specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
+                            //             } else {
+                            //                 specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
+                            //             }
+                            //         });
+                            //         $("#specialty").append(specialty_html);
+
+
+                            //         $("#tbody").append(data_html);
+
+                            //         $('.layui-unselect').not('.header').click(function() {
+                            //             $(this).toggleClass('layui-form-checked')
+                            //         })
+                            //         checkbox()
+                            //     }
+                            // });
                         }
                     });
                 }
@@ -124,52 +183,67 @@ $(function() {
 })
 
 function page() {
-    layui.use('laypage', function() {
+    layui.use(['laypage', 'layer'], function() {
+        // var layer = layui.layer;
         var laypage = layui.laypage;
+
         $.ajax({
             type: "get",
             url: '/teacher/Classlist/indexLen',
             traditional: true,
             dataType: "json",
+            beforeSend: function(){
+                var index = layer.load()
+            },
             success: function(data) {
-                var len = data
+                layer.closeAll()
+
+                classData = data
+
+                var len = data.length
+
                 laypage.render({
                     elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                         ,
                     count: len, //数据总数，从服务端得到
                     limit: 4,
                     jump: function(obj, first) {
-                        //obj包含了当前分页的所有参数，比如：
-                        var data = { 'curr': obj.curr, 'limit': obj.limit };
-                        $.ajax({
-                            type: "post",
-                            url: '/teacher/Classlist/indexPage',
-                            traditional: true,
-                            dataType: "json",
-                            data: data,
-                            success: function(data) {
-                                $("#tbody").empty();
-                                var data_html = "";
-                                if (!data.length > 0) {
-                                    layer.confirm('还没有班级数据,请添加!', function() {
-                                        // location.href="/teacher/Admin/addAdmin";\
-                                        layer.closeAll('dialog')
-                                        // x_admin_show('添加用户', 'addAdmin')
-                                    });
-                                } else {
-                                    $.each(data, function(index, array) {
-                                        data_html += html(array)
-                                    });
-                                }
-                                $("#tbody").append(data_html);
-                                $('.layui-unselect').not('.header').click(function() {
-                                    $(this).toggleClass('layui-form-checked')
-                                })
 
-                                checkbox();
+                        if (obj.curr > 1) {
 
-                            }
-                        });
+                            var start = obj.curr * obj.limit-obj.limit
+
+                            var data = classData.slice(start, obj.curr * obj.limit)
+                        }
+
+                        if (obj.curr == 1) {
+                            var start = 0
+
+                            var data = classData.slice(start, start+obj.limit)
+                        }
+
+
+                        $("#tbody").empty();
+                        var data_html = "";
+                        if (!data.length > 0) {
+                            layer.confirm('还没有班级数据,请添加!', function() {
+                                // location.href="/teacher/Admin/addAdmin";\
+                                layer.closeAll('dialog')
+                                // x_admin_show('添加用户', 'addAdmin')
+                            });
+                        } else {
+                            $.each(data, function(index, array) {
+                                data_html += html(array)
+                            });
+                        }
+
+                        $("#tbody").append(data_html);
+                        $('.layui-unselect').not('.header').click(function() {
+                            $(this).toggleClass('layui-form-checked')
+                        })
+
+                        checkbox();
+
                     }
                 });
             }

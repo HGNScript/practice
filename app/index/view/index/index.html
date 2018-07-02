@@ -59,9 +59,14 @@
             <span>公司联系电话:</span>
             <p>{$company['principal_phone']}</p>
         </div>
-        <div class="info">
-            <span>学生 联系电话:</span>
+     <!--    <div class="info">
+            <span>学生联系电话:</span>
             <p>{$company['stu_phone']}</p>
+        </div> -->
+
+        <div class="info">
+            <span>实习时间:</span>
+            <p>{$company['date']}</p>
         </div>
         {else/}
         <div>
@@ -76,7 +81,7 @@
     </div>
 </section>
 <section class="swiper-container">
-    <h4 class="title">实习日志
+    <h4 class="title">实习(月)记录
         <a href="{:url('/logs')}">
             <i class="fa fa-pencil pull-right"></i>
         </a>
@@ -105,8 +110,8 @@
         {/foreach}
     </div>
     <!-- Add Arrows -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+    <!-- <div class="swiper-button-next"></div> -->
+    <!-- <div class="swiper-button-prev"></div> -->
     {else /}
     <div>
         <h3 style="text-align: center;margin: 30px 0px;line-height: 50px;">

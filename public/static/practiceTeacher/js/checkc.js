@@ -37,91 +37,49 @@ $(function() {
                 traditional: true,
                 dataType: "json",
                 data: data,
+                beforeSend: function() {
+                    index = layer.load();
+                },
                 success: function(data) {
-                    var len = data
+                    layer.close(index)
+
+                    searchData = data
+
+                    var len = data.length
+
                     laypage.render({
                         elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                             ,
                         count: len, //数据总数，从服务端得到
                         limit: 4,
                         jump: function(obj, first) {
-                            //obj包含了当前分页的所有参数，比如：
-                            var info = $("#input").val();
-                            var class_name = $("#class_name").val()
-                            var data = { 'curr': obj.curr, 'limit': obj.limit, 'class_id': class_id, 'info': info||searchdata };
-                            $.ajax({
-                                type: "post",
-                                url: '/teacher/Checkc/searchStu',
-                                traditional: true,
-                                dataType: "json",
-                                data: data,
-                                beforeSend: function() {
-                                    load = layer.load()
-                                },
-                                success: function(data) {
-                                    layer.close(load)
-                                    if (!data.length > 0) {
-                                        layer.msg('没有您需要的数据', {
-                                            icon: 2, //提示的样式
-                                            time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                                            end: function() {
-                                                // location.reload();
-                                            }
-                                        });
-                                    }
-                                    $("#tbody").empty();
-                                    var data_html = "";
-                                    if ($('#hidn').val() == 2) {
-                                        $.each(data, function(index, array) {
-                                            data_html += `<tr>
-                                             <td>
-                                        <div class="checkbox layui-unselect layui-form-checkbox" lay-skin="primary" data-id="` + array['stu_id'] + `"><i class="layui-icon">&#xe605;</i></div>
-                                    </td>
-                                    <td>` + array['stu_numBer'] + `</td>
-                                    <td>` + array['stu_name'] + `</td>
-                                    <td>` + array['stu_phone'] + `</td>
-                                    <td>` + array['signInFlag'] + `</td>
-                                    <td>` + array['logsFlag'] + `</td>
-                                    <td>` + array['company_name'] + `</td>
-                                    <td class="td-manage">
-                                   <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
-                                        <i class="layui-icon">&#xe63c;</i>
-                                      </a>
-                                        <a title="编辑学生信息" href="/teacher/Checkc/edit?stu_id=` + array['stu_id'] + `">
-                                        <i class="layui-icon">&#xe639;</i>
-                                      </a>
-                                         <a title="删除" onclick="member_del(this,'` + array['stu_id'] + `')" href="javascript:;">
-                                            <i class="layui-icon">&#xe640;</i>
-                                          </a>
-                                            </td>
-                                        </tr>`;
-                                        });
-                                    } else {
-                                        $.each(data, function(index, array) {
-                                            data_html += `<tr>
-                                    <td>` + array['stu_numBer'] + `</td>
-                                    <td>` + array['stu_name'] + `</td>
-                                    <td>` + array['stu_phone'] + `</td>
-                                    <td>` + array['signInFlag'] + `</td>
-                                    <td>` + array['logsFlag'] + `</td>
-                                    <td>` + array['company_name'] + `</td>
-                                    <td class="td-manage">
-                                    <a title="学生信息" href="/teacher/Checkc/stuInfo">
-                                        <i class="layui-icon">&#xe63c;</i>
-                                      </a>
-                                            </td>
-                                        </tr>`;
-                                        });
-                                    }
 
 
-                                    $("#tbody").append(data_html)
-                                    $('.layui-unselect').not('.header').click(function() {
-                                        $(this).toggleClass('layui-form-checked')
-                                    })
-                                    $('#input').val('')
-                                }
-                            });
+                            if (obj.curr > 1) {
+
+                                var start = obj.curr * obj.limit-obj.limit
+
+                                var data = searchData.slice(start, obj.curr * obj.limit)
+                            }
+
+                            if (obj.curr == 1) {
+                                var start = 0
+
+                                var data = searchData.slice(start, start+obj.limit)
+                            }
+
+
+                            $("#tbody").empty();
+
+                            var data_html = html(data)
+                            
+
+                            $("#tbody").append(data_html)
+                            $('.layui-unselect').not('.header').click(function() {
+                                $(this).toggleClass('layui-form-checked')
+                            })
+                            $('#input').val('')
+
                         }
                     });
                 }
@@ -181,83 +139,68 @@ function page(searchdata) {
                 dataType: "json",
                 data: { 'class_id': class_id, 'searchdata' : searchdata},
                 success: function(data) {
-                    var len = data
+
+                    stuData = data
+
+                    var len = data.length
                     laypage.render({
                         elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                             ,
                         count: len, //数据总数，从服务端得到
                         limit: 4,
                         jump: function(obj, first) {
-                            //obj包含了当前分页的所有参数，比如：
-                            var info = { 'curr': obj.curr, 'limit': obj.limit };
-                            // console.log(data);
-                            $.ajax({
-                                type: "post",
-                                url: '/teacher/Checkc/indexPage?curr=' + info['curr'] + '&limit=' + info['limit'],
-                                traditional: true,
-                                dataType: "json",
-                                data: { 'class_id': class_id, 'search' : searchdata},
-                                beforeSend: function() {
-                                    load = layer.load()
-                                },
-                                success: function(data) {
-                                    layer.close(load)
-                                    $("#tbody").empty();
-                                    var data_html = "";
-                                    if (!data.length > 0) {
-                                      $("#tbody").append('<td colspan="8" style="text-align: center;"> 暂时没有数据 </td>');
-                                    } else {
-                                        if ($('#hidn').val() == 2) {
-                                            $.each(data, function(index, array) {
-                                                data_html += `<tr>
-                                            <td>
-                                        <div class="checkbox layui-unselect layui-form-checkbox" lay-skin="primary" data-id="` + array['stu_id'] + `"><i class="layui-icon">&#xe605;</i></div>
-                                    </td>
-                                    <td>` + array['stu_numBer'] + `</td>
-                                    <td>` + array['stu_name'] + `</td>
-                                    <td>` + array['stu_phone'] + `</td>
-                                    <td>` + array['signInFlag'] + `</td>
-                                    <td>` + array['logsFlag'] + `</td>
-                                    <td>` + array['company_name'] + `</td>
-                                    <td class="td-manage">
-                                    <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
-                                        <i class="layui-icon">&#xe63c;</i>
-                                      </a>
-                                        <a title="编辑学生信息" href="/teacher/Checkc/edit?stu_id=` + array['stu_id'] + `">
-                                        <i class="layui-icon">&#xe639;</i>
-                                      </a>
-                                              <a title="删除" onclick="member_del(this,'` + array['stu_id'] + `')" href="javascript:;">
-                                            <i class="layui-icon">&#xe640;</i>
-                                          </a>
-                                            </td>
-                                        </tr>`;
-                                            });
-                                        } else {
-                                            $.each(data, function(index, array) {
-                                                data_html += `<tr>
-                                    <td>` + array['stu_numBer'] + `</td>
-                                    <td>` + array['stu_name'] + `</td>
-                                    <td>` + array['stu_phone'] + `</td>
-                                    <td>` + array['signInFlag'] + `</td>
-                                    <td>` + array['logsFlag'] + `</td>
-                                    <td>` + array['company_name'] + `</td>
-                                    <td class="td-manage">
-                                    <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
-                                        <i class="layui-icon">&#xe63c;</i>
-                                  </a>
-                                            </td>
-                                        </tr>`;
-                                            });
-                                        }
-                                    }
-                                    $("#tbody").append(data_html);
-                                    $('.layui-unselect').not('.header').click(function() {
-                                        $(this).toggleClass('layui-form-checked')
-                                    })
 
-                                    checkbox();
-                                }
-                            });
+                            if (obj.curr > 1) {
+
+                                var start = obj.curr * obj.limit-obj.limit
+
+                                var data = stuData.slice(start, obj.curr * obj.limit)
+                            }
+
+                            if (obj.curr == 1) {
+                                var start = 0
+
+                                var data = stuData.slice(start, start+obj.limit)
+                            }
+
+                             $("#tbody").empty();
+
+                            var data_html = html(data)
+                            
+
+                            $("#tbody").append(data_html);
+                            $('.layui-unselect').not('.header').click(function() {
+                                $(this).toggleClass('layui-form-checked')
+                            })
+
+                            checkbox();
+
+
+                            // var info = { 'curr': obj.curr, 'limit': obj.limit };
+                            // $.ajax({
+                            //     type: "post",
+                            //     url: '/teacher/Checkc/indexPage?curr=' + info['curr'] + '&limit=' + info['limit'],
+                            //     traditional: true,
+                            //     dataType: "json",
+                            //     data: { 'class_id': class_id, 'search' : searchdata},
+                            //     beforeSend: function() {
+                            //         load = layer.load()
+                            //     },
+                            //     success: function(data) {
+                            //         layer.close(load)
+                            //         $("#tbody").empty();
+
+                            //         var data_html = html(data)
+                                    
+
+                            //         $("#tbody").append(data_html);
+                            //         $('.layui-unselect').not('.header').click(function() {
+                            //             $(this).toggleClass('layui-form-checked')
+                            //         })
+
+                            //         checkbox();
+                            //     }
+                            // });
                         }
                     });
                 }
@@ -353,5 +296,62 @@ function member_del(obj, id) {
             }
         })
     });
+}
+
+function html(data){
+    var data_html = "";
+
+    if (!data.length > 0) {
+      $("#tbody").append('<td colspan="8" style="text-align: center;"> 暂时没有数据 </td>');
+    } else {
+
+        if ($('#hidn').val() == 2) {
+            $.each(data, function(index, array) {
+                data_html += `<tr>
+            <td>
+                <div class="checkbox layui-unselect layui-form-checkbox" lay-skin="primary" data-id="` + array['stu_id'] + `"><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>` + array['stu_numBer'] + `</td>
+            <td>` + array['stu_name'] + `</td>
+            <td>` + array['stu_phone'] + `</td>
+            <td>` + array['signInFlag'] + `</td>
+            <td>` + array['logsFlag'] + `</td>
+            <td>` + array['company_name'] + `</td>
+            <td class="td-manage">
+            <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
+                <i class="layui-icon">&#xe63c;</i>
+              </a>
+                <a title="编辑学生信息" href="/teacher/Checkc/edit?stu_id=` + array['stu_id'] + `">
+                <i class="layui-icon">&#xe639;</i>
+              </a>
+                      <a title="删除" onclick="member_del(this,'` + array['stu_id'] + `')" href="javascript:;">
+                    <i class="layui-icon">&#xe640;</i>
+                  </a>
+                    </td>
+                </tr>`;
+            });
+
+        } else {
+
+            $.each(data, function(index, array) {
+                data_html += `<tr>
+                <td>` + array['stu_numBer'] + `</td>
+                <td>` + array['stu_name'] + `</td>
+                <td>` + array['stu_phone'] + `</td>
+                <td>` + array['signInFlag'] + `</td>
+                <td>` + array['logsFlag'] + `</td>
+                <td>` + array['company_name'] + `</td>
+                <td class="td-manage">
+                <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
+                    <i class="layui-icon">&#xe63c;</i>
+                </a>
+                </td>
+            </tr>`;
+            });
+        }
+
+    }
+
+    return data_html
 }
 
