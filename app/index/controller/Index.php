@@ -126,7 +126,7 @@ class Index extends Common{
 							->find();
 
 		$stuflag = db('student')->where('stu_id', $stu_id)
-								->where('stu_phone', $data['stu_phone'])
+//								->where('stu_phone', $data['stu_phone'])
 								->find();
 
 		if (!sizeof($flag) == 0 && !sizeof($stuflag) == 0) {

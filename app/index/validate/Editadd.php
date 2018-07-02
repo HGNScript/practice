@@ -12,7 +12,7 @@ class editadd extends Validate
         'company_position' => 'require',
         'principal' => 'require',
         'principal_phone' => 'require',
-        'stu_phone' => 'require',
+//        'stu_phone' => 'require',
         'date' => 'require',
     ];
     protected $message = [
@@ -22,7 +22,7 @@ class editadd extends Validate
         'company_position.require'=>'请输入实习职位',
         'principal.require'=>'请输入实习负责人名称',
         'principal_phone.require'=>'请输入实习负责人联系电话',
-        'stu_phone.require'=>'请输入学生电话',
+//        'stu_phone.require'=>'请输入学生电话',
         'date.require'=>'请输入学生电话',
 	];
 

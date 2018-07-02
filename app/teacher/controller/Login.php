@@ -88,20 +88,42 @@ class Login extends Controller
 
             if ($validate->check($data)) {
                 $info = db('teacher')->where('tch_numBer', $numBer)->where('tch_phone', $phone)->find();
+                $stuInfo = db('student')->where('stu_numBer', $numBer)->where('stu_phone', $phone)->find();
+
+
                 if ($info) {
                     if ($data['newtch_psw'] == $data['newtch_psws']) {
+
                         $suc = db('teacher')->where('tch_numBer', $numBer)->update(['password' => md5($data['newtch_psw'])]);
                         if ($suc) {
                             return json($res = ['valid' => 1, 'msg' => '重置密码成功!']);
                         } else {
                             return json($res = ['valid' => 0, 'msg' => '重置密码失败!']);
                         }
+
                     } else {
+
                         return json($res = ['valid' => 0, 'msg' => '两次密码不一致']);
+
+
                     }
                 } else {
-                    return json($res = ['valid' => 0, 'msg' => '工号或电话号码不一致']);
+
+
+                    if ($stuInfo) {
+                        $suc = db('student')->where('stu_numBer', $numBer)->update(['stu_password' => md5($data['newtch_psw'])]);
+                        if ($suc) {
+                            return json($res = ['valid' => 1, 'msg' => '重置密码成功!']);
+                        } else {
+                            return json($res = ['valid' => 0, 'msg' => '重置密码失败!']);
+                        }
+                    } else {
+
+                        return json($res = ['valid' => 0, 'msg' => '用户名或电话号码不一致']);
+                    }
+
                 }
+
             } else {
                 return json($res = ['valid' => 0, 'msg' => $validate->getError()]);
             }
