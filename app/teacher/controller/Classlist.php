@@ -186,29 +186,39 @@ class Classlist extends Common {
 	public function searchLen() {
 		$info = input('post.info');
 		$data = $this->cla->search($info);
-		return sizeof($data);
+
+        foreach ($data as $key => $value) {
+            $sum = db('student')->where('stu_className', $value['class_name'])->select();
+            $value['sum'] = sizeof($sum);
+            if (!$value['tch_name']) {
+                $value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
+                $value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
+            }
+        }
+
+		return json($data);
 	}
 	/**
 	 * 搜索数据分页
 	 * @return [type] [description]
 	 */
-	public function searchPage() {
-		$curr = input('post.curr');
-		$limit = input('post.limit');
-		$info = input('post.search');
-		$star = ($curr-1)*$limit;
-		$data = $this->cla->search($info);
-		foreach ($data as $key => $value) {
-			$sum = db('student')->where('stu_className', $value['class_name'])->select();
-			$value['sum'] = sizeof($sum);
-			if (!$value['tch_name']) {
-			 	$value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
-			 	$value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
-			}
-		}
-		$data = array_slice($data,$star,$limit);
-		return json($data);
-	}
+//	public function searchPage() {
+//		$curr = input('post.curr');
+//		$limit = input('post.limit');
+//		$info = input('post.search');
+//		$star = ($curr-1)*$limit;
+//		$data = $this->cla->search($info);
+//		foreach ($data as $key => $value) {
+//			$sum = db('student')->where('stu_className', $value['class_name'])->select();
+//			$value['sum'] = sizeof($sum);
+//			if (!$value['tch_name']) {
+//			 	$value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
+//			 	$value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
+//			}
+//		}
+//		$data = array_slice($data,$star,$limit);
+//		return json($data);
+//	}
 
 	/**
 	 * 添加班级

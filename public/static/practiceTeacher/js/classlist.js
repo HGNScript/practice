@@ -1,6 +1,7 @@
 $(function() {
     excel();
     page();
+
     $('.grade').change(function() {
         var arr = $('.grade');
         var data = {}
@@ -20,9 +21,12 @@ $(function() {
                     var index = layer.load()
                 },
                 success: function(data) {
+
                     layer.closeAll()
+                    dataAll = data
 
                     classSelectData = data['data']
+                    specialtys = data['specialtys']
 
                     var len = data['data'].length
 
@@ -30,7 +34,7 @@ $(function() {
                         elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                             ,
                         count: len, //数据总数，从服务端得到
-                        limit: 4,
+                        limit: 10,
                         jump: function(obj, first) {
 
                                 if (obj.curr > 1) {
@@ -52,86 +56,33 @@ $(function() {
                                 $.each(data, function(index, array) {
                                     data_html += html(array)
                                 });
+                                $("#tbody").append(data_html);
 
                                 $("#specialty").empty();
                                 var specialty_html = `<option value=''>专业</option>`
 
-                                $.each(data['specialtys'], function(index, array) {
-                                    if (data['specialty'] == array) {
-                                        specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
+                                Object.keys(specialtys).forEach(function(key){
+
+                                    if (dataAll['specialty'] == specialtys[key]) {
+                                        specialty_html += `<option value="`+specialtys[key]+`" class="option" selected="selected">`+specialtys[key]+`</option>`
+
                                     } else {
-                                        specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
+                                        specialty_html += `<option value="`+specialtys[key]+`" class="option">`+specialtys[key]+`</option>`
+
                                     }
-                                });
+
+                                });  
+
+
                                 $("#specialty").append(specialty_html);
-
-                                console.log(data_html)
-
-                                $("#tbody").append(data_html);
 
                                 $('.layui-unselect').not('.header').click(function() {
                                     $(this).toggleClass('layui-form-checked')
                                 })
+
+
                                 checkbox()
 
-
-
-
-
-
-
-                            // var arr = $('.grade');
-                            // var data = {};
-
-                            // $.each(arr, function(index, array) {
-                            //     data[index] = $(this).val();
-                            // })
-
-                            // var info = { 'curr': obj.curr, 'limit': obj.limit };
-                            // var tchid = $('#allots').attr('data_tchid')
-                            // $.ajax({
-                            //     type: "post",
-                            //     url: '/teacher/Classlist/selectData?curr=' + info['curr'] + '&limit=' + info['limit'],
-                            //     traditional: true,
-                            //     dataType: "json",
-                            //     data: data,
-                            //     success: function(data) {
-                            //         if (!data['data'].length > 0) {
-                            //             layer.msg('没有您需要的数据', {
-                            //                 icon: 2, //提示的样式
-                            //                 time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                            //                 end: function() {
-                            //                     // location.reload();
-                            //                 }
-                            //             });
-                            //         }
-                            //         $("#tbody").empty();
-                            //         var data_html = "";
-                            //         $.each(data['data'], function(index, array) {
-                            //             data_html += html(array)
-                            //         });
-
-                            //         $("#specialty").empty();
-                            //         var specialty_html = `<option value=''>专业</option>`
-
-                            //         $.each(data['specialtys'], function(index, array) {
-                            //             if (data['specialty'] == array) {
-                            //                 specialty_html += `<option value="`+array+`" class="option" selected="selected">`+array+`</option>`
-                            //             } else {
-                            //                 specialty_html += `<option value="`+array+`" class="option">`+array+`</option>`
-                            //             }
-                            //         });
-                            //         $("#specialty").append(specialty_html);
-
-
-                            //         $("#tbody").append(data_html);
-
-                            //         $('.layui-unselect').not('.header').click(function() {
-                            //             $(this).toggleClass('layui-form-checked')
-                            //         })
-                            //         checkbox()
-                            //     }
-                            // });
                         }
                     });
                 }
@@ -206,7 +157,7 @@ function page() {
                     elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                         ,
                     count: len, //数据总数，从服务端得到
-                    limit: 4,
+                    limit: 10,
                     jump: function(obj, first) {
 
                         if (obj.curr > 1) {
@@ -393,52 +344,51 @@ function search() {
     var info = $("#input").val();
     layui.use('laypage', function() {
         var laypage = layui.laypage;
+
         $.ajax({
             type: "post",
             url: '/teacher/Classlist/searchLen',
             traditional: true,
             dataType: "json",
             data: { 'info': info },
+            beforeSend: function(){
+                index = layer.load()
+            },
             success: function(data) {
-                var len = data
+                layer.close(index)
+
+                var len = data.length
+
+                searchData  = data
+
                 laypage.render({
-                    elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
-                        ,
+                    elem: 'test1',
                     count: len, //数据总数，从服务端得到
                     limit: 4,
                     jump: function(obj, first) {
-                        //obj包含了当前分页的所有参数，比如：
-                        var info = $("#input").val();
-                        // var d = info.indexOf('=');
-                        // var ret = info.split("=");
-                        var data = { 'curr': obj.curr, 'limit': obj.limit, 'search': info };
-                        $.ajax({
-                            type: "post",
-                            url: '/teacher/Classlist/searchPage',
-                            traditional: true,
-                            dataType: "json",
-                            data: data,
-                            success: function(data) {
-                                if (!data.length > 0) {
-                                    layer.msg('没有您需要的数据', {
-                                        icon: 2, //提示的样式
-                                        time: 1000, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                                        end: function() {
-                                            $('#input').val('')
-                                            page();
-                                        }
-                                    });
-                                }
-                                $("#tbody").empty();
-                                var data_html = "";
-                                $.each(data, function(index, array) {
-                                    data_html += html(array)
-                                });
+
+                        if (obj.curr > 1) {
+
+                            var start = obj.curr * obj.limit-obj.limit
+
+                            var data = searchData.slice(start, obj.curr * obj.limit)
+                        }
+
+                        if (obj.curr == 1) {
+                            var start = 0
+
+                            var data = searchData.slice(start, start+obj.limit)
+                        }
 
 
-                                $("#tbody").append(data_html);
-                            }
+                        $("#tbody").empty();
+                        var data_html = "";
+                        $.each(data, function(index, array) {
+                            data_html += html(array)
                         });
+
+
+                        $("#tbody").append(data_html);
                     }
                 });
             }
