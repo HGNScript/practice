@@ -18,11 +18,12 @@ $(function() {
                 dataType: "json",
                 data: data,
                 beforeSend: function(){
-                    var index = layer.load()
+                    index = parent.layer.load()
                 },
                 success: function(data) {
 
-                    layer.closeAll()
+                    parent.layer.close(index)
+
                     dataAll = data
 
                     classSelectData = data['data']
@@ -144,10 +145,10 @@ function page() {
             traditional: true,
             dataType: "json",
             beforeSend: function(){
-                var index = layer.load()
+                index = parent.layer.load()
             },
             success: function(data) {
-                layer.closeAll()
+                parent.layer.close(index)
 
                 classData = data
 

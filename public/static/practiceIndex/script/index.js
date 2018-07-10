@@ -154,6 +154,8 @@ $(function() {
     }
 
     var addLogs = function() {
+        var logs_id = $('#logs_id').attr('data-id')
+
         var html = $('#kindEditor').html();
         $('#text').val(html);
         var info = $("#LogsForm").serialize();
@@ -208,7 +210,7 @@ $(function() {
         }
         $.ajax({
             type: "post",
-            url: '/index/Index/addlogs',
+            url: '/index/Index/addlogs?logs_id=' + logs_id,
             traditional: true,
             dataType: "json",
             data: info,

@@ -125,10 +125,11 @@ function page(search) {
             dataType: "json",
             data: search,
             beforeSend: function(){
-                var index = layer.load()
+                index = layer.load()
             },
             success: function(data) {
-                layer.close(index)
+                layer.closeAll()
+
                 var len = data
                 laypage.render({
                     elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
@@ -145,11 +146,12 @@ function page(search) {
                             dataType: "json",
                             data: search,
                             beforeSend: function(){
-                                var index = layer.load()
+                                index = layer.load()
                             },
 
                             success: function(data) {
-                                layer.close(index)
+                                layer.closeAll()
+                                
                                 $("#tbody").empty();
                                 var data_html = "";
                                 $.each(data, function(index, array) {

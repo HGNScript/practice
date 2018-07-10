@@ -107,7 +107,14 @@ function page() {
                             traditional: true,
                             dataType: "json",
                             data: data,
+                            beforeSend: function(){
+                                index = layer.load()
+                            },
                             success: function(data) {
+
+                                layer.close(index)
+
+
                               $("#tbody").empty();
                                 var data_html = "";
                                 if (!data.length > 0) {

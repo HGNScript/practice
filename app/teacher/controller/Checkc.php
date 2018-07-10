@@ -2,6 +2,7 @@
 namespace app\teacher\controller;
 
 use app\index\model\Company;
+use app\teacher\model\Stu;
 
 class Checkc extends Common
 {
@@ -543,7 +544,7 @@ class Checkc extends Common
             }
             foreach ($unstuSign as $key => $value) {
                 $stu_id = db('student')->where('stu_numBer', $value[0]['stu_numBer'])->value('stu_id');
-                $value[0]['sendtime'] = date('Y-m-d', $value[0]['sendtime']);
+                $value[0]['sendtime'] = date('Y-m-d h:i:s', $value[0]['sendtime']);
                 $value[0]['stu_id'] = $stu_id;
                 if (!$value[0]['address']) {
                     $value[0]['address'] = '<span class="layui-badge">没有签到记录</span>';
@@ -566,6 +567,7 @@ class Checkc extends Common
     public function logsinfo()
     {
         $class_id = input('get.class_id');
+
         if (request()->isAjax()) {
             $class_id = input('get.class_id');
             $curr = input('get.curr');
@@ -579,40 +581,53 @@ class Checkc extends Common
             $logs = $this->stu->getLogs($class_name, $changge);
 
             $select = $select;
+
             $sea = $sea;
 
             if ($select) {
+                if ($sea) {
+                    if ($changge) {
+                        $logs = $this->stu->search($class_name, $sea, $changge);
+                    } else {
+                        $logs = $this->stu->search($class_name, $sea, $changge);
+                    }
+                }
+
                 foreach ($logs as $key => $value) {
                     if (date('m', $value['sendtime']) != $select) {
                         unset($logs[$key]);
                     }
                 }
-            }
-
-            if ($sea) {
-                if ($changge) {
-                    $logs = $this->stu->search($class_name, $sea, $changge);
-                } else {
-                    $logs = $this->stu->search($class_name, $sea, $changge);
+            } else {
+                if ($sea) {
+                    if ($changge) {
+                        $logs = $this->stu->search($class_name, $sea, $changge);
+                    } else {
+                        $logs = $this->stu->search($class_name, $sea, $changge);
+                    }
                 }
             }
+
 
             foreach ($logs as $key => $value) {
                 $str = $value['logs_content'];
                 $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
                 $value['logs_content'] = $str;
-                $value['sendtime'] = date('Y-m-d', $value['sendtime']);
+                $value['sendtime'] = date('Y-m-d h:i:s', $value['sendtime']);
 
-                if (!$value['replyFlag']) {
+                if ($value['replyFlag'] == 0) {
+
                     $value['replyFlag'] = '<span class="layui-badge">未评阅</span>';
-                } else {
+
+                } else if ($value['replyFlag'] == 1) {
+
                     $value['replyFlag'] = '<span class="layui-badge layui-bg-green">已评阅</span>';
+
+                } else {
+
+                    $value['replyFlag'] = '<span class="layui-badge">不合格</span>';
+
                 }
-                // if (!$value['logs_id']) {
-                // 	$value['logs_content'] = '<span class="layui-badge">没有签到记录</span>';
-                // 	$value['sendtime'] = '<span class="layui-badge">没有签到记录</span>';
-                // 	$value['replyFlag'] = '没有签到记录';
-                // }
             }
 
 
@@ -636,6 +651,9 @@ class Checkc extends Common
         $class_id = input('get.class_id');
         $authority = $this->tch->getAuthority($id);
         $logs_id = input('get.id');
+        $noRepay = input('get.noRepay');
+
+
         $logs = db('logs')->where('logs_id', $logs_id)->find();
 
         $stu_name = db('student')->where('stu_id', $logs['stu_id'])->value('stu_name');
@@ -644,6 +662,7 @@ class Checkc extends Common
         $this->assign('logs', $logs);
         $this->assign('stu_name', $stu_name);
         $this->assign('class_id', $class_id);
+        $this->assign('noRepay', $noRepay);
         return $this->fetch();
     }
 
@@ -652,6 +671,7 @@ class Checkc extends Common
         $class_id = input('get.class_id');
         $class_name = db('class')->where('class_id', $class_id)->value('class_name');
         $logs_id = $this->cla->getreply($class_name);
+
         if (!sizeof($logs_id)) {
             return $res = ['valid' => 0, 'msg' => '没要未评阅的日志!'];
         } else {
@@ -662,17 +682,22 @@ class Checkc extends Common
     public function reply()
     {
         $data = input('post.logs_reply');
+        $replay_val = input('post.replay_val');
         $logs_id = input('get.logs_id');
         $class_id = input('get.class_id');
         $class_name = db('class')->where('class_id', $class_id)->value('class_name');
+
         if (!$logs_id) {
             $len = strlen($data);
             if ($len > 15000) {
                 $res = ['valid' => 0, 'msg' => '评阅字数过多!'];
             } else {
                 $logs_id = $this->cla->getreply($class_name);
+
                 foreach ($logs_id as $key => $value) {
-                    $res = db('logs')->where('logs_id', $value)->update(['logs_reply' => $data, 'replyFlag' => 1]);
+
+                    $res = db('logs')->where('logs_id', $value)->update(['logs_reply' => $data, 'replyFlag' => 1, 'replay_val' => $replay_val]);
+
                     if ($res) {
                         $res = true;
                     } else {
@@ -682,21 +707,38 @@ class Checkc extends Common
                 if ($res) {
                     $res = ['valid' => 1, 'msg' => '评阅成功!'];
                 } else {
-                    $res = ['valid' => 0, 'msg' => '评阅失败,!'];
+                    $res = ['valid' => 0, 'msg' => '评阅失败!'];
                 }
 
             }
 
         } else {
             $len = strlen($data);
+
+
             if ($len > 15000) {
                 $res = ['valid' => 0, 'msg' => '评阅字数过多!'];
             } else {
-                $res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 1]);
+                $stu = db('logs')->where('logs_id', $logs_id)->find();
+
+                if ($replay_val == '不合格') {
+                    (new Stu())->save([
+                        'logsFlag' => '0',
+                    ], ['stu_id' => $stu['stu_id']]);
+
+                    $res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 2, 'replay_val' => $replay_val]);
+
+
+                } else {
+
+                    $res = db('logs')->where('logs_id', $logs_id)->update(['logs_reply' => $data, 'replyFlag' => 1, 'replay_val' => $replay_val]);
+
+                }
+
                 if ($res) {
                     $res = ['valid' => 1, 'msg' => '评阅成功!'];
                 } else {
-                    $res = ['valid' => 0, 'msg' => '评阅失败,!'];
+                    $res = ['valid' => 0, 'msg' => '评阅失败!'];
                 }
 
             }
@@ -730,49 +772,149 @@ class Checkc extends Common
         $class_id = input('get.class_id');
         if (request()->isAjax()) {
             $class_id = input('get.class_id');
-            $curr = input('get.curr');
-            $limit = input('get.limit');
+//            $curr = input('get.curr');
+//            $limit = input('get.limit');
             $changge = input('get.changge');
             $search = input('post.sea');
+            $select = input('post.select');
 
 
             $class_name = db('class')->where('class_id', $class_id)->value('class_name');
 
-            if ($search) {
-                $stu_id = $this->stu->searchLogs($class_name, $search);
+            if ($select) {
+                $stu_id = $this->stu->getUnLogstStu($select, $search, $class_name);
+
             } else {
-                $stu_id = db('student')->where('stu_className', $class_name)->where('logsFlag', 0)->column('stu_id');
-            }
-            $logs = array();
-            foreach ($stu_id as $key => $value) {
-                $logs[$key] = $this->stu->getunLogs($value);
-            }
-            foreach ($logs as $key => $value) {
-                $stu_id = db('student')->where('stu_numBer', $value[0]['stu_numBer'])->value('stu_id');
-                $value[0]['stu_id'] = $stu_id;
-                $value[0]['sendtime'] = date('Y-m-d', $value[0]['sendtime']);
+                if ($search) {
 
-                $str = $value[0]['logs_content'];
-                $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
-                $value[0]['logs_content'] = $str;
+                    $stu_id = $this->stu->searchLogs($class_name, $search);
 
-                if (!$value[0]['logs_id']) {
-                    $value[0]['logs_content'] = '<span class="layui-badge">没有日志记录</span>';
-                    $value[0]['sendtime'] = '<span class="layui-badge">没有日志记录</span>';
+                } else {
+
+                    $stu_id = db('student')->where('stu_className', $class_name)->where('logsFlag', 0)->column('stu_id');
+
                 }
             }
 
-            if ($curr) {
-                $star = ($curr - 1) * $limit;
-                $logs = array_slice($logs, $star, $limit);
-                return json($logs);
-            } else {
-                return sizeof($logs);
+
+
+            $logs = [
+                '0' => [],
+            ];
+
+            foreach ($stu_id as $key => &$value) {
+
+                if ($select) {
+                    $stu = db('student')
+                        ->where('stu_id', $value)
+                        ->find();
+                } else {
+                    $stu = db('student')
+                        ->where('stu_id', $value)
+                        ->where('logsFlag', 0)
+                        ->find();
+                }
+
+                $l = $this->stu->getunLogs($value, $select);
+
+                if (sizeof($l) > 0) {
+
+                    $l = $this->stu->getunLogs($value, $select);
+                    $l = $l[0];
+
+
+                    if ($l['sendtime']) {
+                        $l['sendtime'] = date('Y-m-d', $l['sendtime']);
+                    }
+
+                    $str = $l['logs_content'];
+
+                    if ($str) {
+                        $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
+                    }
+
+                    $l['logs_content'] = $str;
+
+                    if (!$l['logs_id']) {
+                        $l['logs_content'] = '<span class="layui-badge">没有日志记录</span>';
+                        $l['sendtime'] = '<span class="layui-badge">没有日志记录</span>';
+
+                    }
+
+
+                    array_push($logs[0], $l);
+
+                } else {
+
+                    $stu['sendtime'] = '';
+                    $stu['logs_content'] = '';
+                    $stu['logs_id'] = '';
+                    $stu['stu_numBer'] = $stu['stu_numBer'];
+
+                    if (!$stu['logs_id']) {
+                        $stu['logs_content'] = '<span class="layui-badge">没有日志记录</span>';
+                        $stu['sendtime'] = '<span class="layui-badge">没有日志记录</span>';
+
+                    }
+
+                    $logs[0][$key] = $stu;
+
+                }
+
             }
+
+//            return json();
+
+
+            if (sizeof($logs) > 0) {
+
+                foreach ($logs[0] as $key => &$value) {
+
+//                    $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
+//
+//
+//
+//                    $value['stu_id'] = $stu_id;
+//
+//                    if ($value['sendtime']) {
+//                        $value['sendtime'] = date('Y-m-d', $value['sendtime']);
+//                    }
+//
+//                    $str = $value['logs_content'];
+//
+//                    if ($str) {
+//                        $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
+//                    }
+//
+//                    $value['logs_content'] = $str;
+//
+//                    if (!$value['logs_id']) {
+//                        $value['logs_content'] = '<span class="layui-badge">没有日志记录</span>';
+//                        $value['sendtime'] = '<span class="layui-badge">没有日志记录</span>';
+//
+//                    }
+
+                }
+            } else {
+                $logs = [
+                    '0' => [],
+                ];
+            }
+
+//            if ($curr) {
+//                $star = ($curr - 1) * $limit;
+//                $logs = array_slice($logs, $star, $limit);
+
+                return json($logs[0]);
+//            } else {
+//                return sizeof($logs[0]);
+//            }
         }
+
         $this->assign('class_id', $class_id);
         return $this->fetch();
     }
+
 
     public function score()
     {

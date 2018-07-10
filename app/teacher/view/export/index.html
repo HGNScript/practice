@@ -134,7 +134,12 @@ function page(search) {
                             traditional: true,
                             dataType: "json",
                             data: search,
+                            beforeSend: function(){
+                                index = layer.load()
+                            },
                             success: function(data) {
+                                layer.close(index)
+
                             $("#tbody").empty();
                                 if (data['specialtys']) {
                                     $("#tbody").empty();

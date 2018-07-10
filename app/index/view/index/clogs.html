@@ -32,17 +32,43 @@
             <a href="">查看日志</a>
         </li>
     </ul>
-        <h4 class="col-sm-12" style="color: #2478C0; margin-top: 20px;">日志</h4>
+        <h4 class="col-sm-12" style="color: #2478C0; margin-top: 20px;font-size: 16px;font-weight: bold;">日志</h4>
+        {if condition="$oldLogs['replyFlag'] != 2"}
         <div class="col-sm-12 arc">
                 {$oldLogs['logs_content']}
         </div>
-        <h4 class="col-sm-12" style="color: #2478C0">教师评语</h4>
-        <div class="reply col-sm-12">
-            {if condition="!$oldLogs['logs_reply']"}
-            还没有教师评语!
-            {else/}
-            {$oldLogs['logs_reply']}
-            {/if}
+        {else/}
+        <form class="" id="LogsForm">
+            <input type="hidden" name="logs_content" id="text">
+            <div id="kindEditor" class="col-sm-12 arc" style="word-wrap:break-word;">
+                    {$oldLogs['logs_content']}
+            </div>
+        <button class="btn btn-primary pull-right" type="button" style="margin: 10px" id="addLogs">
+                重新提交
+        </button>
+        </form>
+        <input type="hidden" id="logs_id" data-id="{$oldLogs['logs_id']}">
+        {/if}
+        
+         
+
+        <div style="margin-top: 50px;">
+            <h4 class="col-sm-12" style="color: #2478C0;font-size: 16px;font-weight: bold;">教师指导意见</h4>
+            <div class="reply col-sm-12">
+                <div>
+                    <span style="font-size: 14px;font-weight: bold;">评价:</span>{$oldLogs['replay_val']}
+                </div>
+                <div style="margin-top: 10px;">
+                    <span  style="font-size: 14px;font-weight: bold;">意见：</span>
+                    {if condition="!$oldLogs['logs_reply']"}
+                        还没有教师意见!
+                        {else/}
+                        {$oldLogs['logs_reply']}
+                        {/if}
+                </div>
+                
+            </div>
         </div>
+
 </section>
 {/block}

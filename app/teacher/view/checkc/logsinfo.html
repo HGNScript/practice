@@ -46,9 +46,9 @@
                 </select>
             </div>
             <div class="layui-form layui-col-md10 layui-col-sm10 x-so">
-            <input id="input" type="text" name="search" placeholder="请输入名称或学号" class="layui-input" style="margin: 0;">
-            <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
-        </div>
+                <input id="input" type="text" name="search" placeholder="请输入名称或学号" class="layui-input" style="margin: 0;">
+                <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
+            </div>
         </div>
         <div class="layui-col-md12">
             <table class="layui-table">
@@ -66,10 +66,10 @@
                 </tbody>
             </table>
         </div>
-        <a class="layui-btn" href="/teacher/Checkc/unlogs?class_id={$class_id}" >本月未填写日志学生</a>
-        <button class="layui-btn x-right" id="replyAll">一键评阅</button>
+        <a class="layui-btn layui-btn-danger" href="/teacher/Checkc/unlogs?class_id={$class_id}" >未填写日志学生</a>
+        <!--<button class="layui-btn x-right" id="replyAll">一键评阅</button>-->
         <input type="hidden" name="" value="{$class_id}" id="hide">
-        <div class="page"">
+        <div class="page">
             <div id="test1"></div>
         </div>
     </div>
@@ -85,6 +85,7 @@ $(function() {
     replyAll()
     cli()
 })
+
 function replyAll(){
     $('#replyAll').click(function(){
         var class_id = $('#hide').val();
@@ -118,12 +119,19 @@ function page(search) {
             traditional: true,
             dataType: "json",
             data: search,
+            beforeSend:function(XMLHttpRequest){
+                 var index = parent.layer.load(0, {
+                    shade: [0.2, '#393D49']
+                    });
+            },
             success: function(data) {
+                parent.layer.closeAll()
+
                 var len = data
                 laypage.render({
                     elem: 'test1', //注意，这里的 test1 是 ID，不用加 # 号
                     count: len, //数据总数，从服务端得到
-                    limit: 4,
+                    limit: 10,
                     jump: function(obj, first) {
                         var class_id = $('#hide').val();
                         var info = { 'curr': obj.curr, 'limit': obj.limit };
@@ -133,11 +141,23 @@ function page(search) {
                             traditional: true,
                             dataType: "json",
                             data: search,
+                            beforeSend:function(XMLHttpRequest){
+                                 var index = parent.layer.load(0, {
+                                    shade: [0.2, '#393D49']
+                                    });
+                            },
                             success: function(data) {
+                                parent.layer.closeAll()
+
                                 $("#tbody").empty();
-                                var data_html = "";
-                                $.each(data, function(index, array) {
-                                    data_html += `<tr style="cursor: pointer;" class="cli" data-id="` + array['logs_id'] + `">
+
+                                if (!data.length > 0) {
+                                    $("#tbody").append('<td colspan="7" style="text-align: center;"> 暂时没有数据 </td>');
+
+                                } else {
+                                    var data_html = "";
+                                    $.each(data, function(index, array) {
+                                        data_html += `<tr style="cursor: pointer;" class="cli" data-id="` + array['logs_id'] + `">
                                             <td>` + array['stu_numBer'] + `</td>
                                             <td>` + array['stu_name'] + `</td>
                                             <td>` + array['sendtime'] + `</td>
@@ -152,10 +172,10 @@ function page(search) {
                                                 </a>
                                             </td>
                                     </tr>`;
-                                });
-                                $("#tbody").append(data_html);
-                                cli()
-
+                                    });
+                                    $("#tbody").append(data_html);
+                                    cli()
+                                }
                             }
                         });
                     }
@@ -207,10 +227,13 @@ function search(){
             } else {
                 var search = {}
                 search['sea'] = val
+
+                var month = $('#Month').val();
+                search['select'] = month
                 data = search
                 page(data)
                 $('#input').val('');
-                $("#Month").val('');
+                // $("#Month").val('');
             }
         }
     });
@@ -227,10 +250,14 @@ function search(){
             } else {
                 var search = {}
                 search['sea'] = val
+
+                var month = $('#Month').val();
+                search['select'] = month
+                console.log(month)
                 data = search
                 page(data)
                 $('#input').val('');
-                $("#Month").val('');
+                // $("#Month").val('');
             }
     })
 }

@@ -57,26 +57,104 @@
                 </div>
             {/if}
             <div class="x-nav" style="margin-top: 20px;">
-                <h2 style="display: inline-block;font-weight: bold;font-size: 18px">评阅内容</h2>
+                <h2 style="display: inline-block;font-weight: bold;font-size: 18px">教师指导意见</h2>
+
+
+                {if condition="$logs['replyFlag'] == 0 && $noRepay != 'false' "}
                 <span>
                       <button class="layui-btn x-right" type="button" id="reply">
-                    评阅
+                    提交意见
                 </button>
                 </span>
+                {/if}
+
             </div>
             <div class="layui-row" style="margin-top: 20px;">
-                <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm">
-                    <div class="col-sm-12" style="padding: 0;">
+                <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm" class="layui-form">
+                    <div class="layui-form-item" style="display: inline-block">
+                        <label class="layui-form-label">评价：</label>
+                        <div class="layui-input-block">
+
+                            {if condition="$logs['replyFlag'] == 0 && $noRepay != 'false' "}
+                                {if condition="$logs['replay_val'] == '优秀' "}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" checked>
+                                <input type="radio" name="replay_val" value="良好" title="良好">
+                                <input type="radio" name="replay_val" value="合格" title="合格">
+                                <input type="radio" name="replay_val" value="不合格" title="不合格">
+                                {elseif condition="$logs['replay_val'] == '合格' "/}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" >
+                                <input type="radio" name="replay_val" value="良好" title="良好" >
+                                <input type="radio" name="replay_val" value="合格" title="合格" checked>
+                                <input type="radio" name="replay_val" value="不合格" title="不合格">
+                                {elseif condition="$logs['replay_val'] == '不合格' "/}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" >
+                                <input type="radio" name="replay_val" value="良好" title="良好" >
+                                <input type="radio" name="replay_val" value="合格" title="合格" >
+                                <input type="radio" name="replay_val" value="不合格" title="不合格" checked>
+                                {else/}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" >
+                                <input type="radio" name="replay_val" value="良好" title="良好" checked>
+                                <input type="radio" name="replay_val" value="合格" title="合格" >
+                                <input type="radio" name="replay_val" value="不合格" title="不合格">
+                                {/if}
+                            {else/}
+                                {if condition="$logs['replay_val'] == '优秀' "}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" checked disabled>
+                                <input type="radio" name="replay_val" value="良好" title="良好" disabled>
+                                <input type="radio" name="replay_val" value="合格" title="合格" disabled>
+                                <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
+                                {elseif condition="$logs['replay_val'] == '合格' "/}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
+                                <input type="radio" name="replay_val" value="良好" title="良好" disabled>
+                                <input type="radio" name="replay_val" value="合格" title="合格" checked>
+                                <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
+                                {elseif condition="$logs['replay_val'] == '不合格' "/}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
+                                <input type="radio" name="replay_val" value="良好" title="良好" disabled>
+                                <input type="radio" name="replay_val" value="合格" title="合格" disabled>
+                                <input type="radio" name="replay_val" value="不合格" title="不合格" checked disabled>
+                                {else/}
+                                <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
+                                <input type="radio" name="replay_val" value="良好" title="良好" checked disabled>
+                                <input type="radio" name="replay_val" value="合格" title="合格" disabled>
+                                <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
+                                {/if}
+                            {/if}
+                        </div>
+                    </div>
+                   
+
+                    {if condition="$noRepay != 'false' "}
+
+                    <div class="col-sm-12 col-md-12" style="padding: 0;">
                         <input type="hidden" name="logs_reply" id="text">
                         {if condition="$logs['logs_reply']"}
+                        <label class="layui-form-label">意见：</label>
                         <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">{$logs['logs_reply']}</div>
                         {else/}
+                        <label class="layui-form-label">意见：</label>
                         <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; "></div>
                         {/if}
 
                     </div>
+
+                    {else /}
+
+                   <div class="col-sm-12 col-md-12" style="padding: 0;">
+                        <input type="hidden" name="logs_reply" id="text">
+                        <label class="layui-form-label">意见：</label>
+                        <div style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">{$logs['logs_reply']}</div>
+                        
+
+                    </div>
+
+                    {/if}
+
+
+                    
                 </form>
-                <input type="hidden" name="" id="hide" value="{$logs['logs_id']}">
+
+                <input type="hidden" name="" id="logs_id" value="{$logs['logs_id']}">
                 <input type="hidden" name="" id="class_id" value="{$class_id}">
             </div>
         </div>
@@ -101,21 +179,43 @@ $(function(){
     })
 })
 var reply = function() {
+
     var html = $('#kindEditor').html();
-    $('#text').val(html);
+
+    $('#text').val(html)
+
     var info = $("#LogsForm").serialize();
-    var logs_id = $("#hide").val();
+
     var class_id = $("#class_id").val();
 
-    var str = $('#text').val()
-    var str = str.indexOf("点击此处编辑内容")
-    if (str > 0) {
-        layer.msg('请填写内容', {
-                    icon: 2, //提示的样式
-                    time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                });
-        return false;
+    var logs_id = $("#logs_id").val();
+
+    var radius =  $("input[name='replay_val']:checked").val()
+
+    if (radius == '不合格'){
+
+        var str = $('#kindEditor').html()
+
+        var str = str.indexOf('<p class="Eleditor-placeholder">点击此处编辑内容</p>')
+
+
+        if (str != -1) {
+            layer.msg('请填写内容', {
+                icon: 2, //提示的样式
+                time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+            });
+
+            return false;
+        }
+
+    } else {
+        $('#text').val('')
+        var info = $("#LogsForm").serialize();
+
     }
+
+
+
 
     $.ajax({
         type: "post",
@@ -124,7 +224,6 @@ var reply = function() {
         dataType: "json",
         data: info,
         success: function(data) {
-            console.log(data)
             if (data['valid']) {
                 layer.msg(data['msg'], {
                     icon: 1, //提示的样式

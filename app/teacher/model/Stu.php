@@ -1,6 +1,7 @@
 <?php
 namespace app\teacher\model;
 
+use app\api\controller\v1\Product;
 use think\Model;
 
 class Stu extends Model {
@@ -59,25 +60,90 @@ class Stu extends Model {
 		if ($changge) {
 			return $this->alias('s')
 				->join('practice_logs l', 's.stu_id = l.stu_id', 'RIGHT')
-				->where('s.stu_className', $class_name)
+                ->where('s.stu_className', $class_name)
+                ->where('l.replyFlag', "<>", 2)
 				->order('l.replyFlag, sendtime desc')
 				->select();
 		} else {
 			return $this->alias('s')
 				->join('practice_logs l', 's.stu_id = l.stu_id', 'RIGHT')
 				->where('s.stu_className', $class_name)
-				->order('l.replyFlag desc, sendtime desc')
+                ->where('l.replyFlag', "<>", 2)
+                ->order('l.replyFlag desc, sendtime desc')
 				->select();
 		}
 	}
 
-	public function getunLogs($stu_id){
-		return $this->alias('s')
-				->join('practice_logs l', 's.stu_id = l.stu_id', 'left')
-				->where('s.stu_id', $stu_id)
-				->order('l.sendtime desc')
-				->limit(1)
-				->select();
+	public function getUnLogstStu($select, $search, $class_name){
+        $logstStuID = $this->getLogstStuID($select, $class_name, $search);
+
+        if ($search) {
+            $stu_id =  $this->where('stu_className', '=', $class_name)->where("stu_numBer like '%$search%' OR stu_name like '%$search%'")
+                ->column('stu_id');
+
+        } else {
+            $stu_id =  $this->where('stu_className', '=', $class_name)->column('stu_id');
+
+        }
+
+        foreach ($stu_id as $key => $value) {
+            if (in_array($value, $logstStuID)) {
+                unset($stu_id[$key], $value);
+            }
+        }
+
+
+        return $stu_id;
+    }
+
+    //获取指定月份已填写日志的学生ID
+    public function getLogstStuID ($select, $class_name, $search){
+        $stu_id =  $this->where('stu_className', '=', $class_name)->column('stu_id');
+
+        $logsIDArr = [];
+
+        foreach ($stu_id as $key => $value) {
+            $logs = db('logs')
+                ->where('stu_id', $value)
+                ->where('replyFlag','<>', 2)
+                ->find();
+
+            if (date('m', $logs['sendtime']) == $select) {
+                if ($logs) {
+                    array_push($logsIDArr, $logs['stu_id']);
+                }
+            }
+        }
+
+
+        return $logsIDArr;
+    }
+
+
+
+
+
+	public function getunLogs($stu_id, $select){
+        if ($select) {
+            return $this->alias('s')
+                ->join('practice_logs l', 's.stu_id = l.stu_id', 'left')
+                ->where('s.stu_id', $stu_id)
+                ->where('l.replyFlag', '<>', 2)
+                ->order('l.sendtime desc')
+                ->limit(1)
+                ->select();
+
+        } else {
+            return $this->alias('s')
+                ->join('practice_logs l', 's.stu_id = l.stu_id', 'left')
+                ->where('s.stu_id', $stu_id)
+                ->where('l.replyFlag', '<>', 2)
+                ->where('s.logsFlag', 0)
+                ->order('l.sendtime desc')
+                ->limit(1)
+                ->select();
+        }
+
 	}
 
 	public function search($class_name, $search, $changge){
@@ -100,6 +166,7 @@ class Stu extends Model {
 		return $this->where("logsFlag= 0 AND stu_className= '$class_name' AND stu_numBer like '%$search%' OR logsFlag= 0 AND stu_className='$class_name' AND stu_name like '%$search%'")
 			->column('stu_id');
 	}
+
 	public function searchsign($class_name, $search, $changge){
 		if ($changge) {
 			return $this->where("stu_className= '$class_name' AND stu_numBer like '%$search%' OR stu_className='$class_name' AND stu_name like '%$search%'")
@@ -137,6 +204,5 @@ class Stu extends Model {
 				->order('stu_numBer')
 				->select();
 	}
-
 
 }

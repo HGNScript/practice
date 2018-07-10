@@ -91,18 +91,31 @@
         <div class="swiper-slide">
             <div class="arc">
                 <h5>{:date('Y-m-d H:i', time())}</h5>
-                <h4>本月还没填写实习日志</h4>
+                <p style="font-size: 18px; text-align: center;">本月未填写实习日志、或日志评价不合格</p>
             </div>
         </div>
+
         {/if} {foreach name="$logsInfo" item="vo" key="k"}
         <div class="swiper-slide">
             <a href="{:url('/clogs', ['logs_id' => $vo['logs_id']])}">
             <div class="arc">
                 <h5>{:date('Y-m-d H:i',$vo['sendtime'])}
-                    </h5> {if condition="$vo['logs_content']"}
+                    {if condition="$vo['replyFlag'] == 0"}
+                        <span class="layui-badge layui-bg-orange">未评阅</span>
+                    {elseif condition="$vo['replyFlag'] == 1"}
+                        <span class="layui-badge layui-bg-green">{$vo['replay_val']}</span>
+                    {elseif condition="$vo['replyFlag'] == 2"}
+                        <span class="layui-badge">不合格</span>
+                    {/if}    
+                </h5>
+                {if condition="$vo['logs_content']"}
+
                 <p>{$vo['logs_content']}</p>
+
                 {else/}
+
                 <p>当前日志只有图片,请点击查看</p>
+                
                 {/if}
             </div>
             </a>

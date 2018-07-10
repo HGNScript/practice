@@ -130,7 +130,7 @@ $(function() {
    
 function page(searchdata) {
         var class_id = $("#class_id").val()
-        layui.use('laypage', function() {
+        layui.use(['laypage', 'layer'], function() {
             var laypage = layui.laypage;
             $.ajax({
                 type: "post",
@@ -138,7 +138,14 @@ function page(searchdata) {
                 traditional: true,
                 dataType: "json",
                 data: { 'class_id': class_id, 'searchdata' : searchdata},
+                beforeSend:function(XMLHttpRequest){
+                    index = parent.layer.load(0, {
+                    shade: [0.2, '#393D49']
+                    });
+                },
                 success: function(data) {
+
+                    parent.layer.close(index)
 
                     stuData = data
 
@@ -176,31 +183,6 @@ function page(searchdata) {
                             checkbox();
 
 
-                            // var info = { 'curr': obj.curr, 'limit': obj.limit };
-                            // $.ajax({
-                            //     type: "post",
-                            //     url: '/teacher/Checkc/indexPage?curr=' + info['curr'] + '&limit=' + info['limit'],
-                            //     traditional: true,
-                            //     dataType: "json",
-                            //     data: { 'class_id': class_id, 'search' : searchdata},
-                            //     beforeSend: function() {
-                            //         load = layer.load()
-                            //     },
-                            //     success: function(data) {
-                            //         layer.close(load)
-                            //         $("#tbody").empty();
-
-                            //         var data_html = html(data)
-                                    
-
-                            //         $("#tbody").append(data_html);
-                            //         $('.layui-unselect').not('.header').click(function() {
-                            //             $(this).toggleClass('layui-form-checked')
-                            //         })
-
-                            //         checkbox();
-                            //     }
-                            // });
                         }
                     });
                 }

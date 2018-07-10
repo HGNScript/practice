@@ -19,8 +19,16 @@ class Logs extends Model{
 		return $this->where('stu_id', $stu_id)->order('sendtime desc')->select();
 	}
 
-	public function addLogs($data) {
-		return $this->save($data);
+	public function addLogs($data,$logs_id) {
+	    if ($logs_id && $logs_id != 'undefined'){
+            $data['logs_reply'] = '';
+            $data['replyFlag'] = 0;
+            $data['replay_val'] = '';
+
+            return $this->save($data,['logs_id' => $logs_id]);
+        } else {
+            return $this->save($data);
+        }
 	}
 
 	public function notice($stu_id) {
