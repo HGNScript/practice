@@ -30,7 +30,9 @@
 <body>
    <div class="x-nav">
             <span class="layui-breadcrumb" lay-separator="|">
+            {if condition="$authority == 1"}
             <a href="javascript:history.back(-1)">返回上级</a>
+            {/if}
             <a><cite>学生详细信息</cite></a>
             </span>
         <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">

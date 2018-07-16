@@ -2,6 +2,7 @@
 namespace app\teacher\controller;
 
 use app\index\model\Company;
+use app\teacher\model\Config;
 use app\teacher\model\Stu;
 
 class Checkc extends Common
@@ -45,6 +46,10 @@ class Checkc extends Common
                 if (!$value['company_name']) {
                     $value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
                 }
+                if (!$value['company_address']) {
+                    $value['company_address'] = '<span class="layui-badge">没有实习信息</span>';
+                }
+
                 $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
                 $stuData[$key]['stu_id'] = $stu_id;
             }
@@ -59,34 +64,6 @@ class Checkc extends Common
         $this->assign('authority', $authority);
         return $this->fetch();
     }
-
-    /**
-     * 班级数据分页
-     */
-//    public function indexPage()
-//    {
-//        $class_id = input('post.class_id');
-//        $curr = input('get.curr');
-//        $limit = input('get.limit');
-//        $star = ($curr - 1) * $limit;
-//        $stu_id = db('student')->where('class_id', $class_id)->order('signinFlag, logsFlag')->column('stu_id');
-//        $stuData = array();
-//        foreach ($stu_id as $key => $value) {
-//            $stuData[$key] = $this->stu->getStuInfo($value);
-//        }
-//        foreach ($stuData as $key => $value) {
-//            $value['signInFlag'] ? $value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value['signInFlag'] = '<span class="layui-badge">否</span>';
-//            $value['logsFlag'] ? $value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value['logsFlag'] = '<span class="layui-badge">否</span>';
-//            if (!$value['company_name']) {
-//                $value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
-//            }
-//            $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
-//            $stuData[$key]['stu_id'] = $stu_id;
-//        }
-//        $stuData = array_slice($stuData, $star, $limit);
-//        return json($stuData);
-//
-//    }
 
     /**
      * 搜索数据分页长度
@@ -104,60 +81,34 @@ class Checkc extends Common
                 unset($stu_id[$key]);
             }
         }
-        $stuData = array();
+        $stuData = [];
         foreach ($stu_id as $key => $value) {
-            $stuData[$key] = $this->stu->getStuInfo($value);
+            $data = $this->stu->getStuInfo($value);
+
+            array_push($stuData, $data);
         }
+
+
         foreach ($stuData as $key => $value) {
             $value['signInFlag'] ? $value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value['signInFlag'] = '<span class="layui-badge">否</span>';
             $value['logsFlag'] ? $value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value['logsFlag'] = '<span class="layui-badge">否</span>';
             if (!$value['company_name']) {
                 $value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
             }
+
+            if (!$value['company_address']) {
+                $value['company_address'] = '<span class="layui-badge">没有实习信息</span>';
+            }
+
             $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
             $stuData[$key]['stu_id'] = $stu_id;
         }
 
 
-        return $stuData;
+        return json($stuData);
 
     }
 
-    /**
-     * 搜索的分页数据
-     */
-//    public function searchStu()
-//    {
-//        $curr = input('post.curr');
-//        $limit = input('post.limit');
-//        $class_id = input('post.class_id');
-//        $data = input('post.info');
-//        $star = ($curr - 1) * $limit;
-//        $stu_id = $this->stu->sreach($data, $class_id);
-//        $stuData = array();
-//        foreach ($stu_id as $key => $v) {
-//            $arr = $stu_id;
-//            unset($arr[$key]);
-//            if (in_array($stu_id[$key], $arr)) {
-//                unset($stu_id[$key]);
-//            }
-//        }
-//
-//        foreach ($stu_id as $key => $value) {
-//            $stuData[$key] = $this->stu->getStuInfo($value);
-//        }
-//        foreach ($stuData as $key => $value) {
-//            $value['signInFlag'] ? $value['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value['signInFlag'] = '<span class="layui-badge">否</span>';
-//            $value['logsFlag'] ? $value['logsFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value['logsFlag'] = '<span class="layui-badge">否</span>';
-//            if (!$value['company_name']) {
-//                $value['company_name'] = '<span class="layui-badge">没有实习信息</span>';
-//            }
-//            $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
-//            $stuData[$key]['stu_id'] = $stu_id;
-//        }
-//        $stuData = array_slice($stuData, $star, $limit);
-//        return json($stuData);
-//    }
 
     /**
      * 学生信息详情
@@ -169,6 +120,10 @@ class Checkc extends Common
         $data = $this->stu->getStu($stu_id);
         $sginin = db('sginin')->where('stu_id', $stu_id)->limit(4)->order('sendtime desc')->select();
         $logs = db('logs')->where('stu_id', $stu_id)->limit(4)->order('sendtime desc')->select();
+
+        $id = session('tch.tch_id');
+        $authority = $this->tch->getAuthority($id);
+
         foreach ($logs as $key => $value) {
             $str = $logs[$key]['logs_content'];
             $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
@@ -179,6 +134,8 @@ class Checkc extends Common
         $this->assign('data', $data[0]);
         $this->assign('flag', $flag);
         $this->assign('stu_id', $stu_id);
+        $this->assign('authority', $authority);
+
         return $this->fetch();
     }
 
@@ -278,6 +235,9 @@ class Checkc extends Common
     {
         $stu_id = input('get.stu_id');
         $signin = db('sginin')->where('stu_id', $stu_id)->order('sendtime desc')->select();
+
+
+
         if (request()->isAjax()) {
             $stu_id = input('get.stu_id');
             $curr = input('post.curr');
@@ -292,6 +252,7 @@ class Checkc extends Common
         }
         $this->assign('len', sizeof($signin));
         $this->assign('stu_id', $stu_id);
+
         return $this->fetch();
     }
 
@@ -480,6 +441,9 @@ class Checkc extends Common
         $oldData = db('student')->where('stu_id', $stu_id)->find();
         $this->assign('oldData', $oldData);
 
+        $id = session('tch.tch_id');
+        $authority = $this->tch->getAuthority($id);
+
         if (request()->isAjax()) {
             $data = input('post.');
             $validate = validate('AddStu');
@@ -503,6 +467,8 @@ class Checkc extends Common
             }
             return json($res);
         }
+
+        $this->assign('authority', $authority);
         return $this->fetch();
     }
 
@@ -512,56 +478,78 @@ class Checkc extends Common
         $class_id = input('get.class_id');
         if (request()->isAjax()) {
             $class_id = input('get.class_id');
-            $curr = input('get.curr');
-            $limit = input('get.limit');
             $changge = input('get.changge');
             $chang = $changge;
             $search = input('post.sea');
+            $select = input('post.select');
 
             $class_name = db('class')->where('class_id', $class_id)->value('class_name');
 
-            if ($search) {
-                if ($chang) {
-                    $stu_id = $this->stu->searchsign($class_name, $search, $changge);
-                } else {
+            if (!$select) {
+                if ($search) {
                     $stu_id = $this->stu->searchsign($class_name, $search, $chang);
+                } else {
+                    $stu_id = db('student')->where('stu_className', $class_name)->where('signinFlag', 0)->order('stu_numBer')->column('stu_id');
                 }
             } else {
-                if ($chang) {
-                    $stu_id = db('student')->where('stu_className', $class_name)->order('signinFlag')->column('stu_id');
-                } else {
-                    $stu_id = db('student')->where('stu_className', $class_name)->order('signinFlag desc')->column('stu_id');
-                }
+                $stu_id = $this->stu->getWeekSign($select, $class_name, $search);
             }
 
 
             $unstuSign = array();
+
             foreach ($stu_id as $key => $value) {
-                $unstuSign[$key] = $this->stu->getSignin($value);
-            }
-            foreach ($unstuSign as $key => $value) {
-                $value[0]['signInFlag'] ? $value[0]['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value[0]['signInFlag'] = '<span class="layui-badge">否</span>';
-            }
-            foreach ($unstuSign as $key => $value) {
-                $stu_id = db('student')->where('stu_numBer', $value[0]['stu_numBer'])->value('stu_id');
-                $value[0]['sendtime'] = date('Y-m-d h:i:s', $value[0]['sendtime']);
-                $value[0]['stu_id'] = $stu_id;
-                if (!$value[0]['address']) {
-                    $value[0]['address'] = '<span class="layui-badge">没有签到记录</span>';
-                    $value[0]['sendtime'] = '<span class="layui-badge">没有签到记录</span>';
-                }
-            }
-            if ($curr) {
-                $star = ($curr - 1) * $limit;
-                $unstuSign = array_slice($unstuSign, $star, $limit);
-                return json($unstuSign);
-            } else {
-                return sizeof($unstuSign);
+                array_push($unstuSign, $this->stu->getSignin($value));
             }
 
+
+//            foreach ($unstuSign as $key => $value) {
+//                $value[0]['signInFlag'] ? $value[0]['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value[0]['signInFlag'] = '<span class="layui-badge">否</span>';
+//            }
+
+            foreach ($unstuSign as $key => $value) {
+                $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
+
+                $value['sendtime'] = date('Y-m-d h:i:s', $value['sendtime']);
+                $value['stu_id'] = $stu_id;
+
+                if (!$value['address']) {
+                    $value['address'] = '<span class="layui-badge">没有签到记录</span>';
+                    $value['sendtime'] = '<span class="layui-badge">没有签到记录</span>';
+                }
+            }
+
+            return json($unstuSign);
+
         }
+
+        $weekArr = $this->getWeekCount();
+
         $this->assign('class_id', $class_id);
+        $this->assign('weekArr', $weekArr);
         return $this->fetch();
+    }
+
+    public function getWeekCount()
+    {
+        $weekTime = (new Config())->where('config_key', 'week')->value('config_val');
+        $startWeek = date('W', $weekTime);
+        $endWeek = date('W', time());
+
+        $len = $endWeek - $startWeek;
+
+        $week = [];
+
+        for ($i = 0, $weekNumBer = (int)$startWeek; $i <= $len; $i++, $weekNumBer++) {
+
+            $week[$i] = [
+                "weekShow" => $i,
+                "weekNumBer" => $weekNumBer,
+            ];
+
+        }
+
+        return $week;
     }
 
     public function logsinfo()
@@ -609,6 +597,7 @@ class Checkc extends Common
             }
 
 
+
             foreach ($logs as $key => $value) {
                 $str = $value['logs_content'];
                 $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
@@ -631,13 +620,13 @@ class Checkc extends Common
             }
 
 
-            if ($curr) {
-                $star = ($curr - 1) * $limit;
-                $logs = array_slice($logs, $star, $limit);
-                return json($logs);
-            } else {
-                return sizeof($logs);
-            }
+//            if ($curr) {
+//                $star = ($curr - 1) * $limit;
+//                $logs = array_slice($logs, $star, $limit);
+            return json($logs);
+//            } else {
+//                return sizeof($logs);
+//            }
 
         }
         $this->assign('class_id', $class_id);
@@ -791,16 +780,20 @@ class Checkc extends Common
 
                 } else {
 
-                    $stu_id = db('student')->where('stu_className', $class_name)->where('logsFlag', 0)->column('stu_id');
+                    $stu_id = db('student')->where('stu_className', $class_name)
+                        ->where('logsFlag', 0)
+                        ->order('stu_numBer')
+                        ->column('stu_id');
 
                 }
             }
 
 
-
             $logs = [
                 '0' => [],
             ];
+
+
 
             foreach ($stu_id as $key => &$value) {
 
@@ -905,7 +898,7 @@ class Checkc extends Common
 //                $star = ($curr - 1) * $limit;
 //                $logs = array_slice($logs, $star, $limit);
 
-                return json($logs[0]);
+            return json($logs[0]);
 //            } else {
 //                return sizeof($logs[0]);
 //            }

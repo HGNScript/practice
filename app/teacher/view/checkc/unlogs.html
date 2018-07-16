@@ -27,15 +27,17 @@
 </style>
 <body>
      <div class="x-nav">
-            <span class="layui-breadcrumb" lay-separator="|">
+            <span class="layui-breadcrumb">
             <a href="javascript:history.back(-1)">返回上级</a>
-            <a>未填写日志学生</a>
             </span>
         <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
     <div class="x-body">
-        <div class="layui-row">
+        <fieldset class="layui-elem-field">
+          <legend><span id="month" style="font-size: 20px;font-weight: bold;">{:date('n');}</span>月份未填写实习月记录学生名单</legend>
+          <div class="layui-field-box">
+            <div class="layui-row">
             <div class="layui-col-md2 layui-col-sm2">
                 <select name="city" lay-verify="" class="layui-input" id="Month" style="z-index: 111">
                     <option value="">日志时间</option>
@@ -59,6 +61,12 @@
             </div>
         </div>
         <div class="layui-row">
+            <div class="x-nav">
+                <span>共有<span style="font-size: 18px; font-weight: bold;" id="count"></span>位学生未填写日志</span>
+                <botton class="layui-btn" style="float: right;" id="exporSign">
+                    导出未填写日志学生数据
+                </botton>
+            </div>
             <div class="layui-col-md12">
                 <table class="layui-table">
                     <thead>
@@ -78,6 +86,9 @@
          <div class="page">
             <div id="test1"></div>
         </div>
+          </div>
+        </fieldset>
+        
     </div>
 </body>
 <script type="text/javascript">
@@ -87,6 +98,7 @@ $(function(){
     var data = {};
     data['select'] = month;
     page(1, data)
+    exporLogs()
 
     search()
     select()
@@ -110,9 +122,12 @@ function page(changge, search) {
             success: function(data) {
                 parent.layer.closeAll()
                 stuData = data
+                // console.log(stuData)
                 
 
                 var len = data.length
+
+                $('#count').html(len)
 
 
                 laypage.render({
@@ -226,12 +241,53 @@ function search(){
 function select(){
     $('#Month').change(function() {
         var month = $(this).val();
+
+        $('#month').html(month)
+
         var search = {};
         search['select'] = month;
         data = search
         page(1, data)
     })
 }
+
+function exporLogs(){
+
+
+    var postDownLoadFile = function (options) {
+        var config = $.extend(true, { method: 'post' }, options);
+        var $iframe = $('<iframe id="down-file-iframe" />');
+        var $form = $('<form target="down-file-iframe" method="' + config.method + '" />');
+        $form.attr('action', config.url);
+
+        for (var key in config.data) {
+            $form.append('<input type="hidden" name="' + key + '" value="' + config.data[key] + '" />');
+        }
+        $iframe.append($form);
+        $(document.body).append($iframe);
+        $form[0].submit();
+        $iframe.remove();
+    }
+
+
+    $('#exporSign').click(function(){
+
+        $stu_id = []
+
+        stuData.forEach(function(item, index){
+            $stu_id.push(item['stu_id'])
+        })
+
+
+        postDownLoadFile({
+            url:'/teacher/Export/excel',
+            data:$stu_id,
+            method:'post'
+        });
+
+    })
+}
+
 </script>
 
 </html>

@@ -1,6 +1,8 @@
 <?php
 namespace app\index\controller;
 
+use think\Db;
+
 class Index extends Common
 {
     protected $index;
@@ -194,24 +196,38 @@ class Index extends Common
                 return $res;
             }
 
-            // if ($time >= 1) {
+            Db::startTrans();
 
-            if ($logs_id && $logs_id != 'undefined') {
-                $res = $this->logs->addLogs($data,$logs_id);
-            } else {
-                $res = $this->logs->addLogs($data,null);
+            try{
 
-            }
+                // if ($time >= 1) {
 
-            if ($res) {
-                $up = db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
+                if ($logs_id && $logs_id != 'undefined') {
+                    $res = $this->logs->addLogs($data, $logs_id);
+                } else {
+                    $res = $this->logs->addLogs($data, null);
+
+                }
+
+                db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
+
                 $res = ['valid' => 1, 'msg' => '添加成功!'];
-            } else {
+
+
+                // } else {
+                // 	$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
+                // }
+
+                Db::commit();
+
+
+            } catch (\Exception $e) {
+
                 $res = ['valid' => 0, 'msg' => '添加失败!'];
+                Db::rollback();
             }
-            // } else {
-            // 	$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
-            // }
+
+
 
             return $res;
         }
@@ -225,6 +241,7 @@ class Index extends Common
         $logs_id = input('param.logs_id');
         $stu_id = session('stu.stu_id');
         db('logs')->where('replyFlag', 1)->where('logs_id', $logs_id)->update(['readFlag' => 1]);
+        db('logs')->where('replyFlag', 2)->where('logs_id', $logs_id)->update(['readFlag' => 1]);
 
         $oldLogs = $this->logs->oldlogs($logs_id);
 
@@ -248,16 +265,32 @@ class Index extends Common
         $data = array();
         $data['address'] = $address;
         $data['stu_id'] = $stu_id;
-        $res = $this->signin->addSignIn($data);
 
-        if ($res) {
+
+//         启动事务
+        Db::startTrans();
+        try{
+            $this->signin->addSignIn($data);
             db('student')->where('stu_id', $stu_id)->update(['signInFlag' => 1]);
+
             $res = ['valid' => 1, 'msg' => '签到成功!'];
-        } else {
+
+            Db::commit();
+
+
+        } catch (\Exception $e) {
+            // 回滚事务
             $res = ['valid' => 0, 'msg' => '签到失败!'];
+
+            Db::rollback();
         }
 
+
+
         return json($res);
+
+
+//        return json($res);
     }
 
     /**

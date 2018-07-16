@@ -75,7 +75,7 @@ $(function() {
         $.ajax({
             type: "post",
             url: '/index/Index/signIn',
-            data: { address: address },
+            data: { address: address},
             beforeSend:function(XMLHttpRequest){
                 var index = layer.load();
             },
@@ -313,6 +313,8 @@ $(function() {
                         //     content: data.msg,
                         // });
                         gd()
+
+                        // onComplete();
                     }
                 }
             });

@@ -32,10 +32,15 @@ class Logs extends Model{
 	}
 
 	public function notice($stu_id) {
-		return $this->where('stu_id', $stu_id)
-		->where('replyFlag', 1)
-		->where('readFlag', 0)
-		->select();
+//		return $this
+//            ->where('stu_id', $stu_id)
+//		    ->where('replyFlag', '=', 1)
+//            ->whereOr('replyFlag', '=', 2)
+//		    ->where('readFlag', 0)
+//		    ->select();
+
+		return $this->where("stu_id = '$stu_id' AND replyFlag = 1 AND readFlag = 0 OR stu_id = '$stu_id' AND replyFlag = 2 AND readFlag = 0  ")
+            ->select();
 	}
 
 	public function getLogs() {

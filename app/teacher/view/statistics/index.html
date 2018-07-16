@@ -19,7 +19,11 @@
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/statistices.js"></script>
 
 </head>
-
+<style type="text/css">
+    .layui-badge {
+        height: inherit;
+    }
+</style>
 <body>
     <div class="x-body">
         {if condition="!$staffRoom"}
@@ -90,8 +94,8 @@
                   <div class="layui-form layui-col-md12 x-so">
                 <input id="input" type="text" name="search" placeholder="请输入班级名称" class="layui-input">
                 <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
-                {/if}
             </div>
+                {/if}
                 <table class="layui-table" lay-even>
                     <thead>
                         <tr>
@@ -128,8 +132,46 @@
                         {/if}
                     <tbody id="tbody">
                     </tbody>
+
+
                 </table>
+
+
+
                 {/if}
+
+                {if condition="$authority == 2"}
+                <div class="x-body">
+
+                 <fieldset class="layui-elem-field">
+                      <legend>学生信息</legend>
+                    <div class="layui-form layui-col-md12  x-so">
+                        <input id="input2" type="text" name="search" placeholder="请输入名称,学号,或实习单位名称或地址" class="layui-input">
+                        <button type="button" id="search2" class="layui-btn"><i class="layui-icon">&#xe615;</i>
+                        </button>
+                    </div>
+                      <div class="layui-field-box">
+                        <table class="layui-table" lay-even>
+                        <thead>
+                            <tr>
+                                <th>学号</th>
+                                <th>名称</th>
+                                <th>联系电话</th>
+                                <th>是否签到</th>
+                                <th>是否填写日志</th>
+                                <th>实习单位名称</th>
+                                <th>实习单位地址</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                    <tbody id="tbody1">
+                         
+                    </tbody>
+                    </table>
+                      </div>
+                    </fieldset>
+                  </div> 
+                  {/if}
                  <div class="page">
                     <div id="test1"></div>
                 </div>

@@ -85,7 +85,10 @@
                             <td>{$vo['class_sum']}</td>
                             <td>
                                 <a href="/teacher/Export/excel?class_id={$vo['class_id']}" class="layui-btn">
-                                    导出
+                                    导出学生数据
+                                </a>
+                                <a href="/teacher/Export/exportCount?class_id={$vo['class_id']}" class="layui-btn">
+                                    导出签到与月记录数据
                                 </a>
                             </td>
                         </tr>
@@ -182,7 +185,10 @@ function page(search) {
                                             <td>`+array['class_sum']+`</td>
                                             <td>
                                                 <a href="/teacher/Export/excel?class_id=`+array['class_id']+`" class="layui-btn">
-                                                    导出
+                                                    导出学生数据
+                                                </a>
+                                                 <a href="/teacher/Export/exportCount?class_id=`+array['class_id']+`" class="layui-btn">
+                                                    导出签到数据
                                                 </a>
                                             </td>
                                         </tr>`;

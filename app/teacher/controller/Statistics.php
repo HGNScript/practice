@@ -1,6 +1,7 @@
 <?php
 namespace app\teacher\controller;
 
+use app\teacher\model\Stu;
 use think\Controller;
 
 class Statistics extends Common{
@@ -26,8 +27,6 @@ class Statistics extends Common{
 			if($staffRoom) {
 
 				if(request()->isAjax()){
-					$curr = input('get.curr');
-					$limit = input('get.limit');
 					$staffRoom = input('get.class_staffRoom');
 					$search = input('post.search');
 
@@ -84,13 +83,7 @@ class Statistics extends Common{
 
 					}
 
-					if ($curr) {
-						$star = ($curr-1)*$limit;
-						$data = array_slice($data,$star,$limit);
-						return json($data);
-					} else {
-						return sizeof($data);
-					}
+                    return json($data);
 				}
 
 
@@ -246,4 +239,15 @@ class Statistics extends Common{
 			return json($data);
 		}
 	}
+
+	//获取教师管理的班级所有学生信息
+	public function allStuInfo(){
+        $tch_id = session('tch.tch_id');
+
+        $search = input('post.search');
+
+        $stuData = (new Stu())->getAllStuInfo($tch_id, $search);
+
+        return json($stuData);
+    }
 }

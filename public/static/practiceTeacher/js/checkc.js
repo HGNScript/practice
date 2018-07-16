@@ -51,7 +51,7 @@ $(function() {
                         elem: 'test1' //注意，这里的 test1 是 ID，不用加 # 号
                             ,
                         count: len, //数据总数，从服务端得到
-                        limit: 4,
+                        limit: 10,
                         jump: function(obj, first) {
 
 
@@ -299,11 +299,12 @@ function html(data){
             <td>` + array['signInFlag'] + `</td>
             <td>` + array['logsFlag'] + `</td>
             <td>` + array['company_name'] + `</td>
+            <td>` + array['company_address'] + `</td>
             <td class="td-manage">
-            <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
+            <a title="学生信息" onclick="x_admin_show('修改信息','/teacher/Checkc/stuInfo?id=`+ array['stu_id'] +`')" href="javascript:;">
                 <i class="layui-icon">&#xe63c;</i>
               </a>
-                <a title="编辑学生信息" href="/teacher/Checkc/edit?stu_id=` + array['stu_id'] + `">
+                <a title="编辑学生信息" href="javascript:;" onclick="x_admin_show('修改信息','/teacher/Checkc/edit?stu_id=` + array['stu_id'] + `')">
                 <i class="layui-icon">&#xe639;</i>
               </a>
                       <a title="删除" onclick="member_del(this,'` + array['stu_id'] + `')" href="javascript:;">
@@ -323,6 +324,7 @@ function html(data){
                 <td>` + array['signInFlag'] + `</td>
                 <td>` + array['logsFlag'] + `</td>
                 <td>` + array['company_name'] + `</td>
+            <td>` + array['company_address'] + `</td>
                 <td class="td-manage">
                 <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `">
                     <i class="layui-icon">&#xe63c;</i>
