@@ -179,9 +179,9 @@ function page(search) {
                                             <td>` + array['logs_content'] + `</td>
                                             <td>` + array['replyFlag'] + `</td>
                                             <td>
-                                                <a title="学生信息" href="/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `&flag=2">
-                                                    <i class="layui-icon">&#xe63c;</i>
-                                                </a>
+                                                <a title="学生信息" onclick="x_admin_show('修改信息','/teacher/Checkc/stuInfo?id=`+ array['stu_id'] +`&flag=2')" href="javascript:;">
+                                        <i class="layui-icon">&#xe63c;</i>
+                                    </a>
                                                  <a title="评阅日志" href="/teacher/Checkc/lookLogs?id=` + array['logs_id'] + `">
                                                     <i class="layui-icon">&#xe63a;</i>
                                                 </a>

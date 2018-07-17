@@ -1,6 +1,9 @@
 <?php
 namespace app\teacher\controller;
 
+use app\teacher\model\Stu;
+use think\Session;
+
 class Export extends Common
 {
     protected $cla;
@@ -140,5 +143,17 @@ class Export extends Common
         return (new \app\teacher\model\Export())->exportCountMode($class_id);
     }
 
+
+    public function allExport(){
+        $tch_id = Session::get('tch');
+
+         (new \app\teacher\model\Export())->allExport($tch_id['tch_id']);
+    }
+
+    public function allCountExport(){
+        $tch_id = Session::get('tch');
+
+        (new \app\teacher\model\Export())->allCountExport($tch_id['tch_id']);
+    }
 
 }

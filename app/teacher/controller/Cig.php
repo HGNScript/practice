@@ -34,7 +34,7 @@ class Cig extends Controller
         if ($res) {
             return json(['valid' => 1, 'msg' => '设置成功']);
         } else {
-            return json(['valid' => 2, 'msg' => '设置失败']);
+            return json(['valid' => 0, 'msg' => '设置失败']);
         }
     }
 }

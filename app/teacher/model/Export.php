@@ -59,7 +59,6 @@ class Export extends Model
             '学号',
             '名称',
             '最近一次签到记录',
-            '实习评分',
             '年级',
             '班级名称',
             '教研室',
@@ -99,7 +98,6 @@ class Export extends Model
             array_push($arr, $rows['stu_numBer'] . "\t");
             array_push($arr, $rows['stu_name']);
             array_push($arr, $rows['address']);
-            array_push($arr, $rows['stu_score']);
             array_push($arr, $rows['class_grade']);
             array_push($arr, $rows['stu_className']);
             array_push($arr, $rows['class_staffRoom']);
@@ -257,6 +255,53 @@ class Export extends Model
             ->where('replyFlag', '<>', 2)
             ->select();
     }
+
+    public function allExport($tch_id) {
+
+        $stu_id = (new Stu())->allTch($tch_id);
+
+
+        $stuData = array();
+
+        foreach ($stu_id as $key => $value) {
+            $stuData[$key] = (new Stu())->expot($value);
+        }
+
+        $fileName = 'class_name' . '.xls';
+
+        $this->export($stuData, $fileName);
+    }
+
+
+    public function allCountExport($tch_id) {
+
+        $stu_id = (new Stu())->allTch($tch_id);
+
+
+        $stuData = array();
+        foreach ($stu_id as $key => $value) {
+            $data = (new Stu())->expot($value);
+
+            $SgininCount = $this->getSgininCount($value);
+            $LogsCount = $this->getLogsCount($value);
+
+            $data['SgininCount'] = sizeof($SgininCount);
+            $data['LogsCount'] = sizeof($LogsCount);
+
+            $stuData[$key] = $data;
+
+
+        }
+
+        $fileName = 'class_name' . '.xls';
+
+        $this->exportCount($stuData, $fileName);
+    }
+
+
+
+
+
 
 }
 

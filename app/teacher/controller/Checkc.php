@@ -492,7 +492,7 @@ class Checkc extends Common
                     $stu_id = db('student')->where('stu_className', $class_name)->where('signinFlag', 0)->order('stu_numBer')->column('stu_id');
                 }
             } else {
-                $stu_id = $this->stu->getWeekSign($select, $class_name, $search);
+                $stu_id = $this->stu->getWeekSign($select, $class_name, $search, false);
             }
 
 
@@ -502,10 +502,6 @@ class Checkc extends Common
                 array_push($unstuSign, $this->stu->getSignin($value));
             }
 
-
-//            foreach ($unstuSign as $key => $value) {
-//                $value[0]['signInFlag'] ? $value[0]['signInFlag'] = '<span class="layui-badge layui-bg-green">是</span>' : $value[0]['signInFlag'] = '<span class="layui-badge">否</span>';
-//            }
 
             foreach ($unstuSign as $key => $value) {
                 $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
@@ -1020,5 +1016,59 @@ class Checkc extends Common
 
 
         return json($res);
+    }
+
+
+    public function signinOff(){
+
+        $class_id = input('get.class_id');
+        if (request()->isAjax()) {
+            $class_id = input('get.class_id');
+            $changge = input('get.changge');
+            $chang = $changge;
+            $search = input('post.sea');
+            $select = input('post.select');
+
+            $class_name = db('class')->where('class_id', $class_id)->value('class_name');
+
+            if (!$select) {
+                if ($search) {
+                    $stu_id = $this->stu->searchsign($class_name, $search, $chang);
+                } else {
+                    $stu_id = db('student')->where('stu_className', $class_name)->where('signinFlag', 1)->order('stu_numBer')->column('stu_id');
+                }
+            } else {
+                $stu_id = $this->stu->getWeekSign($select, $class_name, $search, true);
+            }
+
+
+            $unstuSign = array();
+
+            foreach ($stu_id as $key => $value) {
+                array_push($unstuSign, $this->stu->getSignin($value));
+            }
+
+
+            foreach ($unstuSign as $key => $value) {
+                $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
+
+                $value['sendtime'] = date('Y-m-d h:i:s', $value['sendtime']);
+                $value['stu_id'] = $stu_id;
+
+                if (!$value['address']) {
+                    $value['address'] = '<span class="layui-badge">没有签到记录</span>';
+                    $value['sendtime'] = '<span class="layui-badge">没有签到记录</span>';
+                }
+            }
+
+            return json($unstuSign);
+
+        }
+
+        $weekArr = $this->getWeekCount();
+
+        $this->assign('class_id', $class_id);
+        $this->assign('weekArr', $weekArr);
+        return $this->fetch();
     }
 }

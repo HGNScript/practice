@@ -23,43 +23,57 @@ var editInfo = function () {
 
 	            $('#input').blur(function(){
 
+                    var stu_id = $('#stu_id').val()
 
-	                var stu_id = $('#stu_id').val()
-	                var company_id = $('#company_id').val()
+                    var company_id = $('#company_id').val()
+                    $("#input").remove()
+
 	                var val = $(this).val()
 
-	                $("#input").remove()
+                    if (!val) {
+                        layer.msg('编辑错误', {
+                            icon: 2, //提示的样式
+                            time: 600,
+                            end: function(){
+                                return 0;
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            type: "post",
+                            url: '/teacher/Checkc/editCompanyInfo',
+                            traditional: true,
+                            dataType: "json",
+                            data: {'name': name, 'val' : val, 'stu_id' : stu_id, 'company_id' : company_id},
+                            success: function(res) {
 
-	                $.ajax({
-	                    type: "post",
-	                    url: '/teacher/Checkc/editCompanyInfo',
-	                    traditional: true,
-	                    dataType: "json",
-	                    data: {'name': name, 'val' : val, 'stu_id' : stu_id, 'company_id' : company_id},
-	                    success: function(res) {
+                                if (res['valid']) {
+                                    layer.msg(res['msg'], {
+                                        icon: 1, //提示的样式
+                                        time: 600,
+                                        end: function(){
+                                            // parent.html(old)
+                                            location.reload()
+                                        }
+                                    });
+                                } else {
+                                    layer.msg(res['msg'], {
+                                        icon: 2, //提示的样式
+                                        time: 600,
+                                        end: function(){
+                                            parent.html(old)
+                                            // location.reload()
+                                        }
+                                    });
+                                }
 
-	                        if (res['valid']) {
-	                            layer.msg(res['msg'], {
-	                                icon: 1, //提示的样式
-	                                time: 600,
-	                                end: function(){
-	                                    // parent.html(old)
-	                                    location.reload()
-	                                }
-	                            });
-	                        } else {
-	                            layer.msg(res['msg'], {
-	                                icon: 2, //提示的样式
-	                                time: 600,
-	                                end: function(){
-	                                    parent.html(old)
-	                                    // location.reload()
-	                                }
-	                            });
-	                        }
+                            }
+                        })
 
-	                    }
-	                })
+                    }
+
+
+
 	            })
 
 	    })

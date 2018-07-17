@@ -60,7 +60,7 @@ class Stu extends Model
         return $this->alias('s')
             ->join('practice_sginin i', 's.stu_id = i.stu_id', 'LEFT')
             ->where('s.stu_id', $stu_id)
-            ->order('i.sendtime')
+            ->order('i.sendtime desc')
             ->limit(1)
             ->find();
     }
@@ -218,7 +218,8 @@ class Stu extends Model
             ->select();
     }
 
-    public  function OnCompany($stu_id) {
+    public function OnCompany($stu_id)
+    {
         return $this->alias('s')
             ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
             ->where('s.stu_id', $stu_id)
@@ -233,24 +234,47 @@ class Stu extends Model
             ->select();
     }
 
-    public function getWeekSign($select, $class_name, $search)
+//    获取指定周的签到信息，已签或未签
+    public function getWeekSign($select, $class_name, $search, $flag)
     {
         $signStuID = $this->getSignStuID($select, $class_name);
 
-        if($select == date('W', time())) {
+        if ($select == date('W', time())) {
             foreach ($signStuID as $key => $value) {
                 $this->where('stu_id', '=', $value)
                     ->update(['signInFlag' => 1]);
             }
         }
 
-        if ($search) {
-            $stu_id = $this->where('stu_className', '=', $class_name)->where("stu_numBer like '%$search%' OR stu_name like '%$search%'")
-                ->order('stu_numBer')
-                ->column('stu_id');
+        if (!$flag) {
+            if ($search) {
+                $stu_id = $this->where('stu_className', '=', $class_name)->where("stu_numBer like '%$search%' OR stu_name like '%$search%'")
+                    ->order('stu_numBer')
+                    ->column('stu_id');
 
+            } else {
+                $stu_id = $this->where('stu_className', '=', $class_name)->order('stu_numBer')->column('stu_id');
+
+            }
         } else {
-            $stu_id = $this->where('stu_className', '=', $class_name)->order('stu_numBer')->column('stu_id');
+
+            if ($search) {
+                $data = [];
+                $stu_id = $this->where('stu_className', '=', $class_name)->where("stu_numBer like '%$search%' OR stu_name like '%$search%'")
+                    ->order('stu_numBer')
+                    ->column('stu_id');
+
+                foreach ($stu_id as $key => $value) {
+
+                    if (in_array($value, $signStuID)) {
+
+                        array_push($data, $value);
+                    }
+                }
+                return $data;
+            } else {
+                $stu_id = $this->where('stu_className', '=', $class_name)->order('stu_numBer')->column('stu_id');
+            }
 
         }
 
@@ -261,10 +285,16 @@ class Stu extends Model
             }
         }
 
-        return $stu_id;
+        if (!$flag) {
+            return $stu_id;
+        } else {
+            return $signStuID;
+        }
+
 
     }
 
+//    获取指定时间有签到信息的学生ID
     public function getSignStuID($select, $class_name)
     {
         $stu_id = $this->where('stu_className', '=', $class_name)->column('stu_id');
@@ -284,13 +314,21 @@ class Stu extends Model
                     }
                 }
             }
+        }
 
+        foreach ($signIDArr as $key => $v) {
+            $arr = $signIDArr;
+            unset($arr[$key]);
+            if (in_array($signIDArr[$key], $arr)) {
+                unset($signIDArr[$key]);
+            }
         }
 
         return $signIDArr;
     }
 
-    public function getAllStuInfo($tch_id, $search){
+    public function getAllStuInfo($tch_id, $search)
+    {
 
         if (!$search) {
             $stu_id = $this->alias('s')
@@ -301,7 +339,7 @@ class Stu extends Model
                 ->column('s.stu_id');
 
         } else {
-            $stu_id  = $this->alias('s')
+            $stu_id = $this->alias('s')
                 ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
                 ->join('practice_class l', 'l.class_id = s.class_id', 'left')
                 ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
@@ -343,6 +381,18 @@ class Stu extends Model
         }
 
         return $stuData;
+    }
+
+
+    public function allTch($tch_id)
+    {
+        return $this->alias('s')
+            ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+            ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+            ->where('t.tch_id', '=', $tch_id)
+            ->order('s.stu_numBer')
+            ->column('s.stu_id');
+
     }
 
 }
