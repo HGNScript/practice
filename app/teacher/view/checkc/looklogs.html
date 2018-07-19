@@ -35,6 +35,25 @@
         width: 30%;
         height: 30%;
     }
+    #model {
+        display: none;
+    }
+    #model img {
+        width:100%;
+        height:100%;
+    }
+
+    #dowmLoad {
+        width:100%;
+        height:30px;
+        line-height:30px;
+        text-align: center;
+        background-color: rgba(0,0,0,.5);
+        display: block;
+        color: #fff;
+        cursor: pointer;
+
+    }
     </style>
 </head>
 
@@ -52,7 +71,7 @@
         {if condition="$logs"}
         <div class="layui-row">
                 <legend style="font-weight: bold;font-size: 18px">{$stu_name}&nbsp;&nbsp;{:date('Y-m-d',$logs['sendtime'])}</legend>
-                <div class="content layui-col-md10" >
+                <div class="content layui-col-md10" id="img">
                     {$logs['logs_content']}
                 </div>
             {/if}
@@ -159,7 +178,15 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="stu_name" value="{$stu_name}">
+    <input type="hidden" id="time" value="{:date('Y-m-d',$logs['sendtime'])}">
 </body>
+
+<div id="model">
+    <img src="" alt="" id="model-img">
+    <span id="dowmLoad">下载图片</span>
+</div>
+
 <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/Eleditor.js"></script>
 <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/webuploader.min.js"></script>
 <script type="text/javascript">
@@ -174,8 +201,17 @@ var artEditor = new Eleditor({
 $('.Eleditor-controller').css({ "top": "0px" })
 
 $(function(){
+    var url = 'http://practice.top/'
+    $('#img img').css('cursor', 'pointer')
+
+    imgPperation(url)
+
     $('#reply').click(function(){
         reply();
+    })
+    $('#dowmLoad').click(function(){
+        var src = $('#model-img').attr('src')
+        download(src)
     })
 })
 var reply = function() {
@@ -241,6 +277,40 @@ var reply = function() {
         }
     });
 }
+
+var imgPperation =function (url){
+    $('#img img').click(function(){
+        var img_url = url + $(this).attr('src')
+
+        $('#model-img').attr('src', img_url)
+
+        layui.use('layer', function(){
+            var layer = layui.layer;
+
+            layer.open({
+                title : '图片',
+                type: 1,
+                offset: 'auto',
+                area: '500px',
+                content: $('#model') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            })
+        })
+    })
+}
+
+
+function download(src) {
+    var alink = document.createElement("a");
+
+    var stu_name = $('#stu_name').val()
+    var time = $('#time').val()
+
+    alink.href = src;
+    alink.download = stu_name + '——' + time + ".jpg";
+    alink.click();
+}
+
+
 </script>
 
 </html>

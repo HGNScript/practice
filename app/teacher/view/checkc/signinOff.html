@@ -73,6 +73,8 @@
                     <!--导出未签到学生数据-->
                     <!--</botton>-->
                 </div>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;显示数据条数<input type="text" id="row" value="10"
+                                                                       style="width: 25px;height: 25px;"></span>
 
                 <div class="layui-col-md12">
                     <table class="layui-table">
@@ -103,6 +105,7 @@
     var cge = 1;
     var dataSign = null;
     var data = null;
+    var row = 10;
     $(function () {
 
 
@@ -115,6 +118,16 @@
         search()
         select()
         exporSign()
+
+        $('#row').blur(function () {
+            var r = $(this).val()
+            row = r
+
+            var week = $('#Week').val()
+            search['select'] = week
+            page(search)
+
+        })
     })
 
     function page(search) {
@@ -143,7 +156,7 @@
                     laypage.render({
                         elem: 'test1', //注意，这里的 test1 是 ID，不用加 # 号
                         count: len, //数据总数，从服务端得到
-                        limit: 10,
+                        limit: row,
                         jump: function (obj, first) {
 
 

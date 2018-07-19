@@ -267,7 +267,7 @@ class Export extends Model
             $stuData[$key] = (new Stu())->expot($value);
         }
 
-        $fileName = 'class_name' . '.xls';
+        $fileName = '全体数据' . '.xls';
 
         $this->export($stuData, $fileName);
     }
@@ -293,7 +293,7 @@ class Export extends Model
 
         }
 
-        $fileName = 'class_name' . '.xls';
+        $fileName = '全体数据'. '.xls';
 
         $this->exportCount($stuData, $fileName);
     }

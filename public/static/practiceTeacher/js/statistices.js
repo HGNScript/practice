@@ -113,8 +113,11 @@ function postChart(data) {
         }]
     };
 
+
     myChart1.setOption(option1);
     myChart2.setOption(option2);
+
+
 }
 
 

@@ -193,6 +193,35 @@
             }, ]
         };
 
+
+        myChart1.on('click', function (param) {
+
+            var class_id = $('#class_id').val()
+            var flag = param.name;
+            console.log(flag)
+
+            if (flag == "未签到率") {
+                x_admin_show('未签到学生名单','/teacher/Checkc/signininfo?class_id=' + class_id)
+            } else {
+                x_admin_show('签到学生名单','/teacher/Checkc/signinOff?class_id=' + class_id)
+
+            }
+        });
+
+        myChart2.on('click', function (param) {
+
+            var class_id = $('#class_id').val()
+            var flag = param.name;
+            console.log(flag)
+
+            if (flag == "已填写率") {
+                x_admin_show('已填写实习月记录学生名单','/teacher/Checkc/logsinfo?class_id=' + class_id)
+            } else {
+                x_admin_show('未填写实习月记录学生名单','/teacher/Checkc/unlogs?class_id=' + class_id)
+
+            }
+        });
+
         myChart1.setOption(option1);
         myChart2.setOption(option2);
     }
