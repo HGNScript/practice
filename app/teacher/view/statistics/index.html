@@ -6,11 +6,12 @@
     <title>广州城建实习系统</title>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
-    
+
     <script type="text/javascript" src="__STATIC__/practiceTeacher/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/echarts.common.min.js"></script>
@@ -25,138 +26,155 @@
     }
 </style>
 <body>
-    <div class="x-body">
+<div class="x-body">
+    {if condition="!$staffRoom"}
+    <blockquote class="layui-elem-quote">欢迎使用广州城建实习系统</blockquote>
+    {else/}
+    <blockquote class="layui-elem-quote">{$staffRoom}</blockquote>
+    {/if}
+    <fieldset class="layui-elem-field">
+        <legend>数据统计</legend>
+        <div class="layui-field-box">
+            <div id="echarts_post1" style="height:200px;" class="layui-col-md6"></div>
+            <div id="echarts_post2" style="height:200px;" class="layui-col-md6"></div>
+        </div>
         {if condition="!$staffRoom"}
-        <blockquote class="layui-elem-quote">欢迎使用广州城建实习系统</blockquote>
-        {else/}
-        <blockquote class="layui-elem-quote">{$staffRoom}</blockquote>
-        {/if}
-        <fieldset class="layui-elem-field">
-            <legend>数据统计</legend>
-            <div class="layui-field-box">
-                <div id="echarts_post1" style="height:200px;" class="layui-col-md6"></div>
-                <div id="echarts_post2" style="height:200px;" class="layui-col-md6"></div>
-            </div>
-            {if condition="!$staffRoom"}
-            {if condition="$authority == 1"}
-            <div class="x-nav">
+        {if condition="$authority == 1"}
+        <div class="x-nav">
                 <span class="layui-breadcrumb">
                         <a><cite>年级数据</cite></a>
                     </span>
-                <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-                    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
-            </div>
-            <table class="layui-table" lay-even>
-                <thead>
-                    <tr>
-                        <th>年级</th>
-                        <th>签到人数</th>
-                        <th>未签到人数</th>
-                        <th>日志填写人数</th>
-                        <th>日志未填写人数</th>
-                        <th>年级总人数</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {foreach $gradeData as $vo}
-                    {if condition="$vo['sum']"}
-                     <tr>
-                        <td>{$vo['class_grade']}</td>
-                        <td><span class="layui-badge layui-bg-green" >{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )}%)</span></td>
-                        <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )}%)</span></td>
-                        <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )}%)</span></td>
-                        <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )}%)</span></td>
-                        <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
-                    </tr>
-                    {else/}
-                    <tr>
-                        <td>{$vo['class_grade']}</td>
-                        <td><span class="layui-badge layui-bg-green" >0</span></td>
-                        <td><span class="layui-badge">0</span></td>
-                        <td><span class="layui-badge layui-bg-green">0</span></td>
-                        <td><span class="layui-badge">0</span></td>
-                        <td><span class="layui-badge layui-bg-green">0</span></td>
-                    </tr>
-                    {/if}
-                    {/foreach}
-                </tbody>
-            </table>
-            {/if}
+            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+               href="javascript:location.replace(location.href);" title="刷新">
+                <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+        </div>
+        <table class="layui-table" lay-even>
+            <thead>
+            <tr>
+                <th>年级</th>
+                <th>签到人数</th>
+                <th>未签到人数</th>
+                <th>日志填写人数</th>
+                <th>日志未填写人数</th>
+                <th>年级总人数</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $gradeData as $vo}
+            {if condition="$vo['sum']"}
+            <tr>
+                <td>{$vo['class_grade']}</td>
+                <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )}%)</span>
+                </td>
+                <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )}%)</span>
+                </td>
+                <td><span
+                        class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )}%)</span>
+                </td>
+                <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )}%)</span>
+                </td>
+                <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
+            </tr>
             {else/}
-            <div class="x-nav">
-                <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-                    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
-            </div>
-            <div class="x-body">
+            <tr>
+                <td>{$vo['class_grade']}</td>
+                <td><span class="layui-badge layui-bg-green">0</span></td>
+                <td><span class="layui-badge">0</span></td>
+                <td><span class="layui-badge layui-bg-green">0</span></td>
+                <td><span class="layui-badge">0</span></td>
+                <td><span class="layui-badge layui-bg-green">0</span></td>
+            </tr>
             {/if}
-                {if condition="($authority == 2) OR ($staffRoom)"}
-                {if condition="$authority == 1"}
-                  <div class="layui-form layui-col-md12 x-so">
+            {/foreach}
+            </tbody>
+        </table>
+        {/if}
+        {else/}
+        <div class="x-nav">
+            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+               href="javascript:location.replace(location.href);" title="刷新">
+                <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+        </div>
+        <div class="x-body">
+            {/if}
+            {if condition="($authority == 2) OR ($staffRoom)"}
+            {if condition="$authority == 1"}
+            <div class="layui-form layui-col-md12 x-so">
                 <input id="input" type="text" name="search" placeholder="请输入班级名称" class="layui-input">
                 <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
             </div>
+            {/if}
+            <table class="layui-table" lay-even>
+                <thead>
+                <tr>
+                    <th>班级名称</th>
+                    <th>签到人数</th>
+                    <th>未签到人数</th>
+                    <th>日志填写人数</th>
+                    <th>日志未填写人数</th>
+                    <th>班级总人数</th>
+                </tr>
+                </thead>
+                {if condition="($authority == 2)"}
+                {foreach $data as $vo}
+                {if condition="$vo['sum']" }
+                <tr>
+                    <td>{$vo['class_name']}</td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )})%</span>
+                    </td>
+                    <td><span
+                            class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )})%</span>
+                    </td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )})%</span>
+                    </td>
+                    <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )})%</span>
+                    </td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
+                </tr>
+                {else/}
+                <tr>
+                    <td>{$vo['class_name']}</td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['signin']}</span></td>
+                    <td><span class="layui-badge">{$vo['unSignin']}</span></td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['logs']}</span></td>
+                    <td><span class="layui-badge">{$vo['unLogs']}</span></td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
+                </tr>
                 {/if}
-                <table class="layui-table" lay-even>
-                    <thead>
-                        <tr>
-                            <th>班级名称</th>
-                            <th>签到人数</th>
-                            <th>未签到人数</th>
-                            <th>日志填写人数</th>
-                            <th>日志未填写人数</th>
-                            <th>班级总人数</th>
-                        </tr>
-                    </thead>
-                        {if condition="($authority == 2)"}
-                        {foreach $data as $vo}
-                            {if condition="$vo['sum']" }
-                            <tr>
-                                <td>{$vo['class_name']}</td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )})%</span></td>
-                                <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )})%</span></td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )})%</span></td>
-                                <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )})%</span></td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
-                            </tr>
-                            {else/}
-                            <tr>
-                                <td>{$vo['class_name']}</td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['signin']}</span></td>
-                                <td><span class="layui-badge">{$vo['unSignin']}</span></td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['logs']}</span></td>
-                                <td><span class="layui-badge">{$vo['unLogs']}</span></td>
-                                <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
-                            </tr>
-                            {/if}
-                        {/foreach}
-                        {/if}
-                    <tbody id="tbody">
-                    </tbody>
-
-
-                </table>
-
-
-
+                {/foreach}
                 {/if}
+                <tbody id="tbody">
+                </tbody>
 
-                {if condition="$authority == 2"}
-                <div class="x-body">
 
-                 <fieldset class="layui-elem-field">
-                      <legend>学生信息</legend>
+            </table>
 
-                    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-                    <i class="layui-icon" style="line-height:30px">ဂ</i></a>
-                    
+
+            {/if}
+
+            {if condition="$authority == 2"}
+            <div class="x-body">
+
+                <fieldset class="layui-elem-field">
+                    <legend>学生信息</legend>
+
+                    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+                       href="javascript:location.replace(location.href);" title="刷新">
+                        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+
                     <div class="layui-form layui-col-md12  x-so">
-                        <input id="input2" type="text" name="search" placeholder="请输入名称,学号,或实习单位名称或地址" class="layui-input">
+                        <input id="input2" type="text" name="search" placeholder="请输入名称,学号,或实习单位名称或地址"
+                               class="layui-input">
                         <button type="button" id="search2" class="layui-btn"><i class="layui-icon">&#xe615;</i>
                         </button>
                     </div>
-                      <div class="layui-field-box">
+
+                    <div class="x-nav">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;显示数据条数<input type="text" id="row" value="10" style="width: 25px;height: 20px;margin-left: 10px;"></span>
+                    </div>
+                    <div class="layui-field-box">
                         <table class="layui-table" lay-even>
-                        <thead>
+                            <thead>
                             <tr>
                                 <th>学号</th>
                                 <th>名称</th>
@@ -167,23 +185,23 @@
                                 <th>实习单位地址</th>
                                 <th>操作</th>
                             </tr>
-                        </thead>
-                    <tbody id="tbody1">
-                         
-                    </tbody>
-                    </table>
-                      </div>
-                    </fieldset>
-                  </div> 
-                  {/if}
-                 <div class="page">
-                    <div id="test1"></div>
-                </div>
-                </div>
-        </fieldset>
-        <input type="hidden" name="" value="{$authority}" id="hidn">
-        <input type="hidden" name="" value="{$staffRoom}" id="staffRoom">
-    </div>
+                            </thead>
+                            <tbody id="tbody1">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+            {/if}
+            <div class="page">
+                <div id="test1"></div>
+            </div>
+        </div>
+    </fieldset>
+    <input type="hidden" name="" value="{$authority}" id="hidn">
+    <input type="hidden" name="" value="{$staffRoom}" id="staffRoom">
+</div>
 </body>
 
 </html>

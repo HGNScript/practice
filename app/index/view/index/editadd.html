@@ -37,12 +37,12 @@
             <input type="tel" class="layui-input" id="stu_phone" placeholder="学生联系电话" value="{$info['stu_phone']}" name="stu_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
         </div> -->
 
-        <div class="form-group">
-            <label for="stu_phone">实习时间:</label>
-            <div>
-                <input type="text" id="date" name="date" placeholder="点击选择时间" value="{$info['date']}" class="layui-input">
-            </div>
-        </div>
+        <!--<div class="form-group">-->
+            <!--<label for="stu_phone">实习时间:</label>-->
+            <!--<div>-->
+                <input type="hidden" id="date" name="date" placeholder="点击选择时间" value="{:date('Y-m-d', time())}" class="layui-input">
+            <!--</div>-->
+        <!--</div>-->
 
 
         <!-- {if condition="$info"}

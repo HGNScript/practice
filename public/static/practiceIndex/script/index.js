@@ -93,7 +93,15 @@ $(function() {
         });
     }
     var onError = function(obj) {
-        console.log(obj.info + '--' + obj.message)
+        // console.log(obj.info + '--' + obj.message)
+        layer.open({
+            type: 1,
+            content: '开手机的GPS定位功能，2、打开手机网络（WIFI或者手机流量均可，3、进行手机功能权限设置：【设置】-【应用】-【百度地图】-【权限管理】-【定位功能】-选择打开即可。',
+            btn: '我知道了',
+            yes: function(index) {
+                location.reload();
+            }
+        })
     }
 
     var infoAdd = function() {

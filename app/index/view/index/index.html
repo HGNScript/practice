@@ -32,6 +32,26 @@
         </div>
     </div>
 </section>
+
+<section class="row introduction">
+    <div class="col-sm-12">
+        <h4 class="title">学生基础信息
+        </h4>
+        <div class="tch_info" style="text-align: center">
+            <span style="font-size: 14px;color: #0A246A;">(如果信息错误，请联系实习指导教师帮你修改)</span>
+        </div>
+
+        <div class="tch_info">
+            <span>学号:{$info['stu_numBer']}</span>
+        </div>
+        <div class="tch_info">
+            <span>身份证:{$info['identity']}</span>
+        </div>
+        <div class="tch_info">
+            <span>联系电话:{$info['stu_phone']}</span>
+        </div>
+    </div>
+</section>
 <section class="row introduction">
     <div class="col-sm-12">
         <h4 class="title">实习信息<a href="{:url('/info')}"><i class="fa fa-pencil pull-right"></i></a></h4> {if condition="$company"}
@@ -65,7 +85,7 @@
         </div> -->
 
         <div class="info">
-            <span>实习时间:</span>
+            <span>到岗日期:</span>
             <p>{$company['date']}</p>
         </div>
         {else/}

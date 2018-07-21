@@ -352,20 +352,22 @@ class Index extends Common
         return json($res = ['status' => 0, 'msg' => '图片上传错误']);
     }
 
-    public function cnotice()
-    {
-        $stu_id = session('stu.stu_id');
-        $this->notiAnsigns($stu_id);
+//
+//    public function cnotice()
+//    {
+//        $stu_id = session('stu.stu_id');
+//        $this->notiAnsigns($stu_id);
+//
+//        $id = input('param.id');
+//        db('publicsh')->where('publicsh_id', $id)->update(['readFlag' => 1]);
+//
+//        $publicsh = db('publicsh')->where('publicsh_id', $id)->find();
+//        $this->assign('publicsh', $publicsh);
+//        return $this->fetch();
+//    }
 
-        $id = input('param.id');
-        db('publicsh')->where('publicsh_id', $id)->update(['readFlag' => 1]);
 
-        $publicsh = db('publicsh')->where('publicsh_id', $id)->find();
-        $this->assign('publicsh', $publicsh);
-        return $this->fetch();
-    }
-
-
+    //编辑密码
     public function editPas()
     {
         $stu_id = session('stu.stu_id');

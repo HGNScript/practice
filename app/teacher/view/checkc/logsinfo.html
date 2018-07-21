@@ -62,7 +62,7 @@
             <div class="layui-col-md12">
                 <span>共有<span style="font-size: 18px; font-weight: bold;" id="count"></span>实习月记录</span>
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;显示数据条数<input type="text" id="row" value="10"
-                                                                       style="width: 25px;height: 25px;"></span>
+                                                                       style="width: 25px;height: 20px;margin-left: 10px;"></span>
                 <table class="layui-table">
                     <thead>
                     <tr>
@@ -78,7 +78,7 @@
                     </tbody>
                 </table>
             </div>
-            <a class="layui-btn layui-btn-danger" href="/teacher/Checkc/unlogs?class_id={$class_id}">未填写日志学生</a>
+            <a class="layui-btn layui-btn-danger" onclick="x_admin_show('修改信息','/teacher/Checkc/unlogs?class_id={$class_id}')" href="javascript:;">未填写日志学生</a>
             <!--<button class="layui-btn x-right" id="replyAll">一键评阅</button>-->
             <input type="hidden" name="" value="{$class_id}" id="hide">
             <div class="page">
@@ -109,7 +109,6 @@
             var week = $('#Week').val()
             search['select'] = week
             page(search)
-
         })
     })
 

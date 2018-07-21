@@ -145,8 +145,8 @@ class Export extends Model
     }
 
 
-
-    public function exportCountMode($class_id){
+    public function exportCountMode($class_id)
+    {
         $class_name = Db::table('practice_class')->where('class_id', $class_id)->value('class_name');
         $stu_id = Db::table('practice_student')->where('stu_className', $class_name)->column('stu_id');
 
@@ -243,22 +243,32 @@ class Export extends Model
         exit;
     }
 
-    public function getSgininCount($stu_id){
+    public function getSgininCount($stu_id)
+    {
         return Db::table('practice_sginin')
             ->where('stu_id', '=', $stu_id)
             ->select();
     }
 
-    public function getLogsCount($stu_id){
+    public function getLogsCount($stu_id)
+    {
         return Db::table('practice_logs')
             ->where('stu_id', '=', $stu_id)
             ->where('replyFlag', '<>', 2)
             ->select();
     }
 
-    public function allExport($tch_id) {
+    public function allExport($tch_id, $flag)
+    {
 
-        $stu_id = (new Stu())->allTch($tch_id);
+        if (!$flag) {
+            $stu_id = (new Stu())->allTch($tch_id);
+            $fileName = '全体数据' . '.xls';
+
+        } else {
+            $stu_id = (new Stu())->getNoCompanyStu($tch_id);
+            $fileName = '全体数据-未填写实习信息' . '.xls';
+        }
 
 
         $stuData = array();
@@ -267,16 +277,16 @@ class Export extends Model
             $stuData[$key] = (new Stu())->expot($value);
         }
 
-        $fileName = '全体数据' . '.xls';
 
         $this->export($stuData, $fileName);
     }
 
 
-    public function allCountExport($tch_id) {
+    public function allCountExport($tch_id)
+    {
+
 
         $stu_id = (new Stu())->allTch($tch_id);
-
 
         $stuData = array();
         foreach ($stu_id as $key => $value) {
@@ -293,14 +303,10 @@ class Export extends Model
 
         }
 
-        $fileName = '全体数据'. '.xls';
+        $fileName = '全体数据' . '.xls';
 
         $this->exportCount($stuData, $fileName);
     }
-
-
-
-
 
 
 }

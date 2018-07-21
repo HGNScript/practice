@@ -395,4 +395,29 @@ class Stu extends Model
 
     }
 
+    public function getNoCompanyStu($tch_id)
+    {
+        $stuIDAllY = $this->alias('s')
+            ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+            ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+            ->join('practice_company c', 'c.stu_id = s.stu_id', 'right')
+            ->where('t.tch_id', '=', $tch_id)
+            ->order('s.stu_numBer')
+            ->column('s.stu_id');
+
+        $stuIDAll = $this->allTch($tch_id);
+
+        foreach ($stuIDAll as $key => &$v){
+
+            if (in_array($v, $stuIDAllY)) {
+                unset($stuIDAll[$key]);
+            }
+
+        }
+
+        return $stuIDAll;
+
+    }
+
+
 }

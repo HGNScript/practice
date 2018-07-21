@@ -146,8 +146,9 @@ class Export extends Common
 
     public function allExport(){
         $tch_id = Session::get('tch');
+        $flag = input('get.flag');
 
-         (new \app\teacher\model\Export())->allExport($tch_id['tch_id']);
+        (new \app\teacher\model\Export())->allExport($tch_id['tch_id'], $flag);
     }
 
     public function allCountExport(){
