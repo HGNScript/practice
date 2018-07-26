@@ -30,7 +30,7 @@ class Stu extends Model
         return $this->alias('s')
             ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
             ->where('s.stu_id', $stu_id)
-            ->order('signinFlag, logsFlag')
+            ->order('c.sendtime desc')
             ->limit(1)
             ->find();
     }
