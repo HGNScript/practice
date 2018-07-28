@@ -52,7 +52,6 @@ class Export extends Model
 //        $this->export($stuData, $fileName);
 
 
-        (new Csv())->down($stuData);
     }
 
 
@@ -312,9 +311,11 @@ class Export extends Model
             $stuData[$key] = (new Stu())->expot($value);
         }
 
-//        $stuData = (new Stu())->expot($stu_id);
 
-        $this->export($stuData, $fileName);
+
+        (new Csv())->down($stuData);
+
+//        $this->export($stuData, $fileName);
     }
 
 
