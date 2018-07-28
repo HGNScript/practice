@@ -96,7 +96,8 @@
                         {/if}
                     </tbody>
                 </table>
-                 <a href="/teacher/Export/allExport" class="layui-btn">
+
+                 <a href="javascript:;" class="layui-btn" id="exporAll">
                     导出全体学生数据
                 </a>
                  <a href="/teacher/Export/allCountExport" class="layui-btn">
@@ -105,6 +106,7 @@
                 <a href="/teacher/Export/allExport?flag=true" class="layui-btn">
                     导出全体未填写实习信息的学生数据
                 </a>
+
             </div>
         </div>
          <div class="page">
@@ -121,6 +123,7 @@ $(function(){
         search()
         select()
     }
+    exporAll();
 })
 function page(search) {
     layui.use('laypage', function() {
@@ -264,6 +267,46 @@ function select(){
             data[index] = $(this).val();
         })
         page(data);
+    })
+}
+
+
+
+function exporAll() {
+    var stuData = (JSON.parse(localStorage.getItem('stuDataKEY')))
+
+
+    var postDownLoadFile = function (options) {
+        var config = $.extend(true, {method: 'post'}, options);
+        var $iframe = $('<iframe id="down-file-iframe" />');
+        var $form = $('<form target="down-file-iframe" method="' + config.method + '" />');
+        $form.attr('action', config.url);
+
+        for (var key in config.data) {
+            $form.append('<input type="hidden" name="' + key + '" value="' + config.data[key] + '" />');
+        }
+        $iframe.append($form);
+        $(document.body).append($iframe);
+        $form[0].submit();
+        $iframe.remove();
+    }
+
+
+    $('#exporAll').click(function () {
+
+        var stu_id = []
+
+        stuData.forEach(function (item, index) {
+            stu_id.push(item['stu_id'])
+        })
+
+
+        postDownLoadFile({
+            url: '/teacher/Export/excel',
+            data: stu_id,
+            method: 'post'
+        });
+
     })
 }
 

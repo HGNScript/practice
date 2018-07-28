@@ -242,11 +242,16 @@ class Statistics extends Common{
 
 	//获取教师管理的班级所有学生信息
 	public function allStuInfo(){
+
+        ini_set('max_execution_time',0);
+
         $tch_id = session('tch.tch_id');
+
+        $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
 
         $search = input('post.search');
 
-        $stuData = (new Stu())->getAllStuInfo($tch_id, $search);
+        $stuData = (new Stu())->getAllStuInfo($tch_id, $search, $authority);
 
         return json($stuData);
     }

@@ -42,7 +42,8 @@ class Stu extends Model
     {
         return $this->alias('s')
             ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
-            ->where("s.class_id= '$class_id' AND s.stu_numBer like '%$data%' OR s.class_id='$class_id' AND s.stu_name like '%$data%' OR s.class_id='$class_id' AND c.company_name like '%$data%' OR s.class_id='$class_id' AND c.company_address like '%$data%' ")->column('s.stu_id');
+            ->where("s.class_id= '$class_id' AND s.stu_numBer like '%$data%' OR s.class_id='$class_id' AND s.stu_name like '%$data%' OR s.class_id='$class_id' AND c.company_name like '%$data%' OR s.class_id='$class_id' AND c.company_address like '%$data%' ")
+            ->column('s.stu_id');
     }
 
     public function addStu($data)
@@ -206,7 +207,8 @@ class Stu extends Model
             ->where('s.stu_id', $stu_id)
             ->order('g.sendtime desc, c.sendtime desc')
             ->limit(1)
-            ->find();
+            ->find()->toArray();
+
     }
 
     public function company($stu_id)
@@ -327,26 +329,45 @@ class Stu extends Model
         return $signIDArr;
     }
 
-    public function getAllStuInfo($tch_id, $search)
+    public function getAllStuInfo($tch_id, $search , $authority)
     {
+        if ($authority == 1) {
+            if (!$search) {
+                $stu_id = $this->alias('s')
+                    ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+                    ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+                    ->order('s.stu_numBer')
+                    ->column('s.stu_id');
 
-        if (!$search) {
-            $stu_id = $this->alias('s')
-                ->join('practice_class l', 'l.class_id = s.class_id', 'left')
-                ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
-                ->where('t.tch_id', $tch_id)
-                ->order('s.stu_numBer')
-                ->column('s.stu_id');
-
+            } else {
+                $stu_id = $this->alias('s')
+                    ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
+                    ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+                    ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+                    ->where("s.stu_numBer like '%$search%' OR s.stu_name like '%$search%' OR c.company_name like '%$search%' OR c.company_address like '%$search%' ")
+                    ->order('s.stu_numBer')
+                    ->column('s.stu_id');
+            }
         } else {
-            $stu_id = $this->alias('s')
-                ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
-                ->join('practice_class l', 'l.class_id = s.class_id', 'left')
-                ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
-                ->where("t.tch_id= '$tch_id' AND s.stu_numBer like '%$search%' OR t.tch_id= '$tch_id' AND s.stu_name like '%$search%' OR t.tch_id= '$tch_id' AND c.company_name like '%$search%' OR t.tch_id= '$tch_id' AND c.company_address like '%$search%' ")
-                ->order('s.stu_numBer')
-                ->column('s.stu_id');
+            if (!$search) {
+                $stu_id = $this->alias('s')
+                    ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+                    ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+                    ->where('t.tch_id', $tch_id)
+                    ->order('s.stu_numBer')
+                    ->column('s.stu_id');
+
+            } else {
+                $stu_id = $this->alias('s')
+                    ->join('practice_company c', ' s.stu_id = c.stu_id', 'LEFT')
+                    ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+                    ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+                    ->where("t.tch_id= '$tch_id' AND s.stu_numBer like '%$search%' OR t.tch_id= '$tch_id' AND s.stu_name like '%$search%' OR t.tch_id= '$tch_id' AND c.company_name like '%$search%' OR t.tch_id= '$tch_id' AND c.company_address like '%$search%' ")
+                    ->order('s.stu_numBer')
+                    ->column('s.stu_id');
+            }
         }
+
 
         foreach ($stu_id as $key => $v) {
             $arr = $stu_id;
@@ -395,17 +416,24 @@ class Stu extends Model
 
     }
 
-    public function getNoCompanyStu($tch_id)
+    public function getNoCompanyStu($tch_id, $authority)
     {
-        $stuIDAllY = $this->alias('s')
-            ->join('practice_class l', 'l.class_id = s.class_id', 'left')
-            ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
-            ->join('practice_company c', 'c.stu_id = s.stu_id', 'right')
-            ->where('t.tch_id', '=', $tch_id)
-            ->order('s.stu_numBer')
-            ->column('s.stu_id');
 
-        $stuIDAll = $this->allTch($tch_id);
+        if ($authority == 1) {
+
+        } else {
+            $stuIDAllY = $this->alias('s')
+                ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+                ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+                ->join('practice_company c', 'c.stu_id = s.stu_id', 'right')
+                ->where('t.tch_id', '=', $tch_id)
+                ->order('s.stu_numBer')
+                ->column('s.stu_id');
+
+            $stuIDAll = $this->allTch($tch_id);
+        }
+
+
 
         foreach ($stuIDAll as $key => &$v){
 

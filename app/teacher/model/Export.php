@@ -9,6 +9,7 @@
 namespace app\teacher\model;
 
 
+use app\api\controller\v1\Product;
 use think\Db;
 use think\Model;
 
@@ -45,11 +46,17 @@ class Export extends Model
     }
 
 
-    private function export($stuData, $fileName)
-    {
 
+
+    public function export($stuData, $fileName)
+    {
+        ini_set('max_execution_time',0);
 
         vendor("PHPExcel.PHPExcel");
+
+        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_in_memory_serialized;
+        $cacheSettings = array( 'memoryCacheSize' => '512MB');
+        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod,$cacheSettings);
 
         $objPHPExcel = new \PHPExcel();
 
@@ -116,6 +123,8 @@ class Export extends Model
             array_push($arr, $rows['company_position']);
 
 
+
+
             $span = ord("A");
 
             foreach ($arr as $keyName => $value) { // 列写入
@@ -130,6 +139,8 @@ class Export extends Model
 
         }
 
+        unset($stuData);
+
 
         $objPHPExcel->setActiveSheetIndex(0); // 设置活动单指数到第一个表,所以Excel打开这是第一个表
 
@@ -142,6 +153,11 @@ class Export extends Model
         $objWriter->save('php://output'); // 文件通过浏览器下载
 
         exit;
+
+
+
+
+
     }
 
 
@@ -258,15 +274,26 @@ class Export extends Model
             ->select();
     }
 
+
+    //导出全体学生数据
     public function allExport($tch_id, $flag)
     {
+        ini_set('max_execution_time', 0);
+
+        $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
 
         if (!$flag) {
-            $stu_id = (new Stu())->allTch($tch_id);
+
+            if ($authority == 1) {
+                $stu_id = db('student')->column('stu_id');
+            } else {
+                $stu_id = (new Stu())->allTch($tch_id);
+            }
+
             $fileName = '全体数据' . '.xls';
 
         } else {
-            $stu_id = (new Stu())->getNoCompanyStu($tch_id);
+            $stu_id = (new Stu())->getNoCompanyStu($tch_id, $authority);
             $fileName = '全体数据-未填写实习信息' . '.xls';
         }
 
@@ -277,16 +304,22 @@ class Export extends Model
             $stuData[$key] = (new Stu())->expot($value);
         }
 
+//        $stuData = (new Stu())->expot($stu_id);
 
         $this->export($stuData, $fileName);
     }
 
 
+    //导出全体学生签到与月记录数
     public function allCountExport($tch_id)
     {
+        $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
 
-
-        $stu_id = (new Stu())->allTch($tch_id);
+        if ($authority == 1) {
+            $stu_id = db('student')->column('stu_id');
+        } else {
+            $stu_id = (new Stu())->allTch($tch_id);
+        }
 
         $stuData = array();
         foreach ($stu_id as $key => $value) {

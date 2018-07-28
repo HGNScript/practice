@@ -16,7 +16,7 @@ $(function () {
     }
 
     if (authority == 1) {
-
+        stuPage(null)
         // page();
         if (staffRoom) {
             $.ajax({
@@ -251,6 +251,8 @@ $(function () {
 
                     stuData = data
 
+                    localStorage.setItem('stuDataKEY', JSON.stringify(stuData));
+
                     var len = stuData.length
 
                     laypage.render({
@@ -285,7 +287,7 @@ $(function () {
                                     <td>` + array['company_name'] + `</td>
                                     <td>` + array['company_address'] + `</td>
                                      <td class="td-manage">
-                <a title="学生信息" onclick="x_admin_show('修改信息','/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `')"  href="javascript::">
+                <a title="学生信息" onclick="x_admin_show('学生信息','/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `')"  href="javascript::">
                     <i class="layui-icon">&#xe63c;</i>
                 </a>
                 </td>

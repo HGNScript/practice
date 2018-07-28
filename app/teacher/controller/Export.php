@@ -138,6 +138,7 @@ class Export extends Common
 
     }
 
+
     public function exportCount(){
         $class_id = input('get.class_id');
         return (new \app\teacher\model\Export())->exportCountMode($class_id);
