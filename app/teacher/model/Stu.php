@@ -207,6 +207,7 @@ class Stu extends Model
             ->where('s.stu_id', $stu_id)
             ->order('g.sendtime desc, c.sendtime desc')
             ->limit(1)
+            ->field('s.stu_numBer,s.stu_name,g.address,l.class_grade,s.stu_className,l.class_staffRoom,l.class_specialty,s.stu_phone,s.identity,s.classteacher,s.classteacher_phone,t.tch_name,t.tch_phone,c.company_name,c.company_address,c.company_salary,c.principal,c.principal_phone,c.company_position')
             ->find()->toArray();
 
     }
@@ -329,7 +330,7 @@ class Stu extends Model
         return $signIDArr;
     }
 
-    public function getAllStuInfo($tch_id, $search , $authority)
+    public function getAllStuInfo($tch_id, $search, $authority)
     {
         if ($authority == 1) {
             if (!$search) {
@@ -434,8 +435,7 @@ class Stu extends Model
         }
 
 
-
-        foreach ($stuIDAll as $key => &$v){
+        foreach ($stuIDAll as $key => &$v) {
 
             if (in_array($v, $stuIDAllY)) {
                 unset($stuIDAll[$key]);

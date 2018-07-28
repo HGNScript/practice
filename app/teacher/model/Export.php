@@ -10,6 +10,7 @@ namespace app\teacher\model;
 
 
 use app\api\controller\v1\Product;
+use app\teacher\controller\Csv;
 use think\Db;
 use think\Model;
 
@@ -35,14 +36,23 @@ class Export extends Model
 
     public function exportJsMode($stu_id)
     {
+        ini_set('display_errors', 'Off');
+        ini_set('max_execution_time', '0');
+        ini_set('memory_limit', '1024M');
+
         $stuData = array();
         foreach ($stu_id as $key => $value) {
             $stuData[$key] = (new Stu())->expot($value);
         }
 
+
+
         $fileName = $stuData[0]['stu_className'] . '.xls';
 
-        $this->export($stuData, $fileName);
+//        $this->export($stuData, $fileName);
+
+
+        (new Csv())->down($stuData);
     }
 
 
@@ -50,13 +60,11 @@ class Export extends Model
 
     public function export($stuData, $fileName)
     {
-        ini_set('max_execution_time',0);
+        ini_set('display_errors', 'Off');
+        ini_set('max_execution_time', '0');
+        ini_set('memory_limit', '1024M');
 
         vendor("PHPExcel.PHPExcel");
-
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_in_memory_serialized;
-        $cacheSettings = array( 'memoryCacheSize' => '512MB');
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod,$cacheSettings);
 
         $objPHPExcel = new \PHPExcel();
 
@@ -152,7 +160,7 @@ class Export extends Model
 
         $objWriter->save('php://output'); // 文件通过浏览器下载
 
-        exit;
+        exit();
 
 
 

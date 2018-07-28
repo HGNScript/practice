@@ -243,6 +243,11 @@ class Statistics extends Common{
 	//获取教师管理的班级所有学生信息
 	public function allStuInfo(){
 
+        ini_set('display_errors', 'Off');
+        ini_set('max_execution_time', '0');
+        ini_set('memory_limit', '1024M');
+
+
         ini_set('max_execution_time',0);
 
         $tch_id = session('tch.tch_id');
