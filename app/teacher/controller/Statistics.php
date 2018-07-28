@@ -45,7 +45,15 @@ class Statistics extends Common{
 						$unSignin = sizeof($sum) - sizeof($signin);
 
 						$logs =db('student')->where('stu_className', $value)->where('logsFlag', 1)->select();
-						$unLogs = sizeof($sum) - sizeof($logs);
+                        $unLogs = sizeof($sum) - sizeof($logs);
+
+                        $company = null;
+                        $uncompany = null;
+
+                        $uncompanys = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+                            ->where('stu_className',$value)->where("company_name is null")->select();
+                        $uncompany+=sizeof($uncompanys);
+                        $company = sizeof($sum) - $uncompany;
 
 						$data[$key]['class_name'] =$value;
 
@@ -53,12 +61,14 @@ class Statistics extends Common{
 						$data[$key]['unSignin'] = $unSignin;
 						$data[$key]['logs'] =sizeof($logs);
 						$data[$key]['unLogs'] =$unLogs;
-						$data[$key]['sum'] = sizeof($sum);
+                        $data[$key]['company'] =$company;
+                        $data[$key]['uncompany'] =$uncompany;
+                        $data[$key]['sum'] = sizeof($sum);
 
 						if ($data[$key]['signin'] == 0) {
 							$data[$key]['signin'] = '<span class="layui-badge layui-bg-green">'. $data[$key]['signin'] .'</span>';
 						} else {
-							$data[$key]['signin'] = '<span class="layui-badge layui-bg-green">'.$data[$key]['signin'].'('. ceil($data[$key]['signin']/$data[$key]['sum']*100) .'%)</span>';
+							$data[$key]['signin'] = '<span class="layui-badge layui-bg-green">'.$data[$key]['signin'].'('. floor($data[$key]['signin']/$data[$key]['sum']*100) .'%)</span>';
 						}
 
 						if ($data[$key]['unSignin'] == 0) {
@@ -70,15 +80,24 @@ class Statistics extends Common{
 						if ($data[$key]['logs'] == 0) {
 							$data[$key]['logs'] = '<span class="layui-badge layui-bg-green">'. $data[$key]['logs'] .'</span>';
 						} else {
-							$data[$key]['logs'] = '<span class="layui-badge layui-bg-green">'. $data[$key]['logs'].'('. ceil($data[$key]['logs']/$data[$key]['sum']*100) .'%)</span>';
+							$data[$key]['logs'] = '<span class="layui-badge layui-bg-green">'. $data[$key]['logs'].'('. round($data[$key]['logs']/$data[$key]['sum']*100) .'%)</span>';
 						}
 
 						if ($data[$key]['unLogs'] == 0) {
 							$data[$key]['unLogs'] = '<span class="layui-badge">'. $data[$key]['unLogs'] .'</span>';
 						} else {
-							$data[$key]['unLogs'] = '<span class="layui-badge">'. $data[$key]['unLogs'].'('. ceil($data[$key]['unLogs']/$data[$key]['sum']*100) .'%)</span>';
+							$data[$key]['unLogs'] = '<span class="layui-badge">'. $data[$key]['unLogs'].'('. round($data[$key]['unLogs']/$data[$key]['sum']*100) .'%)</span>';
 						}
-
+                        if ($data[$key]['company'] == 0) {
+                            $data[$key]['company'] = '<span class="layui-badge">'. $data[$key]['company'] .'</span>';
+                        } else {
+                            $data[$key]['company'] = '<span class="layui-badge">'. $data[$key]['company'].'('. round($data[$key]['company']/$data[$key]['sum']*100) .'%)</span>';
+                        }
+                        if ($data[$key]['uncompany'] == 0) {
+                            $data[$key]['uncompany'] = '<span class="layui-badge">'. $data[$key]['uncompany'] .'</span>';
+                        } else {
+                            $data[$key]['uncompany'] = '<span class="layui-badge">'. $data[$key]['uncompany'].'('. round($data[$key]['uncompany']/$data[$key]['sum']*100) .'%)</span>';
+                        }
 						$data[$key]['sum'] = '<span class="layui-badge layui-bg-green">'.$data[$key]['sum'] .'</span>';
 
 					}
@@ -101,16 +120,27 @@ class Statistics extends Common{
 
 					$logs =db('student')->where('stu_className', $value)->where('logsFlag', 1)->select();
 					$unLogs = sizeof($sum) - sizeof($logs);
+                    $company = null;
+                    $uncompany = null;
+
+                    $uncompanys = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+                        ->where('stu_className',$value)->where("company_name is null")->select();
+                    $uncompany+=sizeof($uncompanys);
+                    $company = sizeof($sum) - $uncompany;
 
 					$data[$key]['class_name'] =$value;
 					$data[$key]['signin'] =sizeof($signin);
 					$data[$key]['unSignin'] = $unSignin;
 					$data[$key]['logs'] =sizeof($logs);
 					$data[$key]['unLogs'] =$unLogs;
-					$data[$key]['sum'] =sizeof($sum);
-				}
+                    $data[$key]['company'] =$company;
+                    $data[$key]['uncompany'] =$uncompany;
+                    $data[$key]['sum'] =sizeof($sum);
+
+                    $this->assign('data', $data);
+
+                }
 				$this->assign('staffRoom', null);
-				$this->assign('data', $data);
 
 		}
 
@@ -129,6 +159,8 @@ class Statistics extends Common{
 		$nubs = null;
 		$signins = null;
 		$logss = null;
+        $company = null;
+        $uncompany = null;
 		foreach ($grade as $key => $value) {
 			$className = db('class')->where('class_grade', $value)->column('class_name');
 				foreach ($className as $k => $va) {
@@ -143,11 +175,18 @@ class Statistics extends Common{
 						$logss += sizeof($logs);
 						$unLogss = $nubs - $logss;
 
+                        $uncompanys = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+                              ->where('stu_className',$va)->where("company_name is null")->select();
+                         $uncompany+=sizeof($uncompanys);
+                         $company = $nubs - $uncompany;
+
 						$gradeData[$key]['class_grade'] =$value;
 						$gradeData[$key]['signin'] =$signins;
 						$gradeData[$key]['unSignin'] = $unsignin;
 						$gradeData[$key]['logs'] =$logss;
 						$gradeData[$key]['unLogs'] = $unLogss;
+                        $gradeData[$key]['company'] = $company;
+                         $gradeData[$key]['uncompany'] = $uncompany;
 						$gradeData[$key]['sum'] = $nubs;
 				}
 					$nubs = null;
@@ -163,7 +202,7 @@ class Statistics extends Common{
 
 	/**
 	 * 统计图数据
-	 * data 签到人数, 未签到人数, 日志填写人数, 日志为填写人数
+	 * data 签到人数, 未签到人数, 日志填写人数, 日志为填写人数 ,实习人数，未实习人数
 	 */
 	public function proportion(){
 		$staffRoom = input('get.class_staffRoom');
@@ -172,11 +211,14 @@ class Statistics extends Common{
 		 */
 		if($staffRoom) {
 			$res = db('class')->where('class_staffRoom', $staffRoom)->column('class_name');
-			$data = array();
+            $data = array();
 			$sums = null;
 			$signins = null;
 			$logss = null;
-			foreach ($res as $key => $value) {
+			$company = null;
+			$uncompany = null;
+
+            foreach ($res as $key => $value) {
 				$sum = db('student')->where('stu_className', $value)->select();
 				$signin =db('student')->where('stu_className', $value)->where('signInFlag', 1)->select();
 				$unsignins = null;
@@ -184,18 +226,27 @@ class Statistics extends Common{
 				$logs =db('student')->where('stu_className', $value)->where('logsFlag', 1)->select();
 				$unLogss = null;
 
+                $uncompanys = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+                    ->where('stu_className',$value)->where("company_name is null")->select();
+
+
+
 				$sums += sizeof($sum);
 				$signins += sizeof($signin);
 				$unsignins += $sums - $signins;
 				$logss += sizeof($logs);
 				$unLogss += $sums - $logss;
+                $uncompany+=sizeof($uncompanys);
+                $company = $sums - $uncompany;
 
-				$data['signin'] =$signins;
+                $data['signin'] =$signins;
 				$data['unSignin'] = $unsignins;
 				$data['logs'] = $logss;
 				$data['unLogs'] =$unLogss;
+				$data['company'] = $company;
+				$data['uncompany'] = $uncompany;
 			}
-			return json($data);
+            return json($data);
 		} else {
 			$tch_id = session('tch.tch_id');
 			$authority = $this->tch->getAuthority($tch_id);
@@ -204,8 +255,11 @@ class Statistics extends Common{
 				$sums = null;
 				$signins = null;
 				$logss = null;
+                $company = null;
+                $uncompany = null;
 				$className = db('class')->where('tch_id', $tch_id)->column('class_name');
-				foreach ($className as $key => $value) {
+
+                foreach ($className as $key => $value) {
 					$sum = db('student')->where('stu_className', $value)->select();
 					$signin =db('student')->where('stu_className', $value)->where('signInFlag', 1)->select();
 					$unsignins = null;
@@ -219,10 +273,17 @@ class Statistics extends Common{
 					$logss += sizeof($logs);
 					$unLogss += $sums - $logss;
 
+                    $uncompanys = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+                        ->where('stu_className',$value)->where("company_name is null")->select();
+                    $uncompany+=sizeof($uncompanys);
+                    $company = $sums - $uncompany;
+
 					$data['signin'] =$signins;
 					$data['unSignin'] = $unsignins;
 					$data['logs'] = $logss;
 					$data['unLogs'] =$unLogss;
+                    $data['company'] = $company;
+                    $data['uncompany'] = $uncompany;
 				}
 				return json($data);
 			}
@@ -236,25 +297,23 @@ class Statistics extends Common{
 			$data['logs'] = sizeof($logs);
 			$data['unLogs'] = $unLogs;
 
-			return json($data);
+            $uncompanys = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+                        ->where("company_name is null")->select();
+            $uncompany = sizeof($uncompanys);
+            $company = sizeof($sum) - $uncompany;
+            $data['company'] = $company;
+            $data['uncompany'] = $uncompany;
+            return json($data);
 		}
 	}
 
 	//获取教师管理的班级所有学生信息
 	public function allStuInfo(){
-
-        ini_set('display_errors', 'Off');
-        ini_set('max_execution_time', '0');
-        ini_set('memory_limit', '1024M');
-
-
-        ini_set('max_execution_time',0);
-
         $tch_id = session('tch.tch_id');
 
-        $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
-
         $search = input('post.search');
+
+        $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
 
         $stuData = (new Stu())->getAllStuInfo($tch_id, $search, $authority);
 

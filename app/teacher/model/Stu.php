@@ -197,6 +197,7 @@ class Stu extends Model
         }
     }
 
+    //获取导出的学生数据
     public function expot($stu_id)
     {
         return $this->alias('s')
@@ -207,10 +208,26 @@ class Stu extends Model
             ->where('s.stu_id', $stu_id)
             ->order('g.sendtime desc, c.sendtime desc')
             ->limit(1)
-            ->field('s.stu_numBer,s.stu_name,g.address,l.class_grade,s.stu_className,l.class_staffRoom,l.class_specialty,s.stu_phone,s.identity,s.classteacher,s.classteacher_phone,t.tch_name,t.tch_phone,c.company_name,c.company_address,c.company_salary,c.principal,c.principal_phone,c.company_position')
+            ->field('s.stu_numBer,s.stu_name,g.address,l.class_grade,s.stu_className,l.class_staffRoom,l.class_specialty,s.stu_phone,s.identity,s.classteacher,s.classteacher_phone,t.tch_name,t.tch_phone,c.company_name,c.company_address,c.company_salary,c.principal,c.principal_phone,c.company_position,c.company_identical,c.company_recommend,c.company_evaluate,c.date')
             ->find()->toArray();
 
     }
+
+    //获取导出的学生签到数据
+    public function expotSginin($stu_id)
+    {
+        return $this->alias('s')
+            ->join('practice_company c', 's.stu_id = c.stu_id', 'left')
+            ->join('practice_class l', 's.stu_className = l.class_name', 'left')
+            ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+            ->join('practice_sginin g', 's.stu_id = g.stu_id', 'left')
+            ->where('s.stu_id', $stu_id)
+            ->order('g.sendtime desc, c.sendtime desc')
+            ->limit(1)
+            ->field('l.class_staffRoom, l.class_specialty, s.stu_className, s.stu_name')
+            ->find()->toArray();
+    }
+
 
     public function company($stu_id)
     {
@@ -412,27 +429,24 @@ class Stu extends Model
             ->join('practice_class l', 'l.class_id = s.class_id', 'left')
             ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
             ->where('t.tch_id', '=', $tch_id)
-            ->order('s.stu_numBer')
+            ->order('s.stu_numBer,s.stu_className')
             ->column('s.stu_id');
 
     }
 
-    public function getNoCompanyStu($tch_id, $authority)
+    public function getNoCompanyStu($tch_id)
     {
 
-        if ($authority == 1) {
 
-        } else {
-            $stuIDAllY = $this->alias('s')
-                ->join('practice_class l', 'l.class_id = s.class_id', 'left')
-                ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
-                ->join('practice_company c', 'c.stu_id = s.stu_id', 'right')
-                ->where('t.tch_id', '=', $tch_id)
-                ->order('s.stu_numBer')
-                ->column('s.stu_id');
+        $stuIDAllY = $this->alias('s')
+            ->join('practice_class l', 'l.class_id = s.class_id', 'left')
+            ->join('practice_teacher t', 't.tch_id = l.tch_id', 'left')
+            ->join('practice_company c', 'c.stu_id = s.stu_id', 'right')
+            ->where('t.tch_id', '=', $tch_id)
+            ->order('s.stu_numBer, s.stu_className')
+            ->column('s.stu_id');
 
-            $stuIDAll = $this->allTch($tch_id);
-        }
+        $stuIDAll = $this->allTch($tch_id);
 
 
         foreach ($stuIDAll as $key => &$v) {

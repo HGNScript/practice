@@ -16,6 +16,7 @@ use think\Model;
 
 class Export extends Model
 {
+    //导出指定班级学生信息 【需要指定班级ID】
     public function exportMode($class_id)
     {
 
@@ -26,14 +27,15 @@ class Export extends Model
         foreach ($stu_id as $key => $value) {
             $stuData[$key] = (new Stu())->expot($value);
         }
-        $fileName = $class_name . '.xls';
+        $fileName = $class_name;
 
 
-        $this->export($stuData, $fileName);
+        (new Csv())->down($stuData, $fileName);
 
 
     }
 
+    //用导出指定班级学生信息【不许要指定班级ID】
     public function exportJsMode($stu_id)
     {
         ini_set('display_errors', 'Off');
@@ -47,14 +49,13 @@ class Export extends Model
 
 
 
-        $fileName = $stuData[0]['stu_className'] . '.xls';
+        $fileName = $stuData[0]['stu_className'];
 
-//        $this->export($stuData, $fileName);
+
+        (new Csv())->down($stuData, $fileName);
 
 
     }
-
-
 
 
     public function export($stuData, $fileName)
@@ -167,119 +168,32 @@ class Export extends Model
 
     }
 
-
-    public function exportCountMode($class_id)
+    //导出指定班级签到信息
+    public function exportSginin($class_id)
     {
         $class_name = Db::table('practice_class')->where('class_id', $class_id)->value('class_name');
         $stu_id = Db::table('practice_student')->where('stu_className', $class_name)->column('stu_id');
 
         $stuData = array();
         foreach ($stu_id as $key => $value) {
-            $data = (new Stu())->expot($value);
+            $data = (new Stu())->expotSginin($value);
 
             $SgininCount = $this->getSgininCount($value);
-            $LogsCount = $this->getLogsCount($value);
 
-            $data['SgininCount'] = sizeof($SgininCount);
-            $data['LogsCount'] = sizeof($LogsCount);
+            array_push($data, sizeof($SgininCount));
 
             $stuData[$key] = $data;
 
 
         }
-        $fileName = $class_name . '.xls';
+        $fileName = $class_name.'实习情况统计';
 
-
-        $this->exportCount($stuData, $fileName);
+        (new Csv())->downSignin($stuData, $fileName);
     }
 
-    private function exportCount($stuData, $fileName)
-    {
 
 
-        vendor("PHPExcel.PHPExcel");
 
-        $objPHPExcel = new \PHPExcel();
-
-        $objPHPExcel->getProperties();
-
-        $header = [
-            '学号',
-            '名称',
-            '班级名称',
-            '联系电话',
-            '签到记录数',
-            '实习月记录数',
-        ];
-
-        $key = ord("A"); // 设置表头
-
-        foreach ($header as $v) {
-            $colum = chr($key);
-
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colum . '1', $v);
-
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($colum . '1', $v);
-
-            $key += 1;
-
-        }
-
-        $column = 2;
-        $objActSheet = $objPHPExcel->getActiveSheet();
-
-        foreach ($stuData as $key => $rows) { // 行写入
-            $arr = [];
-            array_push($arr, $rows['stu_numBer'] . "\t");
-            array_push($arr, $rows['stu_name']);
-            array_push($arr, $rows['stu_className']);
-            array_push($arr, $rows['stu_phone'] . "\t");
-            array_push($arr, $rows['SgininCount'] . "\t");
-            array_push($arr, $rows['LogsCount'] . "\t");
-
-
-            $span = ord("A");
-
-            foreach ($arr as $keyName => $value) { // 列写入
-
-                $objActSheet->setCellValue(chr($span) . $column, $value);
-
-                $span++;
-
-            }
-
-            $column++;
-
-        }
-
-
-        $objPHPExcel->setActiveSheetIndex(0); // 设置活动单指数到第一个表,所以Excel打开这是第一个表
-
-
-        header('Content-Disposition: attachment;filename=' . $fileName);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-
-        $objWriter->save('php://output'); // 文件通过浏览器下载
-
-        exit;
-    }
-
-    public function getSgininCount($stu_id)
-    {
-        return Db::table('practice_sginin')
-            ->where('stu_id', '=', $stu_id)
-            ->select();
-    }
-
-    public function getLogsCount($stu_id)
-    {
-        return Db::table('practice_logs')
-            ->where('stu_id', '=', $stu_id)
-            ->where('replyFlag', '<>', 2)
-            ->select();
-    }
 
 
     //导出全体学生数据
@@ -292,16 +206,16 @@ class Export extends Model
         if (!$flag) {
 
             if ($authority == 1) {
-                $stu_id = db('student')->column('stu_id');
+                $stu_id = db('student')->order('stu_className')->column('stu_id');
             } else {
                 $stu_id = (new Stu())->allTch($tch_id);
             }
 
-            $fileName = '全体数据' . '.xls';
+            $fileName = '实习信息';
 
         } else {
             $stu_id = (new Stu())->getNoCompanyStu($tch_id, $authority);
-            $fileName = '全体数据-未填写实习信息' . '.xls';
+            $fileName = '未填写实习信息学生名单';
         }
 
 
@@ -312,44 +226,125 @@ class Export extends Model
         }
 
 
+        (new Csv())->down($stuData, $fileName);
 
-        (new Csv())->down($stuData);
-
-//        $this->export($stuData, $fileName);
     }
 
 
-    //导出全体学生签到与月记录数
-    public function allCountExport($tch_id)
+    //导出全体学生签到信息
+    public function allSginExport($tch_id)
     {
+        ini_set('max_execution_time', 0);
+
         $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
 
         if ($authority == 1) {
-            $stu_id = db('student')->column('stu_id');
+            $stu_id = db('student')->order('stu_className')->column('stu_id');
         } else {
             $stu_id = (new Stu())->allTch($tch_id);
         }
 
         $stuData = array();
         foreach ($stu_id as $key => $value) {
-            $data = (new Stu())->expot($value);
+            $data = (new Stu())->expotSginin($value);
 
             $SgininCount = $this->getSgininCount($value);
-            $LogsCount = $this->getLogsCount($value);
 
             $data['SgininCount'] = sizeof($SgininCount);
-            $data['LogsCount'] = sizeof($LogsCount);
 
             $stuData[$key] = $data;
 
 
         }
 
-        $fileName = '全体数据' . '.xls';
+        $fileName = '实习签到情况统计';
 
-        $this->exportCount($stuData, $fileName);
+        (new Csv())->downSignin($stuData, $fileName);
     }
 
+    //全体学生日志信息
+    public function allSLogsExport($tch_id)
+    {
+        ini_set('max_execution_time', 0);
+
+        $authority = db('teacher')->where('tch_id', '=', $tch_id)->value('authority');
+
+        if ($authority == 1) {
+            $stu_id = db('student')->order('stu_className')->column('stu_id');
+        } else {
+            $stu_id = (new Stu())->allTch($tch_id);
+        }
+
+        $stuData = array();
+        foreach ($stu_id as $key => $value) {
+            $data = (new Stu())->expotSginin($value);
+
+            $logsCount = $this->getLogsCount($value);
+
+            $data['logsCount'] = sizeof($logsCount);
+
+            foreach ($logsCount as $k => $v) {
+                array_push($data, $v['replay_val']);
+
+            }
+
+            $stuData[$key] = $data;
+        }
+
+        $fileName = '实习反馈情况统计';
+
+        (new Csv())->downLogs($stuData, $fileName);
+
+    }
+
+
+    //导出指定班级日志信息
+    public function exportLogs($class_id){
+        $class_name = Db::table('practice_class')->where('class_id', $class_id)->value('class_name');
+        $stu_id = Db::table('practice_student')->where('stu_className', $class_name)->column('stu_id');
+
+        $stuData = array();
+        foreach ($stu_id as $key => $value) {
+            $data = (new Stu())->expotSginin($value);
+
+            $logsCount = $this->getLogsCount($value);
+
+            $data['logsCount'] = sizeof($logsCount);
+
+            foreach ($logsCount as $k => $v) {
+                array_push($data, $v['replay_val']);
+
+            }
+
+
+            $stuData[$key] = $data;
+
+
+        }
+
+        $fileName = $class_name.'实习反馈情况统计';
+
+        (new Csv())->downLogs($stuData, $fileName);
+    }
+
+
+
+    //获取学生签到数据
+    public function getSgininCount($stu_id)
+    {
+        return Db::table('practice_sginin')
+            ->where('stu_id', '=', $stu_id)
+            ->select();
+    }
+
+    //获取学生日志数据
+    public function getLogsCount($stu_id)
+    {
+        return Db::table('practice_logs')
+            ->where('stu_id', '=', $stu_id)
+            ->where('replyFlag', '<>', 2)
+            ->select();
+    }
 
 }
 

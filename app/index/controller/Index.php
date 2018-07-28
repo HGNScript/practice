@@ -128,23 +128,23 @@ class Index extends Common
         $stu_id = session('stu.stu_id');
         $data = input('post.');
 
-        $flag = db('company')->where('stu_id', $stu_id)
-            ->where('company_name', $data['company_name'])
-            ->where('company_address', $data['company_address'])
-            ->where('company_salary', $data['company_salary'])
-            ->where('company_position', $data['company_position'])
-            ->where('principal', $data['principal'])
-            ->where('principal_phone', $data['principal_phone'])
-            ->where('date', $data['date'])
-            ->find();
-
-        $stuflag = db('student')->where('stu_id', $stu_id)
-//								->where('stu_phone', $data['stu_phone'])
-            ->find();
-
-        if (!sizeof($flag) == 0 && !sizeof($stuflag) == 0) {
-            return json(['valid' => 0, 'msg' => '提交失败!']);
-        }
+//        $flag = db('company')->where('stu_id', $stu_id)
+//            ->where('company_name', $data['company_name'])
+//            ->where('company_address', $data['company_address'])
+//            ->where('company_salary', $data['company_salary'])
+//            ->where('company_position', $data['company_position'])
+//            ->where('principal', $data['principal'])
+//            ->where('principal_phone', $data['principal_phone'])
+//            ->where('date', $data['date'])
+//            ->find();
+//
+//        $stuflag = db('student')->where('stu_id', $stu_id)
+////								->where('stu_phone', $data['stu_phone'])
+//            ->find();
+//
+//        if (!sizeof($flag) == 0) {
+//            return json(['valid' => 0, 'msg' => '提交失败!']);
+//        }
         $data['stu_id'] = $stu_id;
 
         $validate = validate('Editadd');

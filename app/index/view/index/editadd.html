@@ -1,48 +1,80 @@
 {extend name="base" /} {block name="content"}
 <section class="row introduction">
-    <form  id="addForm" method="post">
+    <form id="addForm" method="post" class="layui-form">
         <ul class="nav nav-tabs" style="margin:10px auto; width:80%">
             <li role="presentation"><a href="{:url('/stu')}">首页</a></li>
             <li role="presentation" class="active">
-                <a href="">编辑实习信息</a>
+                <a href="">添加实习信息</a>
             </li>
         </ul>
         <h4 class="title">实习信息</h4>
         <div class="form-group">
             <label for="company_name">实习单位名称:</label>
-            <input type="text" class="layui-input" id="company_name" placeholder="实习单位名称" value="{$info['company_name']}" name="company_name">
+            <input type="text" class="layui-input" id="company_name" placeholder="实习单位名称"
+                   value="{$info['company_name']}" name="company_name">
         </div>
         <div class="form-group">
             <label for="company_address">实习单位地址:</label>
-            <input type="text" class="layui-input" id="company_address" placeholder="实习单位地址" value="{$info['company_address']}" name="company_address">
+            <input type="text" class="layui-input" id="company_address" placeholder="实习单位地址"
+                   value="{$info['company_address']}" name="company_address">
         </div>
         <div class="form-group">
             <label for="company_salary">月薪:</label>
-            <input type="tel" class="layui-input" id="company_salary" placeholder="月薪" value="{$info['company_salary']}" name="company_salary" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v()";>
+            <input type="tel" class="layui-input" id="company_salary" placeholder="月薪" value="{$info['company_salary']}"
+                   name="company_salary"
+                   onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v()" ;>
         </div>
         <div class="form-group">
             <label for="company_position">岗位:</label>
-            <input type="text" class="layui-input" id="company_position" placeholder="岗位" value="{$info['company_position']}" name="company_position">
+            <input type="text" class="layui-input" id="company_position" placeholder="岗位"
+                   value="{$info['company_position']}" name="company_position">
         </div>
         <div class="form-group">
             <label for="principal">实习单位负责人:</label>
-            <input type="text" class="layui-input" id="principal" placeholder="实习单位负责人" value="{$info['principal']}" name="principal">
+            <input type="text" class="layui-input" id="principal" placeholder="实习单位负责人" value="{$info['principal']}"
+                   name="principal">
         </div>
         <div class="form-group">
             <label for="principal_phone">负责人联系电话:</label>
-            <input type="tel" class="layui-input" id="principal_p hone" placeholder="负责人联系电话" value="{$info['principal_phone']}" name="principal_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
+            <input type="tel" class="layui-input" id="principal_phone" placeholder="负责人联系电话"
+                   value="{$info['principal_phone']}" name="principal_phone"
+                   onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
         </div>
-       <!--  <div class="form-group">
-            <label for="stu_phone">学生联系电话:</label>
-            <input type="tel" class="layui-input" id="stu_phone" placeholder="学生联系电话" value="{$info['stu_phone']}" name="stu_phone" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();">
-        </div> -->
 
-        <!--<div class="form-group">-->
-            <!--<label for="stu_phone">实习时间:</label>-->
-            <!--<div>-->
-                <input type="hidden" id="date" name="date" placeholder="点击选择时间" value="{:date('Y-m-d', time())}" class="layui-input">
-            <!--</div>-->
-        <!--</div>-->
+        <div class="form-group">
+            <label>是否对口</label>
+            <div class="layui-input-block" style="margin-left: 0;">
+                <input type="radio" name="company_identical" value="是" title="是" checked>
+                <input type="radio" name="company_identical" value="否" title="否">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>是否学校/老师推荐</label>
+            <div class="layui-input-block" style="margin-left: 0;">
+                <input type="radio" name="company_recommend" value="是" title="是" checked>
+                <input type="radio" name="company_recommend" value="否" title="否">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>学生满意度评价</label>
+            <div class="layui-input-block"  style="margin-left: 0;">
+                <select name="company_evaluate" lay-verify="required">
+                    <option value=""></option>
+                    <option value="基本满意">基本满意</option>
+                    <option value="非常满意">非常满意</option>
+                    <option value="不满意">不满意</option>
+                </select>
+            </div>
+        </div>
+
+
+
+        <input type="hidden" id="date" name="date" placeholder="点击选择时间" value="{:date('Y/m/d', time())}"
+               class="layui-input">
 
 
         <!-- {if condition="$info"}

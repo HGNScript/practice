@@ -35,9 +35,12 @@
     <fieldset class="layui-elem-field">
         <legend>数据统计</legend>
         <div class="layui-field-box">
-            <div id="echarts_post1" style="height:200px;" class="layui-col-md6"></div>
-            <div id="echarts_post2" style="height:200px;" class="layui-col-md6"></div>
+            <div id="echarts_post1" style="height:200px;" class="layui-col-md4"></div>
+            <div id="echarts_post2" style="height:200px;" class="layui-col-md4"></div>
+            <div id="echarts_post3" style="height:200px;" class="layui-col-md4"></div>
+
         </div>
+
         {if condition="!$staffRoom"}
         {if condition="$authority == 1"}
         <div class="x-nav">
@@ -56,6 +59,8 @@
                 <th>未签到人数</th>
                 <th>日志填写人数</th>
                 <th>日志未填写人数</th>
+                <th>实习人数</th>
+                <th>未实习人数</th>
                 <th>年级总人数</th>
             </tr>
             </thead>
@@ -64,14 +69,18 @@
             {if condition="$vo['sum']"}
             <tr>
                 <td>{$vo['class_grade']}</td>
-                <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )}%)</span>
+                <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:floor( $vo['signin']/$vo['sum']*100 )}%)</span>
                 </td>
                 <td><span class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )}%)</span>
                 </td>
                 <td><span
-                        class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )}%)</span>
+                        class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:round( $vo['logs']/$vo['sum']*100 )}%)</span>
                 </td>
-                <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )}%)</span>
+                <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:round( $vo['unLogs']/$vo['sum']*100 )}%)</span>
+                </td>
+                <td><span class="layui-badge layui-bg-green">{$vo['company']}&nbsp;({:round( $vo['company']/$vo['sum']*100 )})%</span>
+                </td>
+                <td><span class="layui-badge">{$vo['uncompany']}&nbsp;({:round( $vo['uncompany']/$vo['sum']*100 )})%</span>
                 </td>
                 <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
             </tr>
@@ -112,6 +121,8 @@
                     <th>未签到人数</th>
                     <th>日志填写人数</th>
                     <th>日志未填写人数</th>
+                    <th>实习人数</th>
+                    <th>未实习人数</th>
                     <th>班级总人数</th>
                 </tr>
                 </thead>
@@ -120,14 +131,18 @@
                 {if condition="$vo['sum']" }
                 <tr>
                     <td>{$vo['class_name']}</td>
-                    <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:ceil( $vo['signin']/$vo['sum']*100 )})%</span>
+                    <td><span class="layui-badge layui-bg-green">{$vo['signin']}&nbsp;({:floor( $vo['signin']/$vo['sum']*100 )})%</span>
                     </td>
                     <td><span
                             class="layui-badge">{$vo['unSignin']}&nbsp;({:ceil( $vo['unSignin']/$vo['sum']*100 )})%</span>
                     </td>
-                    <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:ceil( $vo['logs']/$vo['sum']*100 )})%</span>
+                    <td><span class="layui-badge layui-bg-green">{$vo['logs']}&nbsp;({:round( $vo['logs']/$vo['sum']*100 )})%</span>
                     </td>
-                    <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:ceil( $vo['unLogs']/$vo['sum']*100 )})%</span>
+                    <td><span class="layui-badge">{$vo['unLogs']}&nbsp;({:round( $vo['unLogs']/$vo['sum']*100 )})%</span>
+                    </td>
+                    <td><span class="layui-badge layui-bg-green">{$vo['company']}&nbsp;({:round( $vo['company']/$vo['sum']*100 )})%</span>
+                    </td>
+                    <td><span class="layui-badge">{$vo['uncompany']}&nbsp;({:round( $vo['uncompany']/$vo['sum']*100 )})%</span>
                     </td>
                     <td><span class="layui-badge layui-bg-green">{$vo['sum']}</span></td>
                 </tr>
@@ -152,6 +167,7 @@
 
             {/if}
 
+            {if condition="$authority == 2"}
             <div class="x-body">
 
                 <fieldset class="layui-elem-field">
@@ -181,7 +197,7 @@
                                 <th>是否签到</th>
                                 <th>是否填写日志</th>
                                 <th>实习单位名称</th>
-                                <th>实习单位地址</th>
+                                <th>实习地点</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -192,6 +208,7 @@
                     </div>
                 </fieldset>
             </div>
+            {/if}
             <div class="page">
                 <div id="test1"></div>
             </div>
@@ -201,6 +218,5 @@
     <input type="hidden" name="" value="{$staffRoom}" id="staffRoom">
 </div>
 </body>
-
 
 </html>

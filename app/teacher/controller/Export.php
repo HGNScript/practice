@@ -82,6 +82,7 @@ class Export extends Common
                     }
 
                     $classinfo = $this->cla->exportClass($select);
+
                 }
 
             } else {
@@ -123,7 +124,8 @@ class Export extends Common
         return $this->fetch();
     }
 
-    public function excel()
+    //导出指定班级学生信息
+    public function export()
     {
         $class_id = input('get.class_id');
         $stu_id = input('post.');
@@ -134,17 +136,16 @@ class Export extends Common
             (new \app\teacher\model\Export())->exportJsMode($stu_id);
         }
 
-
-
     }
 
-
-    public function exportCount(){
+    //导出指定班级学生签到信息
+    public function exportSginin(){
         $class_id = input('get.class_id');
-        return (new \app\teacher\model\Export())->exportCountMode($class_id);
+        (new \app\teacher\model\Export())->exportSginin($class_id);
     }
 
 
+    //导出所有未填写实习信息学生数据
     public function allExport(){
         $tch_id = Session::get('tch');
         $flag = input('get.flag');
@@ -152,10 +153,23 @@ class Export extends Common
         (new \app\teacher\model\Export())->allExport($tch_id['tch_id'], $flag);
     }
 
-    public function allCountExport(){
+    //导出所有学生签到信息
+    public function allSgininExport(){
         $tch_id = Session::get('tch');
 
-        (new \app\teacher\model\Export())->allCountExport($tch_id['tch_id']);
+        (new \app\teacher\model\Export())->allSginExport($tch_id['tch_id']);
+    }
+
+    //导出所有学生日子数据
+    public function exportLogs() {
+        $class_id = input('get.class_id');
+        (new \app\teacher\model\Export())->exportLogs($class_id);
+    }
+
+    public function allSLogsExport(){
+        $tch_id = Session::get('tch');
+
+        (new \app\teacher\model\Export())->allSLogsExport($tch_id['tch_id']);
     }
 
 }

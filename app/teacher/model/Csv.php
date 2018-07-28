@@ -12,11 +12,11 @@ namespace app\teacher\model;
 class Csv
 {
     //导出csv文件
-    public function put_csv($list,$title)
+    public function put_csv($list,$title, $fileName)
     {
-        $file_name = "exam".time().".csv";
+        $fileName = $fileName.".csv";
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename='.$file_name );
+        header('Content-Disposition: attachment;filename='.$fileName );
         header('Cache-Control: max-age=0');
         $file = fopen('php://output',"a");
         $limit = 1000;
@@ -42,6 +42,8 @@ class Csv
             fputcsv($file,$tarr);
             unset($tarr);
         }
+
+
         unset($list);
         fclose($file);
         exit();

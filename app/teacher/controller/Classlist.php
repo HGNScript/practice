@@ -198,27 +198,6 @@ class Classlist extends Common {
 
 		return json($data);
 	}
-	/**
-	 * 搜索数据分页
-	 * @return [type] [description]
-	 */
-//	public function searchPage() {
-//		$curr = input('post.curr');
-//		$limit = input('post.limit');
-//		$info = input('post.search');
-//		$star = ($curr-1)*$limit;
-//		$data = $this->cla->search($info);
-//		foreach ($data as $key => $value) {
-//			$sum = db('student')->where('stu_className', $value['class_name'])->select();
-//			$value['sum'] = sizeof($sum);
-//			if (!$value['tch_name']) {
-//			 	$value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
-//			 	$value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
-//			}
-//		}
-//		$data = array_slice($data,$star,$limit);
-//		return json($data);
-//	}
 
 	/**
 	 * 添加班级
@@ -303,10 +282,11 @@ class Classlist extends Common {
 		$limit = input('get.limit');
 		$data = input('post.');
 
-		$specialty = $data[2];
+
+        $specialty = $data[2];
 
 
-		if ($data[1]) {
+        if ($data[1]) {
 			$specialtys = db('class')->where('class_staffRoom', $data[1])->column('class_specialty');
 		} else {
 			$specialtys = db('class')->column('class_specialty');
@@ -316,23 +296,27 @@ class Classlist extends Common {
 		  	$data[2] = '';
 		}
 
-		$star = ($curr-1)*$limit;
-		$data = $this->cla->getCate($data, 1);
-		foreach ($data as $key => $value) {
-			$sum = db('student')->where('stu_className', $value['class_name'])->select();
-			$value['sum'] = sizeof($sum);
-			if (!$value['tch_name']) {
-			 	$value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
-			 	$value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
-			}
-		}
-		$data = array_slice($data,$star,$limit);
 
-		foreach ($specialtys as $key => $v) {
-			$specialtysArr = $specialtys;
-			unset($specialtysArr[$key]);
-			if (in_array($specialtys[$key], $specialtysArr)) {
-		        unset($specialtys[$key]);
+
+        $star = ($curr-1)*$limit;
+		$data = $this->cla->getCate($data, 1);
+
+
+        foreach ($data as $key => &$value) {
+            $sum = db('student')->where('stu_className', $value['class_name'])->select();
+            $value['sum'] = sizeof($sum);
+            if (!$value['tch_name']) {
+                $value['tch_name'] = '<span class="layui-badge">未分配教师</span>';
+                $value['tch_phone'] = '<span class="layui-badge">未分配教师</span>';
+            }
+        }
+        $data = array_slice($data,$star,$limit);
+
+        foreach ($specialtys as $key => $v) {
+            $specialtysArr = $specialtys;
+            unset($specialtysArr[$key]);
+            if (in_array($specialtys[$key], $specialtysArr)) {
+                unset($specialtys[$key]);
 		    }
 		}
 

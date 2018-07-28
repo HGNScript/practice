@@ -16,7 +16,7 @@ $(function () {
     }
 
     if (authority == 1) {
-        stuPage(null)
+
         // page();
         if (staffRoom) {
             $.ajax({
@@ -25,7 +25,7 @@ $(function () {
                 traditional: true,
                 dataType: "json",
                 success: function (data) {
-                    postChart(data)
+                    postChart(data);
                 }
             })
         } else {
@@ -41,8 +41,8 @@ $(function () {
         }
     } else {
 
-        stuPage(null)
-        stuSearch()
+        stuPage(null);
+        stuSearch();
 
         $.ajax({
             type: "get",
@@ -50,14 +50,16 @@ $(function () {
             traditional: true,
             dataType: "json",
             success: function (data) {
-                postChart(data)
+                postChart(data);
             }
-        })
+        });
     }
 
     function postChart(data) {
         var myChart1 = echarts.init(document.getElementById('echarts_post1'));
         var myChart2 = echarts.init(document.getElementById('echarts_post2'));
+        var myChart3 = echarts.init(document.getElementById('echarts_post3'));
+
         option1 = {
             title: {
                 text: '签到率数据',
@@ -66,14 +68,14 @@ $(function () {
             series: [{
                 name: '',
                 type: 'pie',
-                radius: ['40%', '55%'],
+                radius: ['25%', '45%'],
                 label: {
                     normal: {
-                        formatter: '{a|{a}}{abg|}\n{hr|}\n{b|{b}：}{c}({per|{d}%)}  ',
+                        formatter: "{a}{b}:{c}({d}%)",
                         rich: {
                             b: {
-                                fontSize: 13,
-                                lineHeight: 33
+                                fontSize: 11,
+                                lineHeight: 13
                             },
                         }
                     }
@@ -94,28 +96,54 @@ $(function () {
             series: [{
                 name: '',
                 type: 'pie',
-                radius: ['40%', '55%'],
+                radius: ['25%', '45%'],
                 label: {
                     normal: {
-                        formatter: '{a|{a}}{abg|}\n{hr|}\n{b|{b}：}{c}({per|{d}%)}  ',
+                        formatter:"{a}{b}:{c}({d}%)",
                         rich: {
                             b: {
-                                fontSize: 13,
-                                lineHeight: 33
-                            },
+                                fontSize: 11,
+                                lineHeight: 13
+                            }
                         }
                     }
                 },
                 data: [
-                    {value: data['logs'], name: '日志已填写人数'},
-                    {value: data['unLogs'], name: '日志未填写人数'},
+                    {value: data['logs'], name: '已填写人数'},
+                    {value: data['unLogs'], name: '未填写人数'},
+                ]
+            }]
+        };
+        option3 = {
+            title: {
+                text: '实习数据',
+                x: 'center'
+            },
+            series: [{
+                name: '',
+                type: 'pie',
+                radius: ['25%', '45%'],
+                label: {
+                    normal: {
+                        formatter: "{a}{b}:{c}({d}%)",
+                        rich: {
+                            b: {
+                                fontSize: 11,
+                                lineHeight: 13
+                            }
+                        }
+                    }
+                },
+                data: [
+                    {value: data['company'], name: '已实习人数'},
+                    {value: data['uncompany'], name: '未实习人数'},
                 ]
             }]
         };
 
-
         myChart1.setOption(option1);
         myChart2.setOption(option2);
+        myChart3.setOption(option3);
 
 
     }
@@ -172,6 +200,8 @@ $(function () {
                                     <td>` + array['unSignin'] + `</td>
                                     <td>` + array['logs'] + `</td>
                                     <td>` + array['unLogs'] + `</td>
+                                    <td>` + array['company'] + `</td>
+                                    <td>` + array['uncompany'] + `</td>
                                     <td>` + array['sum'] + `</td>
                                         </tr>`;
                             });
@@ -251,8 +281,6 @@ $(function () {
 
                     stuData = data
 
-                    localStorage.setItem('stuDataKEY', JSON.stringify(stuData));
-
                     var len = stuData.length
 
                     laypage.render({
@@ -287,7 +315,7 @@ $(function () {
                                     <td>` + array['company_name'] + `</td>
                                     <td>` + array['company_address'] + `</td>
                                      <td class="td-manage">
-                <a title="学生信息" onclick="x_admin_show('学生信息','/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `')"  href="javascript::">
+                <a title="学生信息" onclick="x_admin_show('修改信息','/teacher/Checkc/stuInfo?id=` + array['stu_id'] + `')"  href="javascript::">
                     <i class="layui-icon">&#xe63c;</i>
                 </a>
                 </td>
