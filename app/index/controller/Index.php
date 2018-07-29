@@ -151,6 +151,8 @@ class Index extends Common
         if (!$validate->check($data)) {
             $res = ['valid' => 0, 'msg' => $validate->getError()];
         } else {
+
+            $data['company_address'] = $data['company_address1'].',' . $data['company_address2'].',' . $data['company_address3'];
             $cres = $this->company->addInfo($data);
             $sres = $this->index->editInfo($data, $stu_id);
 
