@@ -40,8 +40,10 @@
     {/if}
     <div class="x-body">
         <div class="layui-row">
-            <div id="echarts_post1" style="height:200px;" class="layui-col-md6"></div>
-            <div id="echarts_post2" style="height:200px;" class="layui-col-md6"></div>
+            <div id="echarts_post1" style="height:200px;" class="layui-col-md4"></div>
+            <div id="echarts_post2" style="height:200px;" class="layui-col-md4"></div>
+            <div id="echarts_post3" style="height:200px;" class="layui-col-md4"></div>
+
             <div class="layui-form layui-col-md12 x-so">
                 <input id="input" type="text" name="search" placeholder="请输入名称,学号或实习单位名称" class="layui-input">
                 <button type="button" id="search" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
@@ -71,7 +73,7 @@
                     <th>是否签到</th>
                     <th>是否填写日志</th>
                     <th>实习单位名称</th>
-                    <th>实习地点</th>
+                    <th>实习单位地址</th>
                     <th>操作</th>
             </thead>
             <tbody id="tbody">
@@ -128,71 +130,88 @@
     function postChart(data) {
         var myChart1 = echarts.init(document.getElementById('echarts_post1'));
         var myChart2 = echarts.init(document.getElementById('echarts_post2'));
+        var myChart3 = echarts.init(document.getElementById('echarts_post3'));
+
         option1 = {
             title: {
-                text: '签到率',
+                text: '签到率数据',
                 x: 'center'
             },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            calculable: true,
             series: [{
                 name: '',
                 type: 'pie',
-                radius: ['40%', '55%'],
+                radius: ['25%', '45%'],
                 label: {
                     normal: {
-                        formatter: '{a|{a}}{abg|}\n{hr|}\n{b|{b}：}{c}({per|{d}%)}  ',
+                        formatter: "{a}{b}:{c}({d}%)",
                         rich: {
                             b: {
-                                fontSize: 13,
-                                lineHeight: 33
+                                fontSize: 11,
+                                lineHeight: 13
                             },
                         }
                     }
                 },
                 data: [
-                    { value: data['signin'], name: '签到率' },
-                    { value: data['unSignin'], name: '未签到率' },
+                    {value: data['signin'], name: '已签到人数'},
+                    {value: data['unSignin'], name: '未签到人数'},
                 ]
-            }, ]
+            }]
         };
 
 
         option2 = {
             title: {
-                text: '日志填写率',
+                text: '日志数据',
                 x: 'center'
             },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            calculable: true,
             series: [{
                 name: '',
                 type: 'pie',
-                radius: ['40%', '55%'],
+                radius: ['25%', '45%'],
                 label: {
                     normal: {
-                        formatter: '{a|{a}}{abg|}\n{hr|}\n{b|{b}：}{c}({per|{d}%)}  ',
+                        formatter:"{a}{b}:{c}({d}%)",
                         rich: {
                             b: {
-                                fontSize: 13,
-                                lineHeight: 33
-                            },
+                                fontSize: 11,
+                                lineHeight: 13
+                            }
                         }
                     }
                 },
                 data: [
-                    { value: data['logs'], name: '已填写率' },
-                    { value: data['unLogs'], name: '未填写率' },
+                    {value: data['logs'], name: '已填写人数'},
+                    {value: data['unLogs'], name: '未填写人数'},
                 ]
-            }, ]
+            }]
         };
-
+        option3 = {
+            title: {
+                text: '实习数据',
+                x: 'center'
+            },
+            series: [{
+                name: '',
+                type: 'pie',
+                radius: ['25%', '45%'],
+                label: {
+                    normal: {
+                        formatter: "{a}{b}:{c}({d}%)",
+                        rich: {
+                            b: {
+                                fontSize: 11,
+                                lineHeight: 13
+                            }
+                        }
+                    }
+                },
+                data: [
+                    {value: data['company'], name: '已实习人数'},
+                    {value: data['uncompany'], name: '未实习人数'},
+                ]
+            }]
+        };
 
         myChart1.on('click', function (param) {
 
@@ -222,8 +241,24 @@
             }
         });
 
+//        myChart3.on('click', function (param) {
+//
+//            var class_id = $('#class_id').val()
+//            var flag = param.name;
+//            console.log(flag)
+//
+//            if (flag == "已填写率") {
+//                x_admin_show('已填写实习数据学生名单','/teacher/Checkc/company?class_id=' + class_id)
+//            } else {
+//                x_admin_show('未填写实习数据学生名单','/teacher/Checkc/uncompany?class_id=' + class_id)
+//
+//            }
+//        });
+
         myChart1.setOption(option1);
         myChart2.setOption(option2);
+        myChart3.setOption(option3);
+
     }
     </script>
 </body>

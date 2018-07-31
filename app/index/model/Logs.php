@@ -24,6 +24,7 @@ class Logs extends Model{
             $data['logs_reply'] = '';
             $data['replyFlag'] = 0;
             $data['replay_val'] = '';
+            $data['redadFlag'] = 0;
 
             return $this->save($data,['logs_id' => $logs_id]);
         } else {

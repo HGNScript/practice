@@ -126,7 +126,7 @@
                         {foreach $sginin as $vo}
                         <tr>
                             <td>
-                                {:date('Y-m-d h:i:s',$vo['sendtime'])}
+                                {:date('Y-m-d H:i:s',$vo['sendtime'])}
                             </td>
                             <td>
                                 {$vo['address']}
@@ -166,7 +166,7 @@
                         {foreach $logs as $vo}
                         <tr  class="logs" data-id="{$vo['logs_id']}" style="cursor: pointer;">
                             <td>
-                                {:date('Y-m-d h:i:s',$vo['sendtime'])}
+                                {:date('Y-m-d H:i:s',$vo['sendtime'])}
                             </td>
                             <td>
                                 {$vo['logs_content']}

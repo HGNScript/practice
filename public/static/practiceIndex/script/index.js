@@ -70,6 +70,26 @@ $(function() {
 
     }
 
+    var bd = function (){
+        var map = new BMap.Map("allmap");
+        var point = new BMap.Point(116.331398,39.897445);
+        map.centerAndZoom(point,12);
+
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                var mk = new BMap.Marker(r.point);
+                map.addOverlay(mk);
+                map.panTo(r.point);
+                alert('您的位置：'+r.point.lng+','+r.point.lat);
+            }
+            else {
+                alert('failed'+this.getStatus());
+            }        
+        },{enableHighAccuracy: true})
+    }
+
+
     var onComplete = function(obj) {
         var address = obj.formattedAddress
         $.ajax({
@@ -311,18 +331,10 @@ $(function() {
                             type: 0,
                             content: data.msg,
                             btn: '我知道了',
-                            // yes: function(index) {
-                            //     location.reload();
-                            // }
                         })
                     } else {
-                        // layer.open({
-                        //     type: 2,
-                        //     content: data.msg,
-                        // });
                         gd()
-
-                        // onComplete();
+                        // bd()
                     }
                 }
             });
@@ -338,7 +350,7 @@ $(function() {
         $('#addLogs').click(function() {
             layer.open({
                 content: '你确定添加日志吗,添加后将不可修改',
-                btn: ['添加', '不要'],
+                btn: ['提交', '不要'],
                 yes: function(index) {
                     addLogs()
                 }

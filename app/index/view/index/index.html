@@ -110,35 +110,38 @@
         {if condition="!$log"}
         <div class="swiper-slide">
             <div class="arc">
-                <h5>{:date('Y-m-d H:i', time())}</h5>
-                <p style="font-size: 18px; text-align: center;">本月未填写实习日志、或日志评价不合格</p>
+                <span style="font-size: 12px; text-align: center; line-height: 20px;display: inline-block; width: 100%;">本月未填写实习日志、或日志评价不合格，<span style="color: red; font-size: 14px;">如果日志不合格，请查看不合格的日志，按要求修改后重新提交《向左滑动，查看是否有不合格的日志》</span></span>
             </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
 
         {/if} {foreach name="$logsInfo" item="vo" key="k"}
         <div class="swiper-slide">
             <a href="{:url('/clogs', ['logs_id' => $vo['logs_id']])}">
-            <div class="arc">
-                <h5>{:date('Y-m-d H:i',$vo['sendtime'])}
-                    {if condition="$vo['replyFlag'] == 0"}
+                <div class="arc">
+                    <h5>{:date('Y-m-d H:i',$vo['sendtime'])}
+                        {if condition="$vo['replyFlag'] == 0"}
                         <span class="layui-badge layui-bg-orange">未评阅</span>
-                    {elseif condition="$vo['replyFlag'] == 1"}
+                        {elseif condition="$vo['replyFlag'] == 1"}
                         <span class="layui-badge layui-bg-green">{$vo['replay_val']}</span>
-                    {elseif condition="$vo['replyFlag'] == 2"}
+                        {elseif condition="$vo['replyFlag'] == 2"}
                         <span class="layui-badge">不合格</span>
-                    {/if}    
-                </h5>
-                {if condition="$vo['logs_content']"}
+                        {/if}
+                    </h5>
+                    {if condition="$vo['logs_content']"}
 
-                <p>{$vo['logs_content']}</p>
+                    <p>{$vo['logs_content']}</p>
 
-                {else/}
+                    {else/}
 
-                <p>当前日志只有图片,请点击查看</p>
-                
-                {/if}
-            </div>
+                    <p>当前日志只有图片,请点击查看</p>
+
+                    {/if}
+                </div>
             </a>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
         {/foreach}
     </div>
@@ -148,8 +151,8 @@
     {else /}
     <div>
         <h3 style="text-align: center;margin: 30px 0px;line-height: 50px;">
-                请填写你的实习日志!
-            </h3>
+            请填写你的实习日志!
+        </h3>
     </div>
     {/if}
 </section>

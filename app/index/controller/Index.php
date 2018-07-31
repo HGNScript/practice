@@ -152,7 +152,7 @@ class Index extends Common
             $res = ['valid' => 0, 'msg' => $validate->getError()];
         } else {
 
-            $data['company_address'] = $data['company_address1'].',' . $data['company_address2'].',' . $data['company_address3'];
+            $data['company_address'] = $data['company_address1'] . ',' . $data['company_address2'] . ',' . $data['company_address3'];
             $cres = $this->company->addInfo($data);
             $sres = $this->index->editInfo($data, $stu_id);
 
@@ -200,35 +200,34 @@ class Index extends Common
 
             Db::startTrans();
 
-            try{
+            try {
 
-                // if ($time >= 1) {
+//                if ($time >= 15) {
 
-                if ($logs_id && $logs_id != 'undefined') {
-                    $res = $this->logs->addLogs($data, $logs_id);
-                } else {
-                    $res = $this->logs->addLogs($data, null);
+                    if ($logs_id && $logs_id != 'undefined') {
+                        $res = $this->logs->addLogs($data, $logs_id);
+                    } else {
+                        $res = $this->logs->addLogs($data, null);
 
-                }
+                    }
 
-                db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
+                    db('student')->where('stu_id', $stu_id)->update(['logsFlag' => 1]);
 
-                $res = ['valid' => 1, 'msg' => '添加成功!'];
+                    $res = ['valid' => 1, 'msg' => '提交成功!'];
 
 
-                // } else {
-                // 	$res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志!'];
-                // }
+//                } else {
+//                    $res = ['valid' => 0, 'msg' => '请在每月的十五号之后填写日志(包括十五号)'];
+//                }
 
                 Db::commit();
 
 
             } catch (\Exception $e) {
 
-                $res = ['valid' => 0, 'msg' => '添加失败!'];
+                $res = ['valid' => 0, 'msg' => '提交失败!'];
                 Db::rollback();
             }
-
 
 
             return $res;
@@ -271,7 +270,7 @@ class Index extends Common
 
 //         启动事务
         Db::startTrans();
-        try{
+        try {
             $this->signin->addSignIn($data);
             db('student')->where('stu_id', $stu_id)->update(['signInFlag' => 1]);
 
@@ -286,7 +285,6 @@ class Index extends Common
 
             Db::rollback();
         }
-
 
 
         return json($res);

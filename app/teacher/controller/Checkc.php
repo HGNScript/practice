@@ -246,7 +246,7 @@ class Checkc extends Common
             $data = db('sginin')->where('stu_id', $stu_id)->order('sendtime desc')->select();
             $data = array_slice($data, $star, $limit);
             foreach ($data as $key => $value) {
-                $data[$key]['sendtime'] = date('Y-m-d h:i:s', $data[$key]['sendtime']);
+                $data[$key]['sendtime'] = date('Y-m-d H:i:s', $data[$key]['sendtime']);
             }
             return json($data);
         }
@@ -269,7 +269,7 @@ class Checkc extends Common
             $data = array_slice($data, $star, $limit);
 
             foreach ($data as $key => $value) {
-                $data[$key]['sendtime'] = date('Y-m-d h:i:s', $data[$key]['sendtime']);
+                $data[$key]['sendtime'] = date('Y-m-d H:i:s', $data[$key]['sendtime']);
             }
             foreach ($data as $key => $value) {
                 $str = $data[$key]['logs_content'];
@@ -294,10 +294,16 @@ class Checkc extends Common
         $unSignin = sizeof($sum) - sizeof($signin);
         $data = array('signin' => sizeof($signin), 'unSignin' => $unSignin);
 
+        $uncompany = db('student')->alias('s')->join('practice_company c','s.stu_id = c.stu_id','LEFT')
+            ->where('stu_className',$class_name)->where("company_name is null")->select();
+        $company =  sizeof($sum) - sizeof($uncompany);
+
         $logs = db('student')->where('stu_className', $class_name)->where('logsFlag', 1)->select();
         $unLogs = sizeof($sum) - sizeof($logs);
         $data['logs'] = sizeof($logs);
         $data['unLogs'] = $unLogs;
+        $data['company'] = $company;
+        $data['uncompany'] = sizeof($uncompany);
 
         return json($data);
     }
@@ -506,7 +512,7 @@ class Checkc extends Common
             foreach ($unstuSign as $key => $value) {
                 $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
 
-                $value['sendtime'] = date('Y-m-d h:i:s', $value['sendtime']);
+                $value['sendtime'] = date('Y-m-d H:i:s', $value['sendtime']);
                 $value['stu_id'] = $stu_id;
 
                 if (!$value['address']) {
@@ -598,7 +604,7 @@ class Checkc extends Common
                 $str = $value['logs_content'];
                 $str = mb_substr(strip_tags($str), 0, 15, 'utf-8');
                 $value['logs_content'] = $str;
-                $value['sendtime'] = date('Y-m-d h:i:s', $value['sendtime']);
+                $value['sendtime'] = date('Y-m-d H:i:s', $value['sendtime']);
 
                 if ($value['replyFlag'] == 0) {
 
@@ -1052,7 +1058,7 @@ class Checkc extends Common
             foreach ($unstuSign as $key => $value) {
                 $stu_id = db('student')->where('stu_numBer', $value['stu_numBer'])->value('stu_id');
 
-                $value['sendtime'] = date('Y-m-d h:i:s', $value['sendtime']);
+                $value['sendtime'] = date('Y-m-d H:i:s', $value['sendtime']);
                 $value['stu_id'] = $stu_id;
 
                 if (!$value['address']) {

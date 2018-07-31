@@ -6,311 +6,315 @@
     <title>广州城建实习系统</title>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/font.css">
     <link rel="stylesheet" href="__STATIC__/practiceTeacher/css/xadmin.css">
-   <script type="text/javascript" src="__STATIC__/practiceTeacher/node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="__STATIC__/practiceTeacher/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/echarts.common.min.js"></script>
     <script type="text/javascript" src="__STATIC__/practiceTeacher/js/xadmin.js"></script>
+    <link rel="stylesheet" href="__STATIC__/practiceTeacher/viewer/viewer.min.css">
+    <script type="text/javascript" src="__STATIC__/practiceTeacher/viewer/viewer.min.js"></script>
+
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
     <!--[if lt IE 9]>
-      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style type="text/css">
-    .content {
-        margin: 0 auto;
-        float: none;
-        padding: 20px;
-        border-radius: 4px;
-        word-wrap:break-word;
-    }
-    .content p {
-        word-wrap:break-word;
-    }
+        .content {
+            margin: 0 auto;
+            float: none;
+            padding: 20px;
+            border-radius: 4px;
+            word-wrap: break-word;
+        }
 
-    .content img {
-        width: 30%;
-        height: 30%;
-    }
-    #model {
-        display: none;
-    }
-    #model img {
-        width:100%;
-        height:100%;
-    }
+        .content p {
+            word-wrap: break-word;
+        }
 
-    #dowmLoad {
-        width:100%;
-        height:30px;
-        line-height:30px;
-        text-align: center;
-        background-color: rgba(0,0,0,.5);
-        display: block;
-        color: #fff;
-        cursor: pointer;
+        .content img {
+            width: 30%;
+            height: 30%;
+        }
 
-    }
+        #model {
+            display: none;
+        }
+
+        #model img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #dowmLoad {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, .5);
+            display: block;
+            color: #fff;
+            cursor: pointer;
+
+        }
     </style>
 </head>
 
 <body>
+<div class="x-nav">
     <div class="x-nav">
-        <div class="x-nav">
             <span class="layui-breadcrumb" lay-separator="">
             <a href="javascript:history.back(-1)">返回上级</a>
             </span>
-            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
-        </div>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+           href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
-    <div class="x-body">
-        {if condition="$logs"}
-        <div class="layui-row">
-                <legend style="font-weight: bold;font-size: 18px">{$stu_name}&nbsp;&nbsp;{:date('Y-m-d',$logs['sendtime'])}</legend>
-                <div class="content layui-col-md10" id="img">
-                    {$logs['logs_content']}
-                </div>
-            {/if}
-            <div class="x-nav" style="margin-top: 20px;">
-                <h2 style="display: inline-block;font-weight: bold;font-size: 18px">教师指导意见</h2>
+</div>
+<div class="x-body">
+    {if condition="$logs"}
+    <div class="layui-row">
+        <legend style="font-weight: bold;font-size: 18px">{$stu_name}&nbsp;&nbsp;{:date('Y-m-d',$logs['sendtime'])}
+        </legend>
+        <div class="content layui-col-md10" id="img">
+            {$logs['logs_content']}
+        </div>
+        {/if}
+        <div class="x-nav" style="margin-top: 20px;">
+            <h2 style="display: inline-block;font-weight: bold;font-size: 18px">教师指导意见</h2>
 
 
-                {if condition="$logs['replyFlag'] == 0 && $noRepay != 'false' "}
-                <span>
+            {if condition="$logs['replyFlag'] == 0 && $noRepay != 'false' "}
+            <span>
                       <button class="layui-btn x-right" type="button" id="reply">
                     提交意见
                 </button>
                 </span>
-                {/if}
+            {/if}
 
-            </div>
-            <div class="layui-row" style="margin-top: 20px;">
-                <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm" class="layui-form">
-                    <div class="layui-form-item" style="display: inline-block">
-                        <label class="layui-form-label">评价：</label>
-                        <div class="layui-input-block">
+        </div>
+        <div class="layui-row" style="margin-top: 20px;">
+            <form enctype="multipart/form-data" method="Post" role="form" id="LogsForm" class="layui-form">
+                <div class="layui-form-item" style="display: inline-block">
+                    <label class="layui-form-label">评价：</label>
+                    <div class="layui-input-block">
 
-                            {if condition="$logs['replyFlag'] == 0 && $noRepay != 'false' "}
-                                {if condition="$logs['replay_val'] == '优秀' "}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" checked>
-                                <input type="radio" name="replay_val" value="良好" title="良好">
-                                <input type="radio" name="replay_val" value="合格" title="合格">
-                                <input type="radio" name="replay_val" value="不合格" title="不合格">
-                                {elseif condition="$logs['replay_val'] == '合格' "/}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" >
-                                <input type="radio" name="replay_val" value="良好" title="良好" >
-                                <input type="radio" name="replay_val" value="合格" title="合格" checked>
-                                <input type="radio" name="replay_val" value="不合格" title="不合格">
-                                {elseif condition="$logs['replay_val'] == '不合格' "/}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" >
-                                <input type="radio" name="replay_val" value="良好" title="良好" >
-                                <input type="radio" name="replay_val" value="合格" title="合格" >
-                                <input type="radio" name="replay_val" value="不合格" title="不合格" checked>
-                                {else/}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" >
-                                <input type="radio" name="replay_val" value="良好" title="良好" checked>
-                                <input type="radio" name="replay_val" value="合格" title="合格" >
-                                <input type="radio" name="replay_val" value="不合格" title="不合格">
-                                {/if}
-                            {else/}
-                                {if condition="$logs['replay_val'] == '优秀' "}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" checked disabled>
-                                <input type="radio" name="replay_val" value="良好" title="良好" disabled>
-                                <input type="radio" name="replay_val" value="合格" title="合格" disabled>
-                                <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
-                                {elseif condition="$logs['replay_val'] == '合格' "/}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
-                                <input type="radio" name="replay_val" value="良好" title="良好" disabled>
-                                <input type="radio" name="replay_val" value="合格" title="合格" checked>
-                                <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
-                                {elseif condition="$logs['replay_val'] == '不合格' "/}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
-                                <input type="radio" name="replay_val" value="良好" title="良好" disabled>
-                                <input type="radio" name="replay_val" value="合格" title="合格" disabled>
-                                <input type="radio" name="replay_val" value="不合格" title="不合格" checked disabled>
-                                {else/}
-                                <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
-                                <input type="radio" name="replay_val" value="良好" title="良好" checked disabled>
-                                <input type="radio" name="replay_val" value="合格" title="合格" disabled>
-                                <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
-                                {/if}
-                            {/if}
-                        </div>
-                    </div>
-                   
-
-                    {if condition="$noRepay != 'false' "}
-
-                    <div class="col-sm-12 col-md-12" style="padding: 0;">
-                        <input type="hidden" name="logs_reply" id="text">
-                        {if condition="$logs['logs_reply']"}
-                        <label class="layui-form-label">意见：</label>
-                        <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">{$logs['logs_reply']}</div>
+                        {if condition="$logs['replyFlag'] == 0 && $noRepay != 'false' "}
+                        {if condition="$logs['replay_val'] == '优秀' "}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀" checked>
+                        <input type="radio" name="replay_val" value="良好" title="良好">
+                        <input type="radio" name="replay_val" value="合格" title="合格">
+                        <input type="radio" name="replay_val" value="不合格" title="不合格">
+                        {elseif condition="$logs['replay_val'] == '合格' "/}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀">
+                        <input type="radio" name="replay_val" value="良好" title="良好">
+                        <input type="radio" name="replay_val" value="合格" title="合格" checked>
+                        <input type="radio" name="replay_val" value="不合格" title="不合格">
+                        {elseif condition="$logs['replay_val'] == '不合格' "/}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀">
+                        <input type="radio" name="replay_val" value="良好" title="良好">
+                        <input type="radio" name="replay_val" value="合格" title="合格">
+                        <input type="radio" name="replay_val" value="不合格" title="不合格" checked>
                         {else/}
-                        <label class="layui-form-label">意见：</label>
-                        <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; "></div>
+                        <input type="radio" name="replay_val" value="优秀" title="优秀">
+                        <input type="radio" name="replay_val" value="良好" title="良好" checked>
+                        <input type="radio" name="replay_val" value="合格" title="合格">
+                        <input type="radio" name="replay_val" value="不合格" title="不合格">
                         {/if}
-
+                        {else/}
+                        {if condition="$logs['replay_val'] == '优秀' "}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀" checked disabled>
+                        <input type="radio" name="replay_val" value="良好" title="良好" disabled>
+                        <input type="radio" name="replay_val" value="合格" title="合格" disabled>
+                        <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
+                        {elseif condition="$logs['replay_val'] == '合格' "/}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
+                        <input type="radio" name="replay_val" value="良好" title="良好" disabled>
+                        <input type="radio" name="replay_val" value="合格" title="合格" checked>
+                        <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
+                        {elseif condition="$logs['replay_val'] == '不合格' "/}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
+                        <input type="radio" name="replay_val" value="良好" title="良好" disabled>
+                        <input type="radio" name="replay_val" value="合格" title="合格" disabled>
+                        <input type="radio" name="replay_val" value="不合格" title="不合格" checked disabled>
+                        {else/}
+                        <input type="radio" name="replay_val" value="优秀" title="优秀" disabled>
+                        <input type="radio" name="replay_val" value="良好" title="良好" checked disabled>
+                        <input type="radio" name="replay_val" value="合格" title="合格" disabled>
+                        <input type="radio" name="replay_val" value="不合格" title="不合格" disabled>
+                        {/if}
+                        {/if}
                     </div>
+                </div>
 
-                    {else /}
 
-                   <div class="col-sm-12 col-md-12" style="padding: 0;">
-                        <input type="hidden" name="logs_reply" id="text">
-                        <label class="layui-form-label">意见：</label>
-                        <div style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">{$logs['logs_reply']}</div>
-                        
+                {if condition="$noRepay != 'false' "}
 
+                <div class="col-sm-12 col-md-12" style="padding: 0;">
+                    <input type="hidden" name="logs_reply" id="text">
+                    {if condition="$logs['logs_reply']"}
+                    <label class="layui-form-label">意见：</label>
+                    <div id="kindEditor" style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">
+                        {$logs['logs_reply']}
                     </div>
-
+                    {else/}
+                    <label class="layui-form-label">意见：</label>
+                    <div id="kindEditor"
+                         style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; "></div>
                     {/if}
 
+                </div>
 
-                    
-                </form>
+                {else /}
 
-                <input type="hidden" name="" id="logs_id" value="{$logs['logs_id']}">
-                <input type="hidden" name="" id="class_id" value="{$class_id}">
-            </div>
+                <div class="col-sm-12 col-md-12" style="padding: 0;">
+                    <input type="hidden" name="logs_reply" id="text">
+                    <label class="layui-form-label">意见：</label>
+                    <div style="width: 80%;margin:0 auto;word-wrap:break-word; word-break:normal; ">
+                        {$logs['logs_reply']}
+                    </div>
+
+
+                </div>
+
+                {/if}
+
+
+            </form>
+
+            <input type="hidden" name="" id="logs_id" value="{$logs['logs_id']}">
+            <input type="hidden" name="" id="class_id" value="{$class_id}">
         </div>
     </div>
-    <input type="hidden" id="stu_name" value="{$stu_name}">
-    <input type="hidden" id="time" value="{:date('Y-m-d',$logs['sendtime'])}">
-</body>
-
-<div id="model">
-    <img src="" alt="" id="model-img">
-    <span id="dowmLoad">下载图片</span>
 </div>
+<input type="hidden" id="stu_name" value="{$stu_name}">
+<input type="hidden" id="time" value="{:date('Y-m-d',$logs['sendtime'])}">
+</body>
+<!--<div id="model" class="layui-col-md10">-->
+<!--<span id="dowmLoad">下载图片</span>-->
+<!--</div>-->
+
 
 <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/Eleditor.js"></script>
 <script type="text/javascript" src="__STATIC__/practiceIndex/Eleditor/webuploader.min.js"></script>
 <script type="text/javascript">
-var artEditor = new Eleditor({
-    el: '#kindEditor',
-    upload: {
-        server: '/teacher/Checkc/upload', //后台接收地址
-        fileSizeLimit: 2, //限制文件上传大小为2M
-        formName: 'image', //设置文件name,
-    }
-});
-$('.Eleditor-controller').css({ "top": "0px" })
-
-$(function(){
-    var url = 'http://practice.top/'
-    $('#img img').css('cursor', 'pointer')
-
-    imgPperation(url)
-
-    
-
-    $('#reply').click(function(){
-        reply();
-    })
-    $('#dowmLoad').click(function(){
-        var src = $('#model-img').attr('src')
-        download(src)
-    })
-})
-var reply = function() {
-
-    var html = $('#kindEditor').html();
-
-    $('#text').val(html)
-
-    var info = $("#LogsForm").serialize();
-
-    var class_id = $("#class_id").val();
-
-    var logs_id = $("#logs_id").val();
-
-    var radius =  $("input[name='replay_val']:checked").val()
-
-    if (radius == '不合格'){
-
-        var str = $('#kindEditor').html()
-
-        var str = str.indexOf('<p class="Eleditor-placeholder">点击此处编辑内容</p>')
-
-
-        if (str != -1) {
-            layer.msg('请填写内容', {
-                icon: 2, //提示的样式
-                time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-            });
-
-            return false;
-        }
-
-    } else {
-        $('#text').val('')
-        var info = $("#LogsForm").serialize();
-
-    }
-
-
-
-
-    $.ajax({
-        type: "post",
-        url: '/teacher/Checkc/reply?logs_id='+logs_id+'&class_id='+class_id,
-        traditional: true,
-        dataType: "json",
-        data: info,
-        success: function(data) {
-            if (data['valid']) {
-                layer.msg(data['msg'], {
-                    icon: 1, //提示的样式
-                    time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                    end: function() {
-                        javascript:history.back(-1)
-                    }
-                });
-            } else {
-                layer.msg(data['msg'], {
-                    icon: 2, //提示的样式
-                    time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
-                });
-            }
+    var artEditor = new Eleditor({
+        el: '#kindEditor',
+        upload: {
+            server: '/teacher/Checkc/upload', //后台接收地址
+            fileSizeLimit: 2, //限制文件上传大小为2M
+            formName: 'image', //设置文件name,
         }
     });
-}
+    $('.Eleditor-controller').css({"top": "0px"})
 
-var imgPperation =function (url){
-    $('#img img').click(function(){
-        var img_url = url + $(this).attr('src')
 
-        $('#model-img').attr('src', img_url)
-
-        layui.use('layer', function(){
-            var layer = layui.layer;
-
-            layer.open({
-                title : '图片',
-                type: 1,
-                offset: 'auto',
-                area: '500px',
-                content: $('#model') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-            })
+    $(function () {
+        $('#reply').click(function () {
+            reply();
         })
+
     })
-}
+
+    //viewer插件
+    var $image = $('#img');
+
+    $image.viewer({
+        inline: false,
+        title: false,
+        fullscreen: false,
+        viewed: function() {
+            $img.viewer('zoomTo', 1);
+        }
+    });
+
+    // Get the Viewer.js instance after initialized
+    var viewer = $image.data('viewer');
+
+    // View a list of images
+    $('#img').viewer();
 
 
-function download(src) {
-    var alink = document.createElement("a");
 
-    var stu_name = $('#stu_name').val()
-    var time = $('#time').val()
+    var reply = function () {
 
-    alink.href = src;
-    alink.download = stu_name + '——' + time + ".jpg";
-    alink.click();
-}
+        var html = $('#kindEditor').html();
+
+        $('#text').val(html)
+
+        var info = $("#LogsForm").serialize();
+
+        var class_id = $("#class_id").val();
+
+        var logs_id = $("#logs_id").val();
+
+        var radius = $("input[name='replay_val']:checked").val()
+
+        if (radius == '不合格') {
+
+            var str = $('#kindEditor').html()
+
+            var str = str.indexOf('<p class="Eleditor-placeholder">点击此处编辑内容</p>')
+
+
+            if (str != -1) {
+                layer.msg('请填写内容', {
+                    icon: 2, //提示的样式
+                    time: 600, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                });
+
+                return false;
+            }
+
+        } else {
+            $('#text').val('')
+            var info = $("#LogsForm").serialize();
+
+        }
+
+
+        $.ajax({
+            type: "post",
+            url: '/teacher/Checkc/reply?logs_id=' + logs_id + '&class_id=' + class_id,
+            traditional: true,
+            dataType: "json",
+            data: info,
+            success: function (data) {
+                if (data['valid']) {
+                    layer.msg(data['msg'], {
+                        icon: 1, //提示的样式
+                        time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                        end: function () {
+                            javascript:history.back(-1);
+                        }
+                    });
+                } else {
+                    layer.msg(data['msg'], {
+                        icon: 2, //提示的样式
+                        time: 900, //2秒关闭（如果不配置，默认是3秒）//设置后不需要自己写定时关闭了，单位是毫秒
+                    });
+                }
+            }
+        });
+    }
+
+
+    function download(src) {
+        var url = 'http://practice.top/';
+
+        var alink = document.createElement("a");
+
+        var stu_name = $('#stu_name').val()
+        var time = $('#time').val()
+
+        alink.href = src;
+        alink.download = stu_name + '——' + time + ".jpg";
+        alink.click();
+    }
 
 
 </script>
